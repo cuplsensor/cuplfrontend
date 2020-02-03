@@ -1,3 +1,5 @@
+.. _authorization::
+
 .. sectnum::
 
 Authorization Grant Flow
