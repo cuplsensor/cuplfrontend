@@ -1,4 +1,4 @@
-.. _authorization::
+.. _authorization:
 
 .. sectnum::
 
