@@ -1,0 +1,29 @@
+{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+
+{% block title %}
+Home
+{% endblock %}
+{% block subtitle %}
+
+{% endblock %}
+
+
+
+
+{% block main %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="">
+        {{ form.csrf_token }}
+        {{ form.box_id.label }} {{ form.box_id(size=5) }}
+        <input type="submit" value="Go">
+    </form>
+{% endblock %}

@@ -1,7 +1,6 @@
 from flask import Blueprint, redirect, render_template, \
 request, url_for, session, abort, flash, Response, jsonify, current_app
-#from ..services import boxes, captures
-from ..forms import AddLocationForm, EditLocationForm
+from .forms.locations import AddLocationForm, EditLocationForm
 from werkzeug.exceptions import NotFound
 
 # For GET and POST

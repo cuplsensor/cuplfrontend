@@ -1,28 +1,17 @@
 from flask import Blueprint, redirect, render_template, \
 request, url_for, session, abort, flash, Response, jsonify, current_app
-from flask_login import login_user, current_user
-from ..core import sec
-from ..schemas import BoxViewSchema, BoxViewNestedSchema
-from werkzeug.exceptions import NotFound
-from ..apiwrapper.consumer.user import UserWrapper, UserNotFoundException
-from ..apiwrapper.consumer.capture import CaptureWrapper
+from wsapiwrapper.consumer.user import UserWrapper, UserNotFoundException
+from wsapiwrapper.consumer.capture import CaptureWrapper
 
 # For GET and POST
 import requests
 import json
-import os
 from .defs import auth0_template, requires_auth, optional_auth, route
-import datetime
 
-auth0clientid = os.environ["AUTH0_CLIENTID"]
-auth0clientsecret = os.environ["AUTH0_CLIENTSECRET"]
-auth0apiuniqueid = os.environ["AUTH0_API_UNIQUEID"]
-auth0url = os.environ["AUTH0_URL"]
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
-bp = Blueprint('dashboard', __name__, template_folder='templates', static_folder='static', static_url_path=os.environ['STATIC_URL'])
+bp = Blueprint('dashboard', __name__, template_folder='templates', static_folder='static', static_url_path='/wsfrontend/static')
 
-callbackurl = "https://{baseurl}/callback".format(baseurl=os.environ['BASE_URL'])
 
 @route(bp, '/.well-known/acme-challenge/<token_value>')
 def letsencrpyt(token_value):
@@ -51,18 +40,26 @@ def home_page(**kwargs):
 
     return response
 
+
 @route(bp, '/user/<int:user_id>')
 def user(**kwargs):
     #userobj = users.get_or_404(user_id)
     return render_template('pages/user_page.html', **kwargs)
 
+
 @route(bp, '/user')
 @requires_auth
 def currentuser(userobj, **kwargs):
-    vlogitems = userobj.recent_boxviews
-    vlschema = BoxViewNestedSchema(many=True)
-    vlogitemsjson = vlschema.dump(vlogitems).data
-    return auth0_template('pages/currentuser_page.html', userobj=userobj, vlogitems=vlogitems, vlogitemsjson=vlogitemsjson, **kwargs)
+    """
+    Displays information about the logged on user. An API call is made to find
+    recently viewed boxes and these are rendered in a list. The most recent is
+    displayed first.
+    """
+    #vlogitems = userobj.recent_boxviews
+    #vlschema = BoxViewNestedSchema(many=True)
+    #vlogitemsjson = vlschema.dump(vlogitems).data
+    return auth0_template('pages/currentuser_page.html', userobj=userobj, vlogitems=[], vlogitemsjson=[], **kwargs)
+
 
 @route(bp, '/signin')
 def signin():
@@ -72,20 +69,25 @@ def signin():
     else:
         returl = nexturl
 
+    IDP_ORIGIN = current_app.config["IDP_ORIGIN"]
+    auth0apiuniqueid = current_app.config["AUTH0_API_UNIQUEID"]
+    auth0clientid = current_app.config["AUTH0_CLIENTID"]
+
     callbackurl = url_for('dashboard.callback', _external=True)
-    authorizeurl = "https://{auth0url}/authorize?" \
+    authorizeurl = "{IDP_ORIGIN}/authorize?" \
                    "response_type=code&" \
                    "client_id={auth0clientid}&" \
                    "redirect_uri={callbackurl}&" \
                    "scope=openid%20profile&" \
                    "audience={auth0apiuniqueid}&" \
-                   "state={returl}".format(auth0url=auth0url,
-                                         auth0clientid=auth0clientid,
-                                         callbackurl=callbackurl,
-                                         auth0apiuniqueid=auth0apiuniqueid,
-                                         returl=returl)
+                   "state={returl}".format(IDP_ORIGIN=IDP_ORIGIN,
+                                           auth0clientid=auth0clientid,
+                                           callbackurl=callbackurl,
+                                           auth0apiuniqueid=auth0apiuniqueid,
+                                           returl=returl)
 
     return redirect(authorizeurl)
+
 
 @route(bp, '/signout')
 def signout():
@@ -100,8 +102,13 @@ def callback():
     code = request.args.get('code')
     state = request.args.get('state')
 
+    IDP_ORIGIN = current_app.config["IDP_ORIGIN"]
+    auth0clientid = current_app.config["AUTH0_CLIENTID"]
+    auth0clientsecret = current_app.config["AUTH0_CLIENTSECRET"]
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+
     json_header = {'content-type': 'application/json'}
-    token_url = "https://{auth0url}/oauth/token".format(auth0url=auth0url)
+    token_url = "{IDP_ORIGIN}/oauth/token".format(IDP_ORIGIN=IDP_ORIGIN)
     callbackurl = url_for('dashboard.callback', _external=True)
 
     token_payload = {
@@ -116,7 +123,7 @@ def callback():
     access_token = tokenresponse["access_token"]
     session["access_token"] = access_token
 
-    userwrapper = UserWrapper(access_token)
+    userwrapper = UserWrapper(baseurl=WSB_ORIGIN, tokenstr=access_token)
 
     try:
         usr = userwrapper.get()

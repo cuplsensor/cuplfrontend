@@ -1,6 +1,6 @@
 from functools import wraps
-from os import environ as env
-from flask import render_template, session, abort, redirect, url_for, request
+from flask import render_template, session, redirect, url_for, request, current_app
+
 
 def route(bp, *args, **kwargs):
     def decorator(f):
@@ -12,10 +12,12 @@ def route(bp, *args, **kwargs):
 
     return decorator
 
+
 def auth0_template(templ_name, **kwargs):
-    kwargs['auth0clientid'] = env['AUTH0_CLIENTID']
-    kwargs['auth0url'] = env['AUTH0_URL']
+    kwargs['auth0clientid'] = current_app.config['AUTH0_CLIENTID']
+    kwargs['auth0url'] = current_app.config['IDP_ORIGIN']
     return render_template(templ_name, **kwargs)
+
 
 # Optional auth decorator
 def optional_auth(f):
@@ -26,6 +28,7 @@ def optional_auth(f):
     #  If it has, pop the access token and user info from the session.
     return f(userobj=user, *args, **kwargs)
   return decorated
+
 
 # Requires auth decorator
 def requires_auth(f):

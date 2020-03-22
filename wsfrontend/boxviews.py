@@ -2,8 +2,8 @@ from flask import Blueprint, redirect, render_template, \
     request, url_for, session, abort, flash, Response, jsonify, current_app
 # from ..services import boxes, viewlogitems
 from werkzeug.exceptions import NotFound
-from ..apiwrapper.consumer.capture import CaptureWrapper
-from ..apiwrapper.consumer.box import BoxWrapper
+from wsapiwrapper.consumer.capture import CaptureWrapper
+from wsapiwrapper.consumer.box import BoxWrapper
 
 # For GET and POST
 import requests

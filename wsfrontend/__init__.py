@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-    overholt.frontend
+    wsfrontend.consumer
     ~~~~~~~~~~~~~~~~~~
-    launchpad frontend application package
 """
 
-from .. import factory
+from flask import Flask
 from .defs import auth0_template
 from .views import bp as viewsbp
 from .boxviews import bp as boxviewsbp
 from .captureviews import bp as captureviewsbp
 from .calviews import bp as calviewsbp
 
-def create_app(settings_override=None):
-    """Returns the Overholt dashboard application instance"""
-    app = factory.create_app(__name__, __path__, settings_override)
+
+def create_app(package_name, settings_override=None):
+    """Returns the consumer application instance"""
+    app = Flask(package_name, instance_relative_config=True)
+
+    app.config.from_object('wsfrontend.config')
+    app.config.from_object(settings_override)
 
     app.register_blueprint(viewsbp)
     app.register_blueprint(boxviewsbp)
@@ -25,6 +28,7 @@ def create_app(settings_override=None):
     app.errorhandler(401)(handle_error)
 
     return app
+
 
 def handle_error(e):
     return auth0_template('errors/%s.html' % e.code, code=e.code, desc=str(e)), e.code
