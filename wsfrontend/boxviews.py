@@ -4,6 +4,7 @@ from flask import Blueprint, redirect, render_template, \
 from werkzeug.exceptions import NotFound
 from wsapiwrapper.consumer.capture import CaptureWrapper
 from wsapiwrapper.consumer.box import BoxWrapper
+from wsapiwrapper.consumer.boxview import BoxViewWrapper
 
 # For GET and POST
 import requests
@@ -24,16 +25,21 @@ def handle_error(e):
 @route(bp, '/<string:serial>')
 @optional_auth
 def box(serial, **kwargs):
-    boxwrapper = BoxWrapper()
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN)
     box = boxwrapper.get(boxserial=serial)
 
-    capturewrapper = CaptureWrapper()
+    capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
     latestcapture = capturewrapper.get_list(serial, offset=0, limit=1)[0]
     latestsample = capturewrapper.get_samples(capture_id=latestcapture['id'],
                                               offset=0,
                                               limit=1)[0]
 
-    # viewlogitems.create(boxobj=boxwithserial, **kwargs)
+    # Post a BoxView
+    if 'access_token' in session.keys():
+        bvwrapper = BoxViewWrapper(baseurl=WSB_ORIGIN, tokenstr=session['access_token'])
+        bvwrapper.post(boxserial=serial)
+
     return auth0_template('box_page.html'
                           , box=box
                           , latestcapture=latestcapture

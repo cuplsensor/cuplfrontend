@@ -2,38 +2,6 @@
 
 {% block headerscripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.js"></script>
-<script type="text/javascript">
-var vlogitemsjson = {{vlogitemsjson|tojson}};
-var boxurl = {{ url_for('boxview.box', serial='') }};
-
-function initialise() {
-  var tablebody = document.getElementsByTagName("tbody")[0]
-
-  for (var el in vlogitemsjson) {
-    var ts = moment(vlogitemsjson[el].timestamp).fromNow();
-    var boxserial = vlogitemsjson[el].box.serial;
-    var tr = document.createElement('tr');
-    var td_ts = document.createElement('td');
-    var td_boxserial = document.createElement('td');
-    var ts_text = document.createTextNode(ts);
-
-    var boxserial_anchor = document.createElement('a');
-    boxserial_anchor.setAttribute('href', boxurl+boxserial);
-    boxserial_anchor.innerHTML = boxserial;
-
-    td_ts.appendChild(ts_text);
-    td_boxserial.appendChild(boxserial_anchor);
-
-    tr.appendChild(td_boxserial);
-    tr.appendChild(td_ts);
-
-    tablebody.appendChild(tr);
-  }
-
-}
-
-window.addEventListener('load', initialise);
-</script>
 {% endblock %}
 
 {% block title %}
@@ -54,6 +22,14 @@ window.addEventListener('load', initialise);
         </tr>
       </thead>
       <tbody>
+        {% for bv in bvlist %}
+        <tr>
+          <td>
+              <a href="{{ url_for('boxview.box', serial=bv.boxserial) }}">{{ bv.boxserial }}</a>
+          </td>
+          <td>{{ bv.timestamp }}</td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

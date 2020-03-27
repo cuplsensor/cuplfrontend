@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, \
 request, url_for, session, abort, flash, Response, jsonify, current_app
 from wsapiwrapper.consumer.user import UserWrapper, UserNotFoundException
 from wsapiwrapper.consumer.capture import CaptureWrapper
+from wsapiwrapper.consumer.boxview import BoxViewWrapper
 
 # For GET and POST
 import requests
@@ -30,9 +31,10 @@ def home_page(**kwargs):
     circbufb64 = request.args.get('q')
     versionStr = request.args.get('v')
 
-    if serial is not None:
-        capturewrapper = CaptureWrapper()
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
 
+    if serial is not None:
+        capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
         capt = capturewrapper.post(circbufb64, serial, statusb64, timeintb64, versionStr)
         response = redirect(url_for('captureview.capture', captid=capt['id']))
     else:
@@ -55,10 +57,11 @@ def currentuser(userobj, **kwargs):
     recently viewed boxes and these are rendered in a list. The most recent is
     displayed first.
     """
-    #vlogitems = userobj.recent_boxviews
-    #vlschema = BoxViewNestedSchema(many=True)
-    #vlogitemsjson = vlschema.dump(vlogitems).data
-    return auth0_template('pages/currentuser_page.html', userobj=userobj, vlogitems=[], vlogitemsjson=[], **kwargs)
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+    tokenstr = session["access_token"]
+    bvwrapper = BoxViewWrapper(baseurl=WSB_ORIGIN, tokenstr=tokenstr)
+    bvlist = bvwrapper.get(distinct=True)
+    return auth0_template('pages/currentuser_page.html', userobj=userobj, bvlist=bvlist, **kwargs)
 
 
 @route(bp, '/signin')

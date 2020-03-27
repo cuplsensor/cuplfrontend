@@ -667,9 +667,9 @@ class ChartView {
     var xmax = modeldata.capsamples.endstamp*1000;
 
     for (let sample of modeldata.capsamples.samples) {
-      var timestampPosixMs = sample['timestampPosix']*1000;
+      var timestamp = sample['timestamp'] + 'Z';
       pointarray.push({
-         x: moment(timestampPosixMs).tz(modeldata.tz),
+         x: moment(timestamp).tz(modeldata.tz),
          y: sample[modeldata.sensor].toFixed(2)
       });
     }
@@ -919,8 +919,8 @@ class TableView {
 
     var prevdatestr = '';
     for (let sample of modeldata.capsamples.samples) {
-      var timestampPosixMs = sample['timestampPosix']*1000;
-      var tsMoment = moment(timestampPosixMs).tz(modeldata.tz);
+      var timestamp = sample['timestamp']+'Z';
+      var tsMoment = moment(timestamp).tz(modeldata.tz);
       var datestr = tsMoment.format('dddd MMMM Do YYYY');
       var timestr = tsMoment.format('hh:mm');
       var measstr = sample[modeldata.sensor].toFixed(2);

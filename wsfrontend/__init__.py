@@ -16,7 +16,7 @@ def create_app(package_name, settings_override=None):
     """Returns the consumer application instance"""
     app = Flask(package_name, instance_relative_config=True)
 
-    app.config.from_object('wsfrontend.config')
+    app.config.from_object('config')
     app.config.from_object(settings_override)
 
     app.register_blueprint(viewsbp)

@@ -17,7 +17,7 @@ var dateymd = {
   'day': {{day|tojson}}
 };
 var baseurl = '{{ url_for('calview.index', serial=box.serial) }}';
-var locationsurl = '{{ url_for('locations.locations', boxserial=box.serial) }}'
+var locationsurl = '';
 
 function initialise() {
   let calsubject = new CalendarSubject(locationsurl);
@@ -128,7 +128,7 @@ window.addEventListener('load', initialise);
     </header>
     <section class="modal-card-body">
       <!-- Content ... -->
-      <form id="editlocation" enctype="application/json" action="{{ url_for('locations.location', locationid=0) }}">
+      <form id="editlocation" enctype="application/json" action="">
         {{ editlocform.csrf_token }}
         {{ editlocform.location_id }}
         {{ editlocform.description(class_="input", placeholder="e.g. cupboard under the stairs") }}
@@ -151,7 +151,7 @@ window.addEventListener('load', initialise);
     </header>
     <section class="modal-card-body">
       <!-- Content ... -->
-      <form id="newlocation" enctype="application/json" action="{{ url_for('locations.locations') }}">
+      <form id="newlocation" enctype="application/json" action="">
         {{ newlocform.csrf_token }}
         {{ newlocform.capturesample_id }}
         {{ newlocform.description(class_="input", placeholder="e.g. cupboard under the stairs") }}

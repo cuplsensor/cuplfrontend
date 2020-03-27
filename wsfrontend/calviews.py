@@ -11,6 +11,8 @@ import datetime, time
 from datetime import timezone
 from .defs import auth0_template, requires_auth, optional_auth, route
 from calendar import monthrange
+from wsapiwrapper.consumer.box import BoxWrapper
+from wsapiwrapper.consumer.sample import SampleWrapper
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
 bp = Blueprint('calview', __name__, template_folder='templates/pages/cal', static_folder='static', static_url_path='/static/frontend', url_prefix='/box/<string:serial>/cal')
@@ -65,7 +67,12 @@ def sensor(serial, range, sensor, **kwargs):
 @optional_auth
 def cal(serial, year, month, day, range, sensor, **kwargs):
     current_app.logger.info('test')
-    #boxwithserial = boxes.get_by_serial(serial)
+
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN)
+    box = boxwrapper.get(boxserial=serial)
+
+    boxwithserial = box
     if boxwithserial == None:
         current_app.logger.info('test')
         abort(404)
@@ -90,13 +97,20 @@ def cal(serial, year, month, day, range, sensor, **kwargs):
 
         starttime = starttime.astimezone(timezone.utc)
         endtime = starttime + datetime.timedelta(days=rangelengthdays)
+
+        samplewrapper = SampleWrapper(baseurl=WSB_ORIGIN)
+        samples = samplewrapper.get_samples(serial=serial, starttime=str(starttime), endtime=str(endtime))
+        if len(samples) is not 0:
+            mrlocation = samples[0]['location']
+        else:
+            mrlocation = None
         #capturesamples, mrlocation = boxwithserial.uniquesampleswindow(starttime, endtime)
         startstamp = starttime.timestamp()
         endstamp = endtime.timestamp()
-        return jsonify(samples=capturesamples, mrloc=mrlocation, startstamp=startstamp, endstamp=endstamp)
+        return jsonify(samples=samples, mrloc=mrlocation, startstamp=startstamp, endstamp=endstamp)
     else:
-        newlocform = AddLocationForm(serial=boxwithserial.serial, prefix="newloc")
-        editlocform = EditLocationForm(serial=boxwithserial.serial, prefix="editloc")
+        newlocform = AddLocationForm(serial=boxwithserial['serial'], prefix="newloc")
+        editlocform = EditLocationForm(serial=boxwithserial['serial'], prefix="editloc")
         return auth0_template('dayindex_page.html' \
                                                 , box=boxwithserial \
                                                 , range=range \

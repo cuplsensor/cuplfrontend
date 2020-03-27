@@ -6,7 +6,7 @@
 <script type="text/javascript">
   var temp = {{latestsample.temp}};
   var rh = {{latestsample.rh}};
-  var latest_timestamp = '{{latestsample.timestamp}}' + ' UTC';
+  var latest_timestamp = '{{latestsample.timestamp}}' + 'Z';
   var latest_date = new Date(latest_timestamp);
 
   function getLatestDateStrings() {
@@ -27,7 +27,7 @@
     var latest = getLatestDateStrings();
     var date_now  = new Date();
     var tzoffsetmins = date_now.getTimezoneOffset()*-1;
-    return '{{ url_for('calview.index', serial=box.serial) }}' + range +'/'+ sensor +'/'+ latest.year +'/'+ latest.month +'/' + latest.day +'/'+ tzoffsetmins;
+    return '{{ url_for('calview.index', serial=box.serial) }}' + range +'/'+ sensor +'/'+ latest.year +'/'+ latest.month +'/' + latest.day;
   }
 
   function makeWrapperAnchor(sensor, tileid, range) {

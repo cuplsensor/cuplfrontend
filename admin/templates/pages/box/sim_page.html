@@ -8,13 +8,14 @@
 {% endblock %}
 
 {% block main %}
-<h5>Box {{box.id}}</h5>
+<h5>Box {{boxid}}</h5>
 
 <ul>
   <li>Details</li>
-  <li><a href="{{ url_for('dashboard.sim_page', boxid=box.id) }}">Simulate</a></li>
-  <li><a href="../../box/{{box.serial}}">Consumer</a></li>
+  <li>Simulate</li>
 </ul>
+
+<a href="{{simstr}}">{{simstr}}</a>
 
 
 
