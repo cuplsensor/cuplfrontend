@@ -1,19 +1,26 @@
 from flask import Blueprint, render_template, redirect, flash, url_for
 from .forms.boxes import AddBoxForm
 from wsapiwrapper.admin.box import BoxWrapper
-from .config import WSB_ORIGIN, ADMINAPI_CLIENTID, ADMINAPI_CLIENTSERET
+from wsapiwrapper.admin.capture import CaptureWrapper
+from wsapiwrapper.admin.user import UserWrapper
+from .config import WSB_ORIGIN, ADMINAPI_CLIENTID, ADMINAPI_CLIENTSECRET
 
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
 bp = Blueprint('dashboard', __name__, template_folder='templates', static_folder='static', static_url_path='/admin/static')
 
 
-@bp.route('/', methods=['GET', 'POST'])
-def home_page(**kwargs):
+@bp.route('/')
+def home_page():
+    return redirect(url_for('dashboard.box_list_page'))
+
+
+@bp.route('/boxes', methods=['GET', 'POST'])
+def box_list_page(**kwargs):
     form = AddBoxForm()
     boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
-                            adminapi_client_secret=ADMINAPI_CLIENTSERET)
+                            adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
     if form.validate_on_submit():
         boxwrapper.post(boxid=form.box_id.data)
@@ -22,14 +29,42 @@ def home_page(**kwargs):
 
     boxlist = boxwrapper.get_many()
 
-    return render_template('pages/home_page.html', form=form, boxlist=boxlist, **kwargs)
+    return render_template('pages/box/box_list_page.html', form=form, boxlist=boxlist, **kwargs)
 
+
+@bp.route('/captures')
+def capture_list_page():
+    capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN,
+                                    adminapi_client_id=ADMINAPI_CLIENTID,
+                                    adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+
+    capturelist = capturewrapper.get_many()
+    return render_template('pages/capture/capture_list_page.html', capturelist=capturelist)
+
+
+@bp.route('/users')
+def user_list_page():
+    userwrapper = UserWrapper(baseurl=WSB_ORIGIN,
+                              adminapi_client_id=ADMINAPI_CLIENTID,
+                              adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+
+    userlist = userwrapper.get_many()
+    return render_template('pages/user/user_list_page.html', userlist=userlist)
+
+@bp.route('/user/<int:userid>')
+def user_page(userid):
+    userwrapper = UserWrapper(baseurl=WSB_ORIGIN,
+                              adminapi_client_id=ADMINAPI_CLIENTID,
+                              adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+
+    user = userwrapper.get(userid)
+    return render_template('pages/user/user_page.html', user=user)
 
 @bp.route('/box/<int:boxid>')
 def box_page(boxid):
     boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
-                            adminapi_client_secret=ADMINAPI_CLIENTSERET)
+                            adminapi_client_secret=ADMINAPI_CLIENTSECRET)
     box = boxwrapper.get(boxid)
     return render_template('pages/box/box_page.html', box=box)
 
@@ -38,7 +73,7 @@ def box_page(boxid):
 def sim_page(boxid):
     boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
-                            adminapi_client_secret=ADMINAPI_CLIENTSERET)
+                            adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
     simstr = boxwrapper.simulate(boxid=int(boxid), frontendurl="http://localhost:8080")
     return render_template('pages/box/sim_page.html', boxid=boxid, simstr=simstr)

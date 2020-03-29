@@ -1,1 +1,25 @@
 {% extends "base_templates/base.html" %}
+
+{% block subnav %}
+
+{# implements example in https://stackoverflow.com/questions/18600031/changing-the-active-class-of-a-link-with-the-twitter-bootstrap-css-in-python-fla #}
+
+{% set navigation_bar = [
+    (url_for('dashboard.box_list_page'), 'adminboxes', 'Boxes'),
+    (url_for('dashboard.capture_list_page'), 'admincaptures', 'Captures'),
+    (url_for('dashboard.user_list_page'), 'adminusers', 'Users')
+] -%}
+
+{% set active_page = active_page|default('adminboxes') -%}
+
+<div class="tabs">
+    <ul id="navigation">
+        {% for href, id, caption in navigation_bar %}
+        <li{% if id == active_page %} class="is-active"{% endif %}>
+            <a href="{{ href|e }}">{{ caption|e }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

@@ -94,6 +94,9 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
+          <div class="navbar-item">
+            <a class="button" href="/">Consumer</a>
+          </div>
         {% if userobj %}
         <div class="navbar-item">
           <div id="usermenu" class="dropdown">
@@ -128,11 +131,11 @@
   </div>
   </nav>
   <section class="section">
-  <div class="container">
-          {% block breadcrumbs %}
-          {% endblock %}
-      </div>
-    </section>
+    <div class="container">
+      {% block subnav %}
+      {% endblock %}
+    </div>
+  </section>
   <section class="section">
   <div class="container">
   {% block main %}

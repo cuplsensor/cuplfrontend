@@ -94,29 +94,32 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-end">
-        {% if userobj %}
-        <div class="navbar-item">
-          <div id="usermenu" class="dropdown">
-            <div class="dropdown-trigger">
-              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                <span>{{ userobj.userinfo.given_name }}</span>
-                <span class="icon is-small">
-                  <i class="fas fa-angle-down" aria-hidden="true"></i>
-                </span>
-              </button>
-            </div>
-            <div class="dropdown-menu" id="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="{{ url_for('dashboard.currentuser') }}" class="dropdown-item">
-                  User Page
-                </a>
-                <a href="{{ url_for('dashboard.signout') }}" class="dropdown-item">
-                  Sign out
-                </a>
+          <div class="navbar-item">
+            <a class="button" href="/admin/">Admin</a>
+          </div>
+          {% if userobj %}
+          <div class="navbar-item">
+            <div id="usermenu" class="dropdown">
+              <div class="dropdown-trigger">
+                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                  <span>{{ userobj.userinfo.given_name }}</span>
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down" aria-hidden="true"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="{{ url_for('dashboard.currentuser') }}" class="dropdown-item">
+                    User Page
+                  </a>
+                  <a href="{{ url_for('dashboard.signout') }}" class="dropdown-item">
+                    Sign out
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
         {% else %}
         <div class="navbar-item">
           <a class="button" onclick="signin()">Sign in</a>

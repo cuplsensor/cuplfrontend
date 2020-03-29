@@ -8,13 +8,23 @@
 {% endblock %}
 
 {% block main %}
-<h5>Box {{box.id}}</h5>
+<div class="tabs secondlevel">
+  <ul>
+    <li class="is-active"><a>Boxes</a></li>
+    <li><a>Box {{box.id}}</a></li>
+  </ul>
+</div>
 
-<ul>
-  <li>Details</li>
-  <li><a href="{{ url_for('dashboard.sim_page', boxid=box.id) }}">Simulate</a></li>
-  <li><a href="../../box/{{box.serial}}">Consumer</a></li>
-</ul>
+<div class="tabs secondlevel">
+  <ul>
+    <li><a>Info</a></li>
+    <li><a>Configure</a></li>
+    <li><a href="{{ url_for('dashboard.sim_page', boxid=box.id) }}">Simulate</a></li>
+    <li><a>Captures</a></li>
+    <li><a>BoxViews</a></li>
+    <li><a href="../../box/{{box.serial}}">Consumer</a></li>
+  </ul>
+</div>
 
 
 

@@ -18,33 +18,4 @@ Home
       {% endif %}
     {% endwith %}
 
-    <form method="POST" action="">
-        {{ form.csrf_token }}
-        {{ form.box_id.label }} {{ form.box_id(size=5) }}
-        <input type="submit" value="Go">
-    </form>
-
-    <table class="table">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Serial</th>
-          <th>Secret Key</th>
-          <th>Time Registered</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for box in boxlist %}
-        <tr>
-          <td>
-              <a href="{{ url_for('dashboard.box_page', boxid=box.id) }}">{{ box.id }}</a>
-          </td>
-          <td>{{ box['serial'] }}</td>
-          <td>{{ box['secretkey'] }}</td>
-          <td>{{ box['timeregistered'] }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
 {% endblock %}

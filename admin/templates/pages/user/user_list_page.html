@@ -1,0 +1,43 @@
+{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% set active_page = "adminusers" %}
+
+{% block title %}
+Home
+{% endblock %}
+{% block subtitle %}
+
+{% endblock %}
+
+{% block main %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>OAuth_ID</th>
+            <th>Time Registered</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in userlist %}
+        <tr>
+              <td>
+                  <a href="{{ url_for('dashboard.user_page', userid=user.id) }}">{{ user.id }}</a>
+              </td>
+            <td>{{ user.oauth_id }}</td>
+            <td>{{ user.timeregistered }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

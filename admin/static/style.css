@@ -103,6 +103,21 @@ a {
   color: #1EAEDB;
 }
 
+.tabs.secondlevel ul {
+  border-bottom-color: #9cbcff;
+  color: #9cbcff;
+}
+
+.tabs.secondlevel ul li a {
+  border-bottom-color: #9cbcff;
+  color: #9cbcff;
+}
+
+.tabs.secondlevel li.is-active a {
+  border-bottom-color: #1EAEDB;
+  color: #1EAEDB;
+}
+
 .navbar-brand .navbar-item h4 {
   margin-bottom: 10px;
 }
