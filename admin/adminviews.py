@@ -3,6 +3,7 @@ from .forms.boxes import AddBoxForm
 from wsapiwrapper.admin.box import BoxWrapper
 from wsapiwrapper.admin.capture import CaptureWrapper
 from wsapiwrapper.admin.user import UserWrapper
+from wsapiwrapper.admin.boxview import BoxViewWrapper
 from .config import WSB_ORIGIN, ADMINAPI_CLIENTID, ADMINAPI_CLIENTSECRET
 
 
@@ -62,6 +63,15 @@ def user_page(userid):
     return render_template('pages/user/user_page.html', user=user)
 
 
+@bp.route('/capture/<int:captid>')
+def capture_page(captid):
+    capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN,
+                              adminapi_client_id=ADMINAPI_CLIENTID,
+                              adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+
+    capture = capturewrapper.get(captid)
+    return render_template('pages/capture/capture_page.html', capture=capture)
+
 @bp.route('/box/<int:boxid>')
 def box_page(boxid):
     boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
@@ -93,7 +103,12 @@ def box_boxviews_page(boxid):
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
     box = boxwrapper.get(boxid)
-    return render_template('pages/box/box_boxviews_page.html', box=box)
+
+    boxviewwrapper = BoxViewWrapper(baseurl=WSB_ORIGIN,
+                                    adminapi_client_id=ADMINAPI_CLIENTID,
+                                    adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+    boxviewlist = boxviewwrapper.get_many(boxid)
+    return render_template('pages/box/box_boxviews_page.html', box=box, boxviewlist=boxviewlist)
 
 
 @bp.route('/box/<int:boxid>/simulate')

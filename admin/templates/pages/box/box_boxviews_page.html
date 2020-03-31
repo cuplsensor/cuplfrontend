@@ -3,4 +3,23 @@
 
 {% block boxmain %}
 
+<table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Timestamp</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for boxview in boxviewlist %}
+    <tr>
+      <td>
+          <a href="{{ url_for('dashboard.capture_page', captid=boxview.id) }}">{{ boxview['id'] }}</a>
+      </td>
+      <td>{{ boxview['timestamp'] }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
 {% endblock %}
