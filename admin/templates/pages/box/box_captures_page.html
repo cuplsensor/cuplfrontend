@@ -1,0 +1,15 @@
+{% extends "base_templates/box_base.html" %}  {# base_templates/box_base.html extends base_templates/base.html #}
+{% set box_active_page = "boxcaptures" %}
+
+{% block boxmain %}
+
+{% set capturecols = [
+    ('id', 'ID'),
+    ('parent_box', 'Parent box'),
+    ('scanned_by_user', 'Scanned by'),
+    ('timestamp', 'Timestamp')
+] -%}
+
+{{ caplist() }}
+
+{% endblock %}

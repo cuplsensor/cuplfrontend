@@ -1,14 +1,41 @@
-{% extends "base_templates/base.html" %}
+{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% set box_active_page = box_active_page|default('boxinfo') -%}
 
-{% block breadcrumbs %}
-<div class="buttons has-addons is-centered" style="display:flex;justify-content:flex-start;flex-wrap:nowrap">
-  <a id="serialbutton" class="button is-rounded" href="{{ url_for('boxview.box', serial=box.serial ) }}">@{{ box.serial }}</a>
-  <div id="locationtags" class="button is-rounded" style="flex-grow:1; justify-content: flex-start;overflow:hidden;">
-    <div class="tags">
-      <span class="tag is-link">One</span>
-      <span class="tag is-link">Two</span>
-      <span class="tag is-link">Three</span>
-    </div>
-  </div>
+{% block title %}
+
+{% endblock %}
+{% block subtitle %}
+
+{% endblock %}
+
+
+
+{% block main %}
+{% block boxnav %}
+<h6>Box {{box.id}}</h6>
+
+{% set navigation_bar = [
+    (url_for('dashboard.box_page', boxid=box.id), 'boxinfo', 'Info'),
+    (url_for('dashboard.box_page', boxid=box.id), 'boxconf', 'Configure'),
+    (url_for('dashboard.sim_page', boxid=box.id), 'boxsimulate', 'Simulate'),
+    (url_for('dashboard.box_captures_page', boxid=box.id), 'boxcaptures', 'Captures'),
+    (url_for('dashboard.box_boxviews_page', boxid=box.id), 'boxviews', 'BoxViews')
+] -%}
+
+
+
+<div class="tabs">
+    <ul id="boxnav">
+        {% for href, id, caption in navigation_bar %}
+        <li{% if id == box_active_page %} class="is-active"{% endif %}>
+            <a href="{{ href|e }}">{{ caption|e }}</a>
+        </li>
+        {% endfor %}
+    </ul>
 </div>
+{% endblock %}
+
+{% block boxmain %}
+{% endblock %}
+
 {% endblock %}

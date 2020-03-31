@@ -1,51 +1,9 @@
-{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% extends "base_templates/page_base.html" %}
 {% set active_page = "admincaptures" %}
-{% block title %}
-Home
-{% endblock %}
 
-
-
-{% block subtitle %}
-
-{% endblock %}
 
 {% block main %}
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
 
-
-
-
-
-    <table class="table">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Parent box</th>
-          <th>Scanned by</th>
-          <th>Timestamp</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for capture in capturelist %}
-        <tr>
-          <td>{{ capture['id'] }}</td>
-          <td>
-              <a href="{{ url_for('dashboard.box_page', boxid=capture.parent_box) }}">{{ capture['parent_box'] }}</a>
-          </td>
-          <td>{{ capture['scanned_by_user'] }}</td>
-          <td>{{ capture['timestamp'] }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+{{ caplist() }}
 
 {% endblock %}

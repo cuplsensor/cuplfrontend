@@ -1,22 +1,10 @@
-{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% extends "base_templates/box_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% set box_active_page = "boxsimulate" %}
+{% block boxmain %}
 
-{% block title %}
-
-{% endblock %}
-{% block subtitle %}
-
-{% endblock %}
-
-{% block main %}
-<h5>Box {{boxid}}</h5>
-
-<ul>
-  <li>Details</li>
-  <li>Simulate</li>
-</ul>
-
-<a href="{{simstr}}">{{simstr}}</a>
-
+<code style="word-wrap: break-word">
+  <a href="{{simstr}}">{{simstr}}</a>
+</code>
 
 
 {% endblock %}

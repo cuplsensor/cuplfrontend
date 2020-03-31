@@ -1,5 +1,31 @@
 {% extends "base_templates/base.html" %}
 
+{% macro capturetable(columnlist) %}
+
+<table class="table">
+    <thead>
+    <tr>
+      {% for _, heading in columnlist %}
+        <th>{{ heading|e }}</th>
+      {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for capture in capturelist %}
+    <tr>
+      <td>{{ capture['id'] }}</td>
+      <td>
+          <a href="{{ url_for('dashboard.box_page', boxid=capture.parent_box) }}">{{ capture['parent_box'] }}</a>
+      </td>
+      <td>{{ capture['scanned_by_user'] }}</td>
+      <td>{{ capture['timestamp'] }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+{% endmacro %}
+
 {% block subnav %}
 
 {# implements example in https://stackoverflow.com/questions/18600031/changing-the-active-class-of-a-link-with-the-twitter-bootstrap-css-in-python-fla #}
@@ -21,5 +47,15 @@
         {% endfor %}
     </ul>
 </div>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 
 {% endblock %}

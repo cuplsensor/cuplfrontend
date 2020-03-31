@@ -51,6 +51,7 @@ def user_list_page():
     userlist = userwrapper.get_many()
     return render_template('pages/user/user_list_page.html', userlist=userlist)
 
+
 @bp.route('/user/<int:userid>')
 def user_page(userid):
     userwrapper = UserWrapper(baseurl=WSB_ORIGIN,
@@ -59,6 +60,7 @@ def user_page(userid):
 
     user = userwrapper.get(userid)
     return render_template('pages/user/user_page.html', user=user)
+
 
 @bp.route('/box/<int:boxid>')
 def box_page(boxid):
@@ -69,14 +71,40 @@ def box_page(boxid):
     return render_template('pages/box/box_page.html', box=box)
 
 
+@bp.route('/box/<int:boxid>/captures')
+def box_captures_page(boxid):
+    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+                            adminapi_client_id=ADMINAPI_CLIENTID,
+                            adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+    box = boxwrapper.get(boxid)
+
+    capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN,
+                                    adminapi_client_id=ADMINAPI_CLIENTID,
+                                    adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+
+    capturelist = capturewrapper.get_many(box_id=boxid)
+
+    return render_template('pages/box/box_captures_page.html', box=box, capturelist=capturelist)
+
+
+@bp.route('/box/<int:boxid>/boxviews')
+def box_boxviews_page(boxid):
+    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+                            adminapi_client_id=ADMINAPI_CLIENTID,
+                            adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+    box = boxwrapper.get(boxid)
+    return render_template('pages/box/box_boxviews_page.html', box=box)
+
+
 @bp.route('/box/<int:boxid>/simulate')
 def sim_page(boxid):
     boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
+    box = boxwrapper.get(boxid)
     simstr = boxwrapper.simulate(boxid=int(boxid), frontendurl="http://localhost:8080")
-    return render_template('pages/box/sim_page.html', boxid=boxid, simstr=simstr)
+    return render_template('pages/box/sim_page.html', box=box, simstr=simstr)
 
 
 @bp.route('/signin')
