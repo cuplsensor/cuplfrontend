@@ -1,4 +1,5 @@
-from flask import Blueprint, render_template, redirect, flash, url_for
+from flask import Blueprint, render_template, redirect, flash, url_for, request, send_file
+from flask_qrcode import QRcode
 from .forms.boxes import AddBoxForm
 from wsapiwrapper.admin.box import BoxWrapper
 from wsapiwrapper.admin.capture import CaptureWrapper
@@ -120,6 +121,13 @@ def sim_page(boxid):
     box = boxwrapper.get(boxid)
     simstr = boxwrapper.simulate(boxid=int(boxid), frontendurl="http://localhost:8080")
     return render_template('pages/box/sim_page.html', box=box, simstr=simstr)
+
+
+@bp.route("/qrcode", methods=["GET"])
+def get_qrcode():
+    # please get /qrcode?data=<qrcode_data>
+    data = request.args.get("data", "")
+    return send_file(QRcode(data, mode="raw"), mimetype="image/png")
 
 
 @bp.route('/signin')

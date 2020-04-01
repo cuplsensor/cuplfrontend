@@ -6,17 +6,18 @@
 <table class="table">
     <thead>
     <tr>
-      <th>ID</th>
-      <th>Timestamp</th>
+        <th>ID</th>
+        <th>Parent user</th>
+        <th>Timestamp</th>
     </tr>
     </thead>
     <tbody>
     {% for boxview in boxviewlist %}
     <tr>
-      <td>
-          <a href="{{ url_for('dashboard.capture_page', captid=boxview.id) }}">{{ boxview['id'] }}</a>
-      </td>
-      <td>{{ boxview['timestamp'] }}</td>
+        <td>{{ boxview['id'] }}</td>
+        <td>
+            <a href="{{ url_for('dashboard.user_page', userid=boxview['parent_user']) }}">{{ boxview['parent_user'] }}</a></td>
+        <td>{{ boxview['timestamp'] }}</td>
     </tr>
     {% endfor %}
     </tbody>

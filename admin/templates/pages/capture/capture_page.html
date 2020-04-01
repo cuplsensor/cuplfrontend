@@ -2,8 +2,6 @@
 {% set active_page = active_page|default('admincaptures') -%}
 
 
-{% set box_active_page = "boxinfo" %}
-
-{% block capturemain %}
-Capture {{ capture.id }}
+{% block main %}
+<h6>Capture {{ capture.id }}</h6>
 {% endblock %}
