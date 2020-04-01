@@ -8,45 +8,59 @@ Home
 {% endblock %}
 
 {% block main %}
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+<section class="section">
+    <div class="container">
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+    </div>
+</section>
 
 
-
-    <form method="POST" action="">
+<section class="section">
+    <div class="container">
+        <form method="POST" action="">
         {{ form.csrf_token }}
         {{ form.box_id.label }} {{ form.box_id(size=5) }}
         <input type="submit" value="Go">
-    </form>
+        </form>
+    </div>
+</section>
 
-    <table class="table">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Serial</th>
-          <th>Secret Key</th>
-          <th>Time Registered</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for box in boxlist %}
-        <tr>
-          <td>
-              <a href="{{ url_for('dashboard.box_page', boxid=box.id) }}">{{ box.id }}</a>
-          </td>
-          <td>{{ box['serial'] }}</td>
-          <td>{{ box['secretkey'] }}</td>
-          <td>{{ box['timeregistered'] }}</td>
-        </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<section class="section">
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+              <th>ID</th>
+              <th>Serial</th>
+              <th>Secret Key</th>
+              <th>Time Registered</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for box in boxlist %}
+            <tr>
+              <td>
+                  <a href="{{ url_for('dashboard.box_page', boxid=box.id) }}">{{ box.id }}</a>
+              </td>
+              <td>{{ box['serial'] }}</td>
+              <td>{{ box['secretkey'] }}</td>
+              <td>{{ box['timeregistered'] }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+
+
 
 {% endblock %}

@@ -2,25 +2,28 @@
 {% set box_active_page = "boxviews" %}
 
 {% block boxmain %}
-
-<table class="table">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Parent user</th>
-        <th>Timestamp</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for boxview in boxviewlist %}
-    <tr>
-        <td>{{ boxview['id'] }}</td>
-        <td>
-            <a href="{{ url_for('dashboard.user_page', userid=boxview['parent_user']) }}">{{ boxview['parent_user'] }}</a></td>
-        <td>{{ boxview['timestamp'] }}</td>
-    </tr>
-    {% endfor %}
-    </tbody>
-</table>
+<section class="section">
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Parent user</th>
+                <th>Timestamp</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for boxview in boxviewlist %}
+            <tr>
+                <td>{{ boxview['id'] }}</td>
+                <td>
+                    <a href="{{ url_for('dashboard.user_page', userid=boxview['parent_user']) }}">{{ boxview['parent_user'] }}</a></td>
+                <td>{{ boxview['timestamp'] }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 
 {% endblock %}

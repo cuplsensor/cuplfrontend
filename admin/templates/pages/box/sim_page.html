@@ -2,11 +2,24 @@
 {% set box_active_page = "boxsimulate" %}
 {% block boxmain %}
 
-<code style="word-wrap: break-word">
-  <a href="{{simstr}}">{{simstr}}</a>
-</code>
+<section class="section">
+  <div class="container">
+    <code style="word-wrap: break-word">
+      <a href="{{simstr}}">{{simstr}}</a>
+    </code>
+  </div>
+</section>
 
-<img src={{ qrcode("bbc") }}>
+<section class="section">
+  <div class="container">
+    <div class="container">
+      <img style="width:40%" src={{ qrcode(simstr) }}>
+    </div>
+  </div>
+</section>
+
+
+
 
 
 
