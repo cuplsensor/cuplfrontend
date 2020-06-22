@@ -110,6 +110,15 @@ def box_boxviews_page(boxid):
     boxviewlist = boxviewwrapper.get_many(boxid)
     return render_template('pages/box/box_boxviews_page.html', box=box, boxviewlist=boxviewlist)
 
+@bp.route('/box/<int:boxid>/configure')
+def configure_page(boxid):
+    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+                            adminapi_client_id=ADMINAPI_CLIENTID,
+                            adminapi_client_secret=ADMINAPI_CLIENTSECRET)
+
+    box = boxwrapper.get(boxid)
+    return render_template('pages/box/configure_page.html', box=box)
+
 
 @bp.route('/box/<int:boxid>/simulate')
 def sim_page(boxid):

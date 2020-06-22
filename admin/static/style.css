@@ -31,7 +31,9 @@ p {
 a {
   color: #1EAEDB; }
 
-
+.hidden {
+  display: none;
+}
 
 .captnav {
   display: flex;

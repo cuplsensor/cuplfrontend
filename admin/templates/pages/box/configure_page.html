@@ -1,0 +1,103 @@
+{% extends "base_templates/box_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% set box_active_page = "boxconf" %}
+{% block headerscripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.js"></script>
+<script src="{{ url_for('dashboard.static', filename='webserial.js') }}" defer></script>
+<script src="{{ url_for('dashboard.static', filename='confignfc.js') }}" defer></script>
+
+{% endblock %}
+
+{% block boxmain %}
+
+<section class="section">
+  <div class="container">
+    <p>Configure by serial</p>
+
+    <div id="notSupported" class="hidden">
+      Sorry, <b>Web Serial</b> is not supported on this device, make sure you're
+      running Chrome 78 or later and have enabled the
+      <code>#enable-experimental-web-platform-features</code> flag in
+      <code>chrome://flags</code>
+    </div>
+
+    <button id="btnConnect" type="button">Connect</button>
+
+    <pre id="log"></pre>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <div class="field">
+      <div class="control">
+        <label class="checkbox"></label>
+        <input type="checkbox" id="usehttps" checked>
+        Use HTTPS
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="radio"> </label>
+        <input type="text" id="baseurl" name="question" value="">
+        Base URL
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="checkbox"></label>
+        <input type="checkbox" id="usehmac" checked>
+        Use HMAC
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="radio"> </label>
+        <input type="password" id="secretkeyinput" name="question" value="">
+        HMAC Secret key
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="radio"></label>
+        <input type="radio" id="trhradio" name="question" checked>
+        Temperature & Relative Humidity
+
+        <label class="radio">
+          <input type="radio" id="tempradio" name="question">
+          Temperature
+        </label>
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="radio"></label>
+        <input type="number" id="smplintervalinput" name="question" min="0" max="65535" value="10">
+        Sample interval (minutes)
+      </div>
+    </div>
+    <div class="field">
+      <div class="control">
+        <label class="radio"></label>
+        <input type="number" id="scantimeoutinput" name="question" min="0" max="90" value="30">
+        Deep sleep scan timeout (days)
+      </div>
+    </div>
+    <div class="field">
+        <textarea class="textarea" id="configtext" name="question" min="0" max="90" value="10"></textarea>
+    </div>
+    <div class="container">
+      <div class="notification">
+        <div class="field">
+      <div class="control">
+        <button class="button" id="writebutton">Write NFC</button>
+      </div>
+      </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}
