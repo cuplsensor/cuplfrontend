@@ -26,13 +26,13 @@ class ConfigSubject extends BaseSubject {
   constructor() {
     super();
     this._configtext = "";
+    this._serial = "";
     this._baseurl = "";
     this._secretkey = "";
     this._trhenabled = true;
     this._usehmac = false;
     this._usehttps = false;
     this._smplintervalmins = 10;
-    this._scantimeoutdays = 30;
     this._writepending = false;
   }
 
@@ -45,9 +45,18 @@ class ConfigSubject extends BaseSubject {
     return this._writepending;
   }
 
+  set serial(value) {
+    this._serial = value;
+    this.notifyAll();
+  }
+
+  get serial() {
+    return this._serial;
+  }
+
   set trhenabled(value) {
     this._trhenabled = value;
-    this.createConfigText();
+    this.notifyAll();
   }
 
   get trhenabled() {
@@ -56,7 +65,8 @@ class ConfigSubject extends BaseSubject {
 
   set secretkey(value) {
     this._secretkey = value;
-    this.createConfigText();
+    this.usehmac = (value !== "");
+    this.notifyAll();
   }
 
   get secretkey() {
@@ -74,7 +84,7 @@ class ConfigSubject extends BaseSubject {
 
   set usehmac(value) {
     this._usehmac = value;
-    this.createConfigText();
+    this.notifyAll();
   }
 
   get usehmac() {
@@ -83,7 +93,7 @@ class ConfigSubject extends BaseSubject {
 
   set usehttps(value) {
     this._usehttps = value;
-    this.createConfigText();
+    this.notifyAll();
   }
 
   get usehttps() {
@@ -92,7 +102,7 @@ class ConfigSubject extends BaseSubject {
 
   set baseurl(value) {
     this._baseurl = value;
-    this.createConfigText();
+    this.notifyAll();
   }
 
   get baseurl() {
@@ -101,33 +111,11 @@ class ConfigSubject extends BaseSubject {
 
   set smplintervalmins(value) {
     this._smplintervalmins = value;
-    this.createConfigText();
+    this.notifyAll();
   }
 
   get smplintervalmins() {
     return this._smplintervalmins;
-  }
-
-  set scantimeoutdays(value) {
-    this._scantimeoutdays = value;
-    this.createConfigText();
-  }
-
-  get scantimeoutdays() {
-    return this._scantimeoutdays;
-  }
-
-  writeNfc() {
-    console.log("writing NFC");
-    this.writepending = true;
-    navigator.nfc.push(this.configtext).then(() => {
-      console.log("Completed");
-      this.writepending = false;
-    }).catch(function(error) {
-      console.log("Error");
-      this.writepending = false;
-    });
-    this.notifyAll();
   }
 
   createConfigLine(key, value) {
@@ -135,26 +123,34 @@ class ConfigSubject extends BaseSubject {
     return cline;
   }
 
-  createConfigText() {
-    var ctext = '';
-    // HTTPS
-    ctext += this.createConfigLine('h', this.usehttps ? '1':'0');
-    // Append Base URL
-    ctext += this.createConfigLine('b', this.baseurl);
-    // Append version string
-    ctext += this.createConfigLine('v', this.trhenabled ? '11':'12');
-    // Append the sample interval string
-    ctext += this.createConfigLine('t', this.smplintervalmins.toString());
-    // Append scan timeout in days
-    ctext += this.createConfigLine('d', this.scantimeoutdays.toString());
-    // Append use HMAC
-    ctext += this.createConfigLine('i', this.usehmac ? '1':'0');
+  createConfigList() {
+    var configlist = [];
 
-    if (this.usehmac && (this.secretkey.length == 16)) {
+
+    if (this.serial.length === 8) {
+      configlist.push(this.createConfigLine('w', this.serial));                     // Serial
+    }
+    configlist.push(this.createConfigLine('h', this.usehttps ? '1':'0'));           // HTTPS
+    configlist.push(this.createConfigLine('b', this.baseurl));                      // Append Base URL
+    configlist.push(this.createConfigLine('v', this.trhenabled ? '11':'12'));       // Append version string
+    configlist.push(this.createConfigLine('t', this.smplintervalmins.toString()));  // Append the sample interval string
+    configlist.push(this.createConfigLine('i', this.usehmac ? '1':'0'));            // Append use HMAC
+    if (this.usehmac && (this.secretkey.length === 8)) {
       // Append secret key
-      ctext += this.createConfigLine('s', this.secretkey);
+      configlist.push(this.createConfigLine('s', this.secretkey));                  // Append secret key
     }
 
+    this.configlist = configlist;
+  }
+
+  createConfigText() {
+    this.createConfigList();
+
+    var ctext = '';
+
+    this.configlist.forEach(function(configstr) {
+      ctext += configstr;
+    });
 
     this.configtext = ctext;
   }
@@ -182,6 +178,7 @@ class Controller {
       default:
         console.log(e.currentTarget);
     }
+    this.model.createConfigText();
   }
 
   clickHandler(target) {
@@ -191,7 +188,10 @@ class Controller {
         this.model.writeNfc();
         break;
       case 'usehmac':
-        this.model.usehmac = target.checked;
+        if (target.checked === false) {
+          this.model.secretkey = "";
+        }
+        this.model.usehmac = (this.model.secretkey !== "");
         break;
       case 'usehttps':
         this.model.usehttps = target.checked;
@@ -200,6 +200,7 @@ class Controller {
       default:
         handled = false;
     }
+    this.model.createConfigText();
   }
 
   changeHandler(target) {
@@ -210,8 +211,8 @@ class Controller {
       case 'tempradio':
         this.model.trhenabled = !target.checked;
         break;
-
     }
+    this.model.createConfigText();
   }
 
   inputHandler(target) {
@@ -219,22 +220,26 @@ class Controller {
       case 'baseurl':
         this.model.baseurl = target.value;
         break;
+      case 'serialinput':
+        this.model.serial = target.value;
+        break;
       case 'secretkeyinput':
         this.model.secretkey = target.value;
         break;
       case 'smplintervalinput':
         this.model.smplintervalmins = target.value;
         break;
-      case 'scantimeoutinput':
-        this.model.scantimeoutdays = target.value;
-        break;
     }
+    this.model.createConfigText();
   }
 }
 
 class NavView {
   constructor(controller) {
     this.controller = controller;
+
+    this.serialinput = document.getElementById('serialinput');
+    this.serialinput.addEventListener('input', controller);
 
     this.baseurlinput = document.getElementById('baseurl');
     this.baseurlinput.addEventListener('input', controller);
@@ -251,9 +256,6 @@ class NavView {
     this.smplintervalinput = document.getElementById('smplintervalinput');
     this.smplintervalinput.addEventListener('input', controller);
 
-    this.scantimeoutinput = document.getElementById('scantimeoutinput');
-    this.scantimeoutinput.addEventListener('input', controller);
-
     this.usehttps = document.getElementById('usehttps');
     this.usehttps.addEventListener('click', controller);
 
@@ -262,39 +264,33 @@ class NavView {
     this.usehmac = document.getElementById('usehmac');
     this.usehmac.addEventListener('click', controller);
 
-    this.writebutton = document.getElementById('writebutton');
-    this.writebutton.addEventListener('click', controller);
 
 
-    this.controller.model.subscribe(this);
-
+    this.controller.model.serial = this.serialinput.value;
+    this.controller.model.secretkey = this.secretkeyinput.value;
     this.controller.model.baseurl = window.location.host;
     if (window.location.protocol === 'https:') {
       this.controller.model.usehttps = true;
     } else {
       this.controller.model.usehttps = false;
     }
+    this.controller.model.createConfigText();
+    this.controller.model.notifyAll();
+    this.controller.model.subscribe(this);
   }
 
   update(updatedmodel) {
     this.baseurlinput.value = updatedmodel.baseurl;
     this.usehttps.checked = updatedmodel.usehttps;
-    this.usehmac.checked = updatedmodel.usehmac;
+    this.secretkeyinput.value = updatedmodel.secretkey;
 
-    this.secretkeyinput.disabled = !updatedmodel.usehmac;
+    this.usehmac.checked = updatedmodel.secretkey.length > 0;
 
     this.configtext.value = updatedmodel.configtext;
     this.trhradio.checked = updatedmodel.trhenabled;
     this.tempradio.checked = !updatedmodel.trhenabled;
 
     this.smplintervalmins = updatedmodel.smplintervalmins;
-    this.scantimeoutinput = updatedmodel.scantimeoutdays;
-
-    if (updatedmodel.writepending) {
-      this.writebutton.classList.add("is-loading");
-    } else {
-      this.writebutton.classList.remove("is-loading");
-    }
   }
 
 
@@ -304,8 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initialise();
 });
 
+let configsubject = new ConfigSubject();
+
 function initialise() {
-  let subject = new ConfigSubject();
-  let controller = new Controller(subject);
+  let controller = new Controller(configsubject);
   let view = new NavView(controller);
+
+  configsubject.notifyAll();
 }

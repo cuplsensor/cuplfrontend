@@ -8,14 +8,16 @@ let outputStream;
 const log = document.getElementById('log');
 const btnConnect = document.getElementById('btnConnect');
 
-document.addEventListener('DOMContentLoaded', () => {
-btnConnect.addEventListener('click', clickConnect);
 
-// CODELAB: Add feature detection here.
+  // CODELAB: Add feature detection here.
 if (!('serial' in navigator)) {
   const notSupported = document.getElementById('notSupported');
   notSupported.classList.remove('hidden');
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+
+btnConnect.addEventListener('click', clickConnect);
 
 });
 /**
@@ -31,6 +33,7 @@ async function connect() {
   // CODELAB: Send CTRL-C and turn off echo on REPL
 
   // CODELAB: Add code to read the stream here.
+  alert(configsubject.configlist)
 
   // - Request a port and open a connection.
   port = await navigator.serial.requestPort();
