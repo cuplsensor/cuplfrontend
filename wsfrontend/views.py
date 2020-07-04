@@ -2,7 +2,6 @@ from flask import Blueprint, redirect, render_template, \
 request, url_for, session, abort, flash, Response, jsonify, current_app
 from wsapiwrapper.consumer.user import UserWrapper, UserNotFoundException
 from wsapiwrapper.consumer.capture import CaptureWrapper
-from wsapiwrapper.consumer.boxview import BoxViewWrapper
 
 # For GET and POST
 import requests

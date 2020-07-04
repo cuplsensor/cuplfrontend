@@ -8,6 +8,23 @@ let outputStream;
 const log = document.getElementById('log');
 const btnConnect = document.getElementById('btnConnect');
 
+// https://italonascimento.github.io/applying-a-timeout-to-your-promises/
+const promiseTimeout = function(ms, promise){
+
+  // Create a promise that rejects in <ms> milliseconds
+  let timeout = new Promise((resolve, reject) => {
+    let id = setTimeout(() => {
+      clearTimeout(id);
+      reject('Timed out in '+ ms + 'ms.')
+    }, ms)
+  })
+
+  // Returns a race between our timeout and the passed in promise
+  return Promise.race([
+    promise,
+    timeout
+  ])
+}
 
   // CODELAB: Add feature detection here.
 if (!('serial' in navigator)) {
@@ -33,12 +50,17 @@ async function connect() {
   // CODELAB: Send CTRL-C and turn off echo on REPL
 
   // CODELAB: Add code to read the stream here.
-  alert(configsubject.configlist)
+
 
   // - Request a port and open a connection.
   port = await navigator.serial.requestPort();
   // - Wait for the port to open.
   await port.open({ baudrate: 9600 });
+
+  // CODELAB: Add code setup the output stream here.
+  const encoder = new TextEncoderStream();
+  outputDone = encoder.readable.pipeTo(port.writable);
+  outputStream = encoder.writable;
 
   // CODELAB: Add code to read the stream here.
   let decoder = new TextDecoderStream();
@@ -46,23 +68,16 @@ async function connect() {
   inputStream = decoder.readable;
 
   reader = inputStream.getReader();
-  readLoop();
-
 }
 
-async function readLoop() {
-  // CODELAB: Add read loop here.
-  while (true) {
-    const { value, done } = await reader.read();
-    if (value) {
-      log.textContent += value + '\n';
-    }
-    if (done) {
-      console.log('[readLoop] DONE', done);
-      reader.releaseLock();
-      break;
-    }
-  }
+function writeToStream(...lines) {
+  // CODELAB: Write to output stream
+  const writer = outputStream.getWriter();
+  lines.forEach((line) => {
+    console.log('[SEND]', line);
+    writer.write(line);
+  });
+  writer.releaseLock();
 }
 
 function toggleUIConnected(connected) {
@@ -96,6 +111,21 @@ async function disconnect() {
   port = null;
 }
 
+async function readResponse() {
+  // CODELAB: Add read loop here.
+  const { value, done } = await reader.read();
+  if (value) {
+    log.textContent += value + '\n';
+  }
+  if (done) {
+    console.log('[readLoop] DONE', done);
+    reader.releaseLock();
+  }
+
+  return value;
+}
+
+
 async function clickConnect() {
   // CODELAB: Add code to request & open port here.
 
@@ -109,5 +139,23 @@ async function clickConnect() {
 
   await connect();
   toggleUIConnected(true);
+
+  //await promiseTimeout(1000, readResponse()).then(v => {alert(v)}).catch(e => {});
+
+  for (const configstr of configsubject.configlist) {
+    writeToStream(configstr);
+    await reader.read().then(function processText({done, value}) {
+      if (done) {
+        console.log("Stream complete");
+        return;
+      }
+      console.log(value);
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+
+
   return;
 }

@@ -3,8 +3,8 @@ from flask import Blueprint, redirect, render_template, \
 # from ..services import boxes, viewlogitems
 from werkzeug.exceptions import NotFound
 from wsapiwrapper.consumer.capture import CaptureWrapper
-from wsapiwrapper.consumer.box import BoxWrapper
-from wsapiwrapper.consumer.boxview import BoxViewWrapper
+from wsapiwrapper.consumer.tag import TagWrapper
+from wsapiwrapper.consumer.tagview import TagViewWrapper
 
 # For GET and POST
 import requests
@@ -26,8 +26,8 @@ def handle_error(e):
 @optional_auth
 def box(serial, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN)
-    box = boxwrapper.get(boxserial=serial)
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
+    tag = tagwrapper.get(tagserial=serial)
 
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
     latestcapture = capturewrapper.get_list(serial, offset=0, limit=1)[0]
@@ -37,11 +37,11 @@ def box(serial, **kwargs):
 
     # Post a BoxView
     if 'access_token' in session.keys():
-        bvwrapper = BoxViewWrapper(baseurl=WSB_ORIGIN, tokenstr=session['access_token'])
-        bvwrapper.post(boxserial=serial)
+        tvwrapper = TagViewWrapper(baseurl=WSB_ORIGIN, tokenstr=session['access_token'])
+        tvwrapper.post(tagserial=serial)
 
     return auth0_template('box_page.html'
-                          , box=box
+                          , box=tag
                           , latestcapture=latestcapture
                           , latestsample=latestsample
                           , **kwargs)

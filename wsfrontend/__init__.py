@@ -7,7 +7,7 @@
 from flask import Flask
 from .defs import auth0_template
 from .views import bp as viewsbp
-from .boxviews import bp as boxviewsbp
+from .tagviews import bp as tagviewsbp
 from .captureviews import bp as captureviewsbp
 from .calviews import bp as calviewsbp
 
@@ -20,7 +20,7 @@ def create_app(package_name, settings_override=None):
     app.config.from_object(settings_override)
 
     app.register_blueprint(viewsbp)
-    app.register_blueprint(boxviewsbp)
+    app.register_blueprint(tagviewsbp)
     app.register_blueprint(calviewsbp)
     app.register_blueprint(captureviewsbp)
 

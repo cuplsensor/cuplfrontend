@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, request, send_file
 from .forms.boxes import AddBoxForm
-from wsapiwrapper.admin.box import BoxWrapper
+from wsapiwrapper.admin.tag import TagWrapper
 from wsapiwrapper.admin.capture import CaptureWrapper
 from wsapiwrapper.admin.user import UserWrapper
-from wsapiwrapper.admin.boxview import BoxViewWrapper
+from wsapiwrapper.admin.tagview import TagViewWrapper
 from .config import WSB_ORIGIN, ADMINAPI_CLIENTID, ADMINAPI_CLIENTSECRET
 
 
@@ -19,16 +19,21 @@ def home_page():
 @bp.route('/boxes', methods=['GET', 'POST'])
 def box_list_page(**kwargs):
     form = AddBoxForm()
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
     if form.validate_on_submit():
-        boxwrapper.post(boxid=form.box_id.data)
+        serial = form.serial.data
+        secretkey = form.secretkey.data
+        fwversion = form.fwversion.data
+        hwversion = form.hwversion.data
+        description = form.description.data
+        tagwrapper.post(serial=serial, secretkey=secretkey, fwversion=fwversion, hwversion=hwversion, description=description)
         flash("Box added")
         return redirect(url_for('dashboard.home_page'))
 
-    boxlist = boxwrapper.get_many()
+    boxlist = tagwrapper.get_many()
 
     return render_template('pages/box/box_list_page.html', form=form, boxlist=boxlist, **kwargs)
 
@@ -74,19 +79,19 @@ def capture_page(captid):
 
 @bp.route('/box/<int:boxid>')
 def box_page(boxid):
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    box = boxwrapper.get(boxid)
+    box = tagwrapper.get(boxid)
     return render_template('pages/box/box_page.html', box=box)
 
 
 @bp.route('/box/<int:boxid>/captures')
 def box_captures_page(boxid):
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    box = boxwrapper.get(boxid)
+    box = tagwrapper.get(boxid)
 
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN,
                                     adminapi_client_id=ADMINAPI_CLIENTID,
@@ -97,37 +102,37 @@ def box_captures_page(boxid):
     return render_template('pages/box/box_captures_page.html', box=box, capturelist=capturelist)
 
 
-@bp.route('/box/<int:boxid>/boxviews')
-def box_boxviews_page(boxid):
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+@bp.route('/box/<int:boxid>/tagviews')
+def box_tagviews_page(boxid):
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    box = boxwrapper.get(boxid)
+    tag = tagwrapper.get(boxid)
 
-    boxviewwrapper = BoxViewWrapper(baseurl=WSB_ORIGIN,
+    tagViewWrapper = TagViewWrapper(baseurl=WSB_ORIGIN,
                                     adminapi_client_id=ADMINAPI_CLIENTID,
                                     adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    boxviewlist = boxviewwrapper.get_many(boxid)
-    return render_template('pages/box/box_boxviews_page.html', box=box, boxviewlist=boxviewlist)
+    tagviewlist = tagViewWrapper.get_many(boxid)
+    return render_template('pages/box/box_tagviews_page.html', box=tag, tagviewlist=tagviewlist)
 
 @bp.route('/box/<int:boxid>/configure')
 def configure_page(boxid):
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
-    box = boxwrapper.get(boxid)
+    box = tagwrapper.get(boxid)
     return render_template('pages/box/configure_page.html', box=box)
 
 
 @bp.route('/box/<int:boxid>/simulate')
 def sim_page(boxid):
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN,
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
-    box = boxwrapper.get(boxid)
-    simstr = boxwrapper.simulate(boxid=int(boxid), frontendurl="http://localhost:8080")
+    box = tagwrapper.get(boxid)
+    simstr = tagwrapper.simulate(tagid=int(boxid), frontendurl="http://localhost:8080")
     return render_template('pages/box/sim_page.html', box=box, simstr=simstr)
 
 @bp.route('/signin')

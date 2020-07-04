@@ -7,6 +7,7 @@
 from werkzeug.debug import DebuggedApplication
 from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
+from os import environ as env
 import wsfrontend
 import admin
 
@@ -24,4 +25,5 @@ app = DebuggedApplication(app, evalex=False)
 app.debug = True
 
 if __name__ == "__main__":
-    run_simple('localhost', 8080, app)
+    port = int(env.get('WSF_PORT'))
+    run_simple('localhost', port, app)

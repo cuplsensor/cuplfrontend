@@ -11,7 +11,7 @@ import datetime, time
 from datetime import timezone
 from .defs import auth0_template, requires_auth, optional_auth, route
 from calendar import monthrange
-from wsapiwrapper.consumer.box import BoxWrapper
+from wsapiwrapper.consumer.tag import TagWrapper
 from wsapiwrapper.consumer.sample import SampleWrapper
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
@@ -69,8 +69,8 @@ def cal(serial, year, month, day, range, sensor, **kwargs):
     current_app.logger.info('test')
 
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
-    boxwrapper = BoxWrapper(baseurl=WSB_ORIGIN)
-    box = boxwrapper.get(boxserial=serial)
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
+    box = tagwrapper.get(tagserial=serial)
 
     boxwithserial = box
     if boxwithserial == None:

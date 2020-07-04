@@ -26,8 +26,12 @@ Home
 <section class="section">
     <div class="container">
         <form method="POST" action="">
-        {{ form.csrf_token }}
-        {{ form.box_id.label }} {{ form.box_id(size=5) }}
+            {{ form.csrf_token }}
+            {{ form.serial.label }} {{ form.serial(size=8) }}
+            {{ form.secretkey.label }} {{ form.secretkey(size=16) }}
+            {{ form.fwversion.label }} {{ form.fwversion(size=8) }}
+            {{ form.hwversion.label }} {{ form.hwversion(size=8) }}
+            {{ form.description.label }} {{ form.description(size=40) }}
         <input type="submit" value="Go">
         </form>
     </div>
@@ -41,6 +45,9 @@ Home
               <th>ID</th>
               <th>Serial</th>
               <th>Secret Key</th>
+              <th>Firmware Version</th>
+              <th>Hardware Version</th>
+              <th>Description</th>
               <th>Time Registered</th>
             </tr>
             </thead>
@@ -52,6 +59,9 @@ Home
               </td>
               <td>{{ box['serial'] }}</td>
               <td>{{ box['secretkey'] }}</td>
+              <td>{{ box['fwversion'] }}</td>
+              <td>{{ box['hwversion'] }}</td>
+              <td>{{ box['description'] }}</td>
               <td>{{ box['timeregistered'] }}</td>
             </tr>
             {% endfor %}

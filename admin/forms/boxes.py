@@ -5,13 +5,17 @@
     Boxes forms
 """
 
-from flask_wtf import Form
-from wtforms import IntegerField, SubmitField
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
 from wtforms.validators import Optional, ValidationError, Length
 
 __all__ = ['AddBoxForm']
 
 
-class AddBoxForm(Form):
-    box_id = IntegerField('box_id', validators=[Optional()])
+class AddBoxForm(FlaskForm):
+    serial = StringField('tag_serial', validators=[Optional(), Length(min=8, max=8)])
+    secretkey = StringField('tag_secretkey', validators=[Optional(), Length(min=16, max=16)])
+    fwversion = StringField('tag_fwversion', validators=[Optional()])
+    hwversion = StringField('tag_hwversion', validators=[Optional()])
+    description = StringField('tag_description', validators=[Optional(), Length(max=280)])
     submit = SubmitField('Add')

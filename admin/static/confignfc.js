@@ -135,7 +135,7 @@ class ConfigSubject extends BaseSubject {
     configlist.push(this.createConfigLine('v', this.trhenabled ? '11':'12'));       // Append version string
     configlist.push(this.createConfigLine('t', this.smplintervalmins.toString()));  // Append the sample interval string
     configlist.push(this.createConfigLine('i', this.usehmac ? '1':'0'));            // Append use HMAC
-    if (this.usehmac && (this.secretkey.length === 8)) {
+    if (this.usehmac && (this.secretkey.length === 16)) {
       // Append secret key
       configlist.push(this.createConfigLine('s', this.secretkey));                  // Append secret key
     }
