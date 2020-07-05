@@ -3,6 +3,8 @@
 # but not using Alpine because this distribution is not compatible with Python manylinux binaries.
 FROM python:3.8.2-slim-buster as base
 
+RUN apt-get update && pip3 install uwsgi
+
 ENV WSF_PORT=5000
 
 COPY ./requirements.txt .
