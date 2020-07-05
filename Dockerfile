@@ -3,7 +3,9 @@
 # but not using Alpine because this distribution is not compatible with Python manylinux binaries.
 FROM python:3.8.2-slim-buster as base
 
-RUN apt-get update && pip3 install uwsgi
+RUN apt-get update &&  apt-get install -y build-essential \
+    && pip3 install uwsgi \
+    && apt-get remove -y --purge build-essential
 
 ENV WSF_PORT=5000
 
