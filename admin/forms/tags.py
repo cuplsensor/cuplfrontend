@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 """
-    web.boxes.forms
+    web.tags.forms
 
-    Boxes forms
+    Tags forms
 """
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import Optional, ValidationError, Length
 
-__all__ = ['AddBoxForm']
+__all__ = ['AddTagForm']
 
 
-class AddBoxForm(FlaskForm):
+class AddTagForm(FlaskForm):
     serial = StringField('tag_serial', validators=[Optional(), Length(min=8, max=8)])
     secretkey = StringField('tag_secretkey', validators=[Optional(), Length(min=16, max=16)])
     fwversion = StringField('tag_fwversion', validators=[Optional()])

@@ -9,7 +9,7 @@
             <thead>
             <tr>
               <th>ID</th>
-              <th>Parent box</th>
+              <th>Parent Tag</th>
               <th>Scanned by</th>
               <th>Timestamp</th>
             </tr>
@@ -21,7 +21,7 @@
                   <a href="{{ url_for('dashboard.capture_page', captid=capture.id) }}">{{ capture['id'] }}</a>
               </td>
               <td>
-                  <a href="{{ url_for('dashboard.box_page', boxid=capture.parent_box) }}">{{ capture['parent_box'] }}</a>
+                  <a href="{{ url_for('dashboard.tag_page', tagid=capture.parent_tag) }}">{{ capture['parent_tag'] }}</a>
               </td>
               <td>{{ capture['scanned_by_user'] }}</td>
               <td>{{ capture['timestamp'] }}</td>

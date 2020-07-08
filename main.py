@@ -25,5 +25,5 @@ app = DebuggedApplication(app, evalex=False)
 app.debug = True
 
 if __name__ == "__main__":
-    port = int(env.get('WSF_PORT'))
+    port = int(env['WSF_PORT'])
     run_simple('localhost', port, app)

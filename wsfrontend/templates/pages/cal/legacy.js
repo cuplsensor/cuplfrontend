@@ -246,7 +246,7 @@ const copyToClipboard = str => {
 function makeUrl() {
   s = getStateStrings();
 
-  return '{{ url_for('calview.index', serial=box.serial) }}' + range +'/'+ sensor +'/'+ s.year +'/'+ s.month +'/' + s.day +'/'+ s.tzoffsetmins;
+  return '{{ url_for('calview.index', serial=tag.serial) }}' + range +'/'+ sensor +'/'+ s.year +'/'+ s.month +'/' + s.day +'/'+ s.tzoffsetmins;
 }
 
 function setUrl(firstrun) {

@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, redirect, flash, url_for, request, send_file
-from .forms.boxes import AddBoxForm
+from flask import Blueprint, render_template, redirect, flash, url_for, current_app
+from .forms.tags import AddTagForm
 from wsapiwrapper.admin.tag import TagWrapper
 from wsapiwrapper.admin.capture import CaptureWrapper
 from wsapiwrapper.admin.user import UserWrapper
@@ -13,12 +13,12 @@ bp = Blueprint('dashboard', __name__, template_folder='templates', static_folder
 
 @bp.route('/')
 def home_page():
-    return redirect(url_for('dashboard.box_list_page'))
+    return redirect(url_for('dashboard.tag_list_page'))
 
 
-@bp.route('/boxes', methods=['GET', 'POST'])
-def box_list_page(**kwargs):
-    form = AddBoxForm()
+@bp.route('/tags', methods=['GET', 'POST'])
+def tag_list_page(**kwargs):
+    form = AddTagForm()
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
@@ -30,12 +30,12 @@ def box_list_page(**kwargs):
         hwversion = form.hwversion.data
         description = form.description.data
         tagwrapper.post(serial=serial, secretkey=secretkey, fwversion=fwversion, hwversion=hwversion, description=description)
-        flash("Box added")
+        flash("Tag added")
         return redirect(url_for('dashboard.home_page'))
 
-    boxlist = tagwrapper.get_many()
+    taglist = tagwrapper.get_many()
 
-    return render_template('pages/box/box_list_page.html', form=form, boxlist=boxlist, **kwargs)
+    return render_template('pages/tag/tag_list_page.html', form=form, taglist=taglist, **kwargs)
 
 
 @bp.route('/captures')
@@ -77,63 +77,63 @@ def capture_page(captid):
     capture = capturewrapper.get(captid)
     return render_template('pages/capture/capture_page.html', capture=capture)
 
-@bp.route('/box/<int:boxid>')
-def box_page(boxid):
+@bp.route('/tag/<int:tagid>')
+def tag_page(tagid):
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    box = tagwrapper.get(boxid)
-    return render_template('pages/box/box_page.html', box=box)
+    tag = tagwrapper.get(tagid)
+    return render_template('pages/tag/tag_page.html', tag=tag)
 
 
-@bp.route('/box/<int:boxid>/captures')
-def box_captures_page(boxid):
+@bp.route('/tag/<int:tagid>/captures')
+def tag_captures_page(tagid):
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    box = tagwrapper.get(boxid)
+    tag = tagwrapper.get(tagid)
 
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN,
                                     adminapi_client_id=ADMINAPI_CLIENTID,
                                     adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
-    capturelist = capturewrapper.get_many(box_id=boxid)
+    capturelist = capturewrapper.get_many(tag_id=tagid)
 
-    return render_template('pages/box/box_captures_page.html', box=box, capturelist=capturelist)
+    return render_template('pages/tag/tag_captures_page.html', tag=tag, capturelist=capturelist)
 
 
-@bp.route('/box/<int:boxid>/tagviews')
-def box_tagviews_page(boxid):
+@bp.route('/tag/<int:tagid>/tagviews')
+def tag_tagviews_page(tagid):
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    tag = tagwrapper.get(boxid)
+    tag = tagwrapper.get(tagid)
 
     tagViewWrapper = TagViewWrapper(baseurl=WSB_ORIGIN,
                                     adminapi_client_id=ADMINAPI_CLIENTID,
                                     adminapi_client_secret=ADMINAPI_CLIENTSECRET)
-    tagviewlist = tagViewWrapper.get_many(boxid)
-    return render_template('pages/box/box_tagviews_page.html', box=tag, tagviewlist=tagviewlist)
+    tagviewlist = tagViewWrapper.get_many(tagid)
+    return render_template('pages/tag/tag_tagviews_page.html', tag=tag, tagviewlist=tagviewlist)
 
-@bp.route('/box/<int:boxid>/configure')
-def configure_page(boxid):
+@bp.route('/tag/<int:tagid>/configure')
+def configure_page(tagid):
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
-    box = tagwrapper.get(boxid)
-    return render_template('pages/box/configure_page.html', box=box)
+    tag = tagwrapper.get(tagid)
+    return render_template('pages/tag/configure_page.html', tag=tag)
 
 
-@bp.route('/box/<int:boxid>/simulate')
-def sim_page(boxid):
+@bp.route('/tag/<int:tagid>/simulate')
+def sim_page(tagid):
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN,
                             adminapi_client_id=ADMINAPI_CLIENTID,
                             adminapi_client_secret=ADMINAPI_CLIENTSECRET)
 
-    box = tagwrapper.get(boxid)
-    simstr = tagwrapper.simulate(tagid=int(boxid), frontendurl="http://localhost:8080")
-    return render_template('pages/box/sim_page.html', box=box, simstr=simstr)
+    tag = tagwrapper.get(tagid)
+    simstr = tagwrapper.simulate(tagid=int(tagid), frontendurl=current_app.config["WSF_ORIGIN"])
+    return render_template('pages/tag/sim_page.html', tag=tag, simstr=simstr)
 
 @bp.route('/signin')
 def signin():

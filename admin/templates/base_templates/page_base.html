@@ -5,12 +5,12 @@
 {# implements example in https://stackoverflow.com/questions/18600031/changing-the-active-class-of-a-link-with-the-twitter-bootstrap-css-in-python-fla #}
 
 {% set navigation_bar = [
-    (url_for('dashboard.box_list_page'), 'adminboxes', 'Boxes'),
+    (url_for('dashboard.tag_list_page'), 'admintags', 'Tags'),
     (url_for('dashboard.capture_list_page'), 'admincaptures', 'Captures'),
     (url_for('dashboard.user_list_page'), 'adminusers', 'Users')
 ] -%}
 
-{% set active_page = active_page|default('adminboxes') -%}
+{% set active_page = active_page|default('admintags') -%}
 
 <div class="tabs">
     <ul id="navigation">

@@ -1,5 +1,5 @@
-{% extends "base_templates/box_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
-{% block boxmain %}
+{% extends "base_templates/tag_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% block tagmain %}
 <section class="section">
   <div class="container">
 
@@ -7,7 +7,7 @@
     <div class="field">
       <div class="control">
         <label class="radio"> </label>
-        <input type="text" id="serialinput" name="question" value="{{ box.serial }}">
+        <input type="text" id="serialinput" name="question" value="{{ tag.serial }}">
         Serial
       </div>
     </div>
@@ -35,7 +35,7 @@
     <div class="field">
       <div class="control">
         <label class="radio"> </label>
-        <input type="text" id="secretkeyinput" name="question" value="{{ box.secretkey }}">
+        <input type="text" id="secretkeyinput" name="question" value="{{ tag.secretkey }}">
         HMAC Secret key
       </div>
     </div>

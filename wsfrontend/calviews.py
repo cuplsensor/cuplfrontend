@@ -15,7 +15,7 @@ from wsapiwrapper.consumer.tag import TagWrapper
 from wsapiwrapper.consumer.sample import SampleWrapper
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
-bp = Blueprint('calview', __name__, template_folder='templates/pages/cal', static_folder='static', static_url_path='/static/frontend', url_prefix='/box/<string:serial>/cal')
+bp = Blueprint('calview', __name__, template_folder='templates/pages/cal', static_folder='static', static_url_path='/static/frontend', url_prefix='/tag/<string:serial>/cal')
 
 @bp.errorhandler(NotFound)
 def handle_error(e):
@@ -24,14 +24,14 @@ def handle_error(e):
 @route(bp, '/')
 @optional_auth
 def index(serial, range='day', sensor='temp', **kwargs):
-    #boxwithserial = boxes.get_by_serial(serial)
-    if boxwithserial == None:
+    #tagwithserial = tags.get_by_serial(serial)
+    if tagwithserial == None:
         abort(404)
     else:
-        newlocform = AddLocationForm(serial=boxwithserial.serial, prefix="newloc")
-        editlocform = EditLocationForm(serial=boxwithserial.serial, prefix="editloc")
+        newlocform = AddLocationForm(serial=tagwithserial.serial, prefix="newloc")
+        editlocform = EditLocationForm(serial=tagwithserial.serial, prefix="editloc")
         return auth0_template('dayindex_page.html' \
-                                            , box=boxwithserial \
+                                            , tag=tagwithserial \
                                             , range='day' \
                                             , year=None \
                                             , month=None \
@@ -45,14 +45,14 @@ def index(serial, range='day', sensor='temp', **kwargs):
 @route(bp, '/<range>/<sensor>')
 @optional_auth
 def sensor(serial, range, sensor, **kwargs):
-    #boxwithserial = boxes.get_by_serial(serial)
-    if boxwithserial == None:
+    #tagwithserial = tags.get_by_serial(serial)
+    if tagwithserial == None:
         abort(404)
     else:
-        newlocform = AddLocationForm(serial=boxwithserial.serial, prefix="newloc")
-        editlocform = EditLocationForm(serial=boxwithserial.serial, prefix="editloc")
+        newlocform = AddLocationForm(serial=tagwithserial.serial, prefix="newloc")
+        editlocform = EditLocationForm(serial=tagwithserial.serial, prefix="editloc")
         return auth0_template('dayindex_page.html' \
-                                            , box=boxwithserial \
+                                            , tag=tagwithserial \
                                             , range=range \
                                             , year=None \
                                             , month=None \
@@ -70,10 +70,10 @@ def cal(serial, year, month, day, range, sensor, **kwargs):
 
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
-    box = tagwrapper.get(tagserial=serial)
+    tag = tagwrapper.get(tagserial=serial)
 
-    boxwithserial = box
-    if boxwithserial == None:
+    tagwithserial = tag
+    if tagwithserial == None:
         current_app.logger.info('test')
         abort(404)
     if request.method == 'POST':
@@ -104,15 +104,15 @@ def cal(serial, year, month, day, range, sensor, **kwargs):
             mrlocation = samples[0]['location']
         else:
             mrlocation = None
-        #capturesamples, mrlocation = boxwithserial.uniquesampleswindow(starttime, endtime)
+        #capturesamples, mrlocation = tagwithserial.uniquesampleswindow(starttime, endtime)
         startstamp = starttime.timestamp()
         endstamp = endtime.timestamp()
         return jsonify(samples=samples, mrloc=mrlocation, startstamp=startstamp, endstamp=endstamp)
     else:
-        newlocform = AddLocationForm(serial=boxwithserial['serial'], prefix="newloc")
-        editlocform = EditLocationForm(serial=boxwithserial['serial'], prefix="editloc")
+        newlocform = AddLocationForm(serial=tagwithserial['serial'], prefix="newloc")
+        editlocform = EditLocationForm(serial=tagwithserial['serial'], prefix="editloc")
         return auth0_template('dayindex_page.html' \
-                                                , box=boxwithserial \
+                                                , tag=tagwithserial \
                                                 , range=range \
                                                 , year=year \
                                                 , month=month \

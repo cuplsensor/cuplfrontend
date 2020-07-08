@@ -17,7 +17,7 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Box</th>
+          <th>Tag</th>
           <th>Timestamp</th>
         </tr>
       </thead>
@@ -25,7 +25,7 @@
         {% for bv in bvlist %}
         <tr>
           <td>
-              <a href="{{ url_for('boxview.box', serial=bv.boxserial) }}">{{ bv.boxserial }}</a>
+              <a href="{{ url_for('tagview.tag', serial=bv.tagserial) }}">{{ bv.tagserial }}</a>
           </td>
           <td>{{ bv.timestamp }}</td>
         </tr>

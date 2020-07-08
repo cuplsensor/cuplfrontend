@@ -16,7 +16,7 @@ var dateymd = {
   'month': {{month|tojson}},
   'day': {{day|tojson}}
 };
-var baseurl = '{{ url_for('calview.index', serial=box.serial) }}';
+var baseurl = '{{ url_for('calview.index', serial=tag.serial) }}';
 var locationsurl = '';
 
 function initialise() {

@@ -1,0 +1,29 @@
+{% extends "base_templates/tag_base.html" %}  {# base_templates/tag_base.html extends base_templates/base.html #}
+{% set tag_active_page = "tagviews" %}
+
+{% block tagmain %}
+<section class="section">
+    <div class="container">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Parent user</th>
+                <th>Timestamp</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for tagview in tagviewlist %}
+            <tr>
+                <td>{{ tagview['id'] }}</td>
+                <td>
+                    <a href="{{ url_for('dashboard.user_page', userid=tagview['parent_user']) }}">{{ tagview['parent_user'] }}</a></td>
+                <td>{{ tagview['timestamp'] }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+{% endblock %}

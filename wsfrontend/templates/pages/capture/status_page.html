@@ -1,7 +1,7 @@
 {% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
 
 {% block breadcrumbs %}
-<li><a href="{{ url_for('boxview.box', serial=capture.boxserial ) }}">Box {{ capture.boxserial }}</a></li>
+<li><a href="{{ url_for('tagview.box', serial=capture.boxserial ) }}">Box {{ capture.boxserial }}</a></li>
 {% endblock %}
 
 {% block title %}

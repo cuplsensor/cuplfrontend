@@ -1,4 +1,4 @@
-{% extends "base_templates/box_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% extends "base_templates/tag_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
 
 {% block headerscripts %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.js"></script>
@@ -27,7 +27,7 @@
     var latest = getLatestDateStrings();
     var date_now  = new Date();
     var tzoffsetmins = date_now.getTimezoneOffset()*-1;
-    return '{{ url_for('calview.index', serial=box.serial) }}' + range +'/'+ sensor +'/'+ latest.year +'/'+ latest.month +'/' + latest.day;
+    return '{{ url_for('calview.index', serial=tag.serial) }}' + range +'/'+ sensor +'/'+ latest.year +'/'+ latest.month +'/' + latest.day;
   }
 
   function makeWrapperAnchor(sensor, tileid, range) {
@@ -71,7 +71,7 @@
 
     <div class="tile is-ancestor">
       <div class="tile is-6 is-vertical is-parent">
-        <div class="tile is-child box" id="temptile">
+        <div class="tile is-child tag" id="temptile">
           <div class="innertile">
             <span class="icon is-large temperature is-pulled-right">
               <i class="fas fa-thermometer-half fa-3x"></i>
@@ -80,7 +80,7 @@
             <p class="subtitle">{{ latestsample.temp|round(2) }} °C</p>
           </div>
         </div>
-        <div class="tile is-child box" id="rhtile">
+        <div class="tile is-child tag" id="rhtile">
           <div class="innertile">
             <span class="icon is-large rh is-pulled-right">
               <i class="fas fa-tint fa-3x"></i>
@@ -91,15 +91,15 @@
         </div>
       </div>
       <div class="tile is-6 is-vertical is-parent">
-        <div class="tile is-child box">
+        <div class="tile is-child tag">
           <span class="icon is-large battery is-pulled-right">
             <i class="fas fa-battery-full fa-3x"></i>
           </span>
           <p class="title">Battery</p>
           <p class="subtitle">{{ latestcapture.batvoltagemv }} mV</p>
         </div>
-        <div class="tile is-child box">
-          {#<p>Scanned {{ box.captures|length }} times</p>#}
+        <div class="tile is-child tag">
+          {#<p>Scanned {{ tag.captures|length }} times</p>#}
         </div>
       </div>
     </div>

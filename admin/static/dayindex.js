@@ -36,7 +36,7 @@ class BaseSubject {
   }
 }
 
-class BoxSubject extends BaseSubject {
+class TagSubject extends BaseSubject {
   constructor(locapiurl) {
     super(); // Call the super class constructor.
     this.recentlocations = null;
@@ -72,7 +72,7 @@ class BoxSubject extends BaseSubject {
   }
 }
 
-class CalendarSubject extends BoxSubject {
+class CalendarSubject extends TagSubject {
   constructor(locapiurl) {
     super(locapiurl); // Call the super class constructor.
     this.range = null;
@@ -260,7 +260,7 @@ class CalendarSubject extends BoxSubject {
   }
 }
 
-class BoxController {
+class TagController {
   constructor(model) {
     this.model = model;
     var tz = this.getUrlParameter('tz');
@@ -299,7 +299,7 @@ class BoxController {
   }
 }
 
-class CalendarController extends BoxController {
+class CalendarController extends TagController {
   constructor(model, sensor, range, dateymd) {
     super(model);
     this.model.sensor = sensor;

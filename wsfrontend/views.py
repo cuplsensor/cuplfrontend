@@ -2,6 +2,7 @@ from flask import Blueprint, redirect, render_template, \
 request, url_for, session, abort, flash, Response, jsonify, current_app
 from wsapiwrapper.consumer.user import UserWrapper, UserNotFoundException
 from wsapiwrapper.consumer.capture import CaptureWrapper
+from wsapiwrapper.consumer.tagview import TagViewWrapper
 
 # For GET and POST
 import requests
@@ -53,12 +54,12 @@ def user(**kwargs):
 def currentuser(userobj, **kwargs):
     """
     Displays information about the logged on user. An API call is made to find
-    recently viewed boxes and these are rendered in a list. The most recent is
+    recently viewed tags and these are rendered in a list. The most recent is
     displayed first.
     """
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
     tokenstr = session["access_token"]
-    bvwrapper = BoxViewWrapper(baseurl=WSB_ORIGIN, tokenstr=tokenstr)
+    bvwrapper = TagViewWrapper(baseurl=WSB_ORIGIN, tokenstr=tokenstr)
     bvlist = bvwrapper.get(distinct=True)
     return auth0_template('pages/currentuser_page.html', userobj=userobj, bvlist=bvlist, **kwargs)
 

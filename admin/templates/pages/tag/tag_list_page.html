@@ -1,5 +1,5 @@
 {% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
-{% set active_page = "adminboxes" %}
+{% set active_page = "admintags" %}
 {% block title %}
 Home
 {% endblock %}
@@ -52,17 +52,17 @@ Home
             </tr>
             </thead>
             <tbody>
-            {% for box in boxlist %}
+            {% for tag in taglist %}
             <tr>
               <td>
-                  <a href="{{ url_for('dashboard.box_page', boxid=box.id) }}">{{ box.id }}</a>
+                  <a href="{{ url_for('dashboard.tag_page', tagid=tag.id) }}">{{ tag.id }}</a>
               </td>
-              <td>{{ box['serial'] }}</td>
-              <td>{{ box['secretkey'] }}</td>
-              <td>{{ box['fwversion'] }}</td>
-              <td>{{ box['hwversion'] }}</td>
-              <td>{{ box['description'] }}</td>
-              <td>{{ box['timeregistered'] }}</td>
+              <td>{{ tag['serial'] }}</td>
+              <td>{{ tag['secretkey'] }}</td>
+              <td>{{ tag['fwversion'] }}</td>
+              <td>{{ tag['hwversion'] }}</td>
+              <td>{{ tag['description'] }}</td>
+              <td>{{ tag['timeregistered'] }}</td>
             </tr>
             {% endfor %}
             </tbody>
