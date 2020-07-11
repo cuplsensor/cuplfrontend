@@ -84,60 +84,59 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="container">
       <div class="navbar-brand">
-          <a class="navbar-item" href="{{ url_for('dashboard.home_page') }}"><h4>plotsensor</h4></a>
-        <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+        {% block logo %}
+
+        {% endblock %}
       </div>
 
       <div id="navbarBasicExample" class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <a class="button" href="/admin/">Admin</a>
-          </div>
-          {% if userobj %}
-          <div class="navbar-item">
-            <div id="usermenu" class="dropdown">
-              <div class="dropdown-trigger">
-                <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                  <span>{{ userobj.userinfo.given_name }}</span>
-                  <span class="icon is-small">
-                    <i class="fas fa-angle-down" aria-hidden="true"></i>
-                  </span>
-                </button>
-              </div>
-              <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                <div class="dropdown-content">
-                  <a href="{{ url_for('dashboard.currentuser') }}" class="dropdown-item">
-                    User Page
-                  </a>
-                  <a href="{{ url_for('dashboard.signout') }}" class="dropdown-item">
-                    Sign out
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        {% else %}
-        <div class="navbar-item">
-          <a class="button" onclick="signin()">Sign in</a>
-        </div>
-        {% endif %}
-      </div>
+        {% block menucontent %}
+        {% endblock %}
       </div>
     </div>
-  </div>
   </nav>
-  <section class="section">
-  <div class="container">
-          {% block breadcrumbs %}
-          {% endblock %}
-      </div>
-    </section>
-  {% block main %}
+  {% block subnav %}
   {% endblock %}
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <section class="section">
+        <div class="container">
+            {% with errors = get_flashed_messages(category_filter=["error"]) %}
+            {% if errors %}
+            <div class="notification is-danger is-light">
+                <ul class=flashes>
+                  {%- for message in errors %}
+                  <li>{{ message }}</li>
+                  {% endfor -%}
+                </ul>
+            </div>
+            {% endif %}
+            {% endwith %}
+            {% with messages = get_flashed_messages(category_filter=["info"]) %}
+              {% if messages %}
+              <div class="notification is-primary is-light">
+                <ul class=flashes>
+                {% for message in messages %}
+                  <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+              </div>
+              {% endif %}
+            {% endwith %}
+        </div>
+    </section>
+  {% endif %}
+  {% endwith %}
+
+  <section class="section">
+        <div class="container">
+            <h3>{% block title %}{% endblock %}</h3>
+        </div>
+        {% block main %}
+        {% endblock %}
+  </section>
+
+
 
 
 

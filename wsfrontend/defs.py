@@ -1,5 +1,6 @@
 from functools import wraps
 from flask import render_template, session, redirect, url_for, request, current_app
+import jwt
 
 
 def route(bp, *args, **kwargs):
@@ -38,4 +39,16 @@ def requires_auth(f):
     if user == None:
         return redirect(url_for('dashboard.signin', next=request.url))
     return f(userobj=user, *args, **kwargs)
+  return decorated
+
+
+# Requires admin auth decorator
+def requires_admin(f):
+  @wraps(f)
+  def decorated(*args, **kwargs):
+    adminapi_token = session.get('ADMINAPI_TOKEN')
+    if (adminapi_token == None) and (current_app.config['ADMIN_SECURE']):
+        return redirect(url_for('adminbp.signin', next=request.url))
+
+    return f(adminapi_token=adminapi_token, *args, **kwargs)
   return decorated

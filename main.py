@@ -9,7 +9,6 @@ from werkzeug.middleware.dispatcher import DispatcherMiddleware
 from werkzeug.serving import run_simple
 from os import environ as env
 import wsfrontend
-import admin
 
 
 def simple(env, resp):
@@ -17,13 +16,11 @@ def simple(env, resp):
     return [b'Hello WSGI World']
 
 
-app = DispatcherMiddleware(wsfrontend.create_app(__name__), {
-                           '/admin': admin.create_app('adminapp')
-})
+app = DispatcherMiddleware(wsfrontend.create_app(__name__))
 
-app = DebuggedApplication(app, evalex=False)
+app = DebuggedApplication(app, evalex=True)
 app.debug = True
 
 if __name__ == "__main__":
     port = int(env['WSF_PORT'])
-    run_simple('localhost', port, app)
+    run_simple('localhost', port, app, use_debugger=True)

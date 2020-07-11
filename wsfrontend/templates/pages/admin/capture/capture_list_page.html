@@ -1,6 +1,9 @@
-{% extends "base_templates/page_base.html" %}
+{% extends "base_templates/admin_base.html" %}
 {% set active_page = "admincaptures" %}
 
+{% block title %}
+List of Captures
+{% endblock %}
 
 {% block main %}
 <section class="section">
@@ -18,10 +21,10 @@
             {% for capture in capturelist %}
             <tr>
               <td>
-                  <a href="{{ url_for('dashboard.capture_page', captid=capture.id) }}">{{ capture['id'] }}</a>
+                  <a href="{{ url_for('adminbp.capture_page', captid=capture.id) }}">{{ capture['id'] }}</a>
               </td>
               <td>
-                  <a href="{{ url_for('dashboard.tag_page', tagid=capture.parent_tag) }}">{{ capture['parent_tag'] }}</a>
+                  <a href="{{ url_for('adminbp.tag_page', tagid=capture.parent_tag) }}">{{ capture['parent_tag'] }}</a>
               </td>
               <td>{{ capture['scanned_by_user'] }}</td>
               <td>{{ capture['timestamp'] }}</td>

@@ -66,11 +66,15 @@ def currentuser(userobj, **kwargs):
 
 @route(bp, '/signin')
 def signin():
+    # Set the URL to redirect to after sign in.
     nexturl = request.args.get('next')
     if nexturl is None:
         returl = request.referrer or '/'
     else:
         returl = nexturl
+
+    # Set scope according to the admin argument
+    scopestr = "openid%20profile"
 
     IDP_ORIGIN = current_app.config["IDP_ORIGIN"]
     auth0apiuniqueid = current_app.config["AUTH0_API_UNIQUEID"]
@@ -81,12 +85,13 @@ def signin():
                    "response_type=code&" \
                    "client_id={auth0clientid}&" \
                    "redirect_uri={callbackurl}&" \
-                   "scope=openid%20profile&" \
+                   "scope={scopestr}&" \
                    "audience={auth0apiuniqueid}&" \
                    "state={returl}".format(IDP_ORIGIN=IDP_ORIGIN,
                                            auth0clientid=auth0clientid,
                                            callbackurl=callbackurl,
                                            auth0apiuniqueid=auth0apiuniqueid,
+                                           scopestr=scopestr,
                                            returl=returl)
 
     return redirect(authorizeurl)
@@ -129,11 +134,11 @@ def callback():
     userwrapper = UserWrapper(baseurl=WSB_ORIGIN, tokenstr=access_token)
 
     try:
-        usr = userwrapper.get()
+        user = userwrapper.get()
     except UserNotFoundException:
-        usr = userwrapper.post()
+        user = userwrapper.post()
 
-    session['user'] = usr
+    session['user'] = user
 
     if state is not None:
         response = redirect(state)

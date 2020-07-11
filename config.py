@@ -12,6 +12,11 @@ DEFAULT_WSF_PROTOCOL = "http://"
 DEFAULT_WSF_HOST = "localhost"
 DEFAULT_WSF_PORT = 5001
 
+DEFAULT_ADMIN_SECURE = True
+
+DEFAULT_ADMINAPI_AUDIENCE = "default_adminapi_audience"
+DEFAULT_ADMINAPI_CLIENTID = "default_adminapi_clientid"
+
 IDP_PROTOCOL = os.getenv('IDP_PROTOCOL', DEFAULT_IDP_PROTOCOL)
 IDP_HOST = os.getenv('IDP_HOST', DEFAULT_IDP_HOST)
 IDP_PORT = os.getenv('IDP_PORT', DEFAULT_IDP_PORT)
@@ -33,10 +38,18 @@ WSF_ORIGIN = '{wsf_protocol}{wsf_host}:{wsf_port}'.format(wsf_protocol=WSF_PROTO
                                                           wsf_host=WSF_HOST,
                                                           wsf_port=str(WSF_PORT))
 
+ADMINAPI_AUDIENCE = os.getenv('ADMINAPI_AUDIENCE', DEFAULT_ADMINAPI_AUDIENCE)
+ADMINAPI_CLIENTID = os.getenv('ADMINAPI_CLIENTID', DEFAULT_ADMINAPI_CLIENTID)
+ADMINAPI_CLIENTSECRET = os.environ['ADMINAPI_CLIENTSECRET']
+
 AUTH0_CLIENTID = os.environ['AUTH0_CLIENTID']
 AUTH0_CLIENTSECRET = os.environ["AUTH0_CLIENTSECRET"]
 
 AUTH0_API_UNIQUEID = os.environ["AUTH0_API_UNIQUEID"]
+
+ADMIN_SECURE = os.getenv('ADMIN_SECURE', DEFAULT_ADMIN_SECURE)
+
+SESSION_COOKIE_HTTPONLY = True # Never expose the cookie to javascript running in the browser.
 
 STATIC_URL = os.environ['STATIC_URL']
 BASE_URL = os.environ['BASE_URL']

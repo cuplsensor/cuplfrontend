@@ -1,0 +1,25 @@
+{% extends "base_templates/admin_base.html" %}
+
+{% block title %}
+Sign in
+{% endblock %}
+{% block subtitle %}
+{% endblock %}
+
+{% block subnav %}
+{% endblock %}
+
+{% block main %}
+
+<section class="section">
+    <div class="container">
+        <form method="POST" action="">
+            {{ form.csrf_token }}
+            {{ form.client_id.label }} {{ form.client_id(size=25) }}
+            {{ form.client_secret.label }} {{ form.client_secret(size=25) }}
+        <input type="submit" value="Go">
+        </form>
+    </div>
+</section>
+
+{% endblock %}
