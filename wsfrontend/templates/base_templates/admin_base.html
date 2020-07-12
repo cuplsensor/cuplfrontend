@@ -55,3 +55,13 @@
   </div>
 </section>
 {% endblock %}
+
+{% block main %}
+<section class="section">
+        <div class="container">
+            <h3>{% block title %}{% endblock %}</h3>
+        </div>
+        {% block adminmain %}
+        {% endblock %}
+  </section>
+{% endblock %}

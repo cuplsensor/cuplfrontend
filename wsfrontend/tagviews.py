@@ -45,3 +45,22 @@ def tag(serial, **kwargs):
                           , latestcapture=latestcapture
                           , latestsample=latestsample
                           , **kwargs)
+
+
+@route(bp, '/<string:serial>/battery')
+@optional_auth
+def battery(serial, **kwargs):
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
+    tag = tagwrapper.get(tagserial=serial)
+
+    batterymvlist = list()
+    capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
+    captures = capturewrapper.get_list(serial, offset=0, limit=100)
+    for capture in captures:
+        batterymvlist.append({'t': capture['timestamp'], 'y':capture['batvoltagemv']})
+
+    return auth0_template('battery_page.html'
+                          , tag=tag
+                          , temps=batterymvlist, miny=1500, maxy=4000, sensor='battery', **kwargs)

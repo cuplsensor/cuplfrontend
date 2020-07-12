@@ -1,9 +1,4 @@
-{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
-
-{% block headerscripts %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
-{% endblock %}
+{% extends "base_templates/tag_plot_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
 
 {% block breadcrumbs %}
 <li><a href="{{ url_for('tagview.box', serial=capture.boxserial ) }}">{{ capture.boxserial }}</a></li>
@@ -17,7 +12,8 @@ Capture {{ capture.id }}
 {% endblock %}
 
 {% block main %}
-<div class="tabs">
+  <div class="container">
+    <div class="tabs">
   <ul>
     {% if "temp" in sensor %}
     <li class="is-active">
@@ -38,67 +34,33 @@ Capture {{ capture.id }}
     </li>
   </ul>
 </div>
-<div class="chart-container" style="position: relative; height:80vh; width:100%">
-  <canvas id="myChart"></canvas>
-</div>
-<script>
-  var ctx = document.getElementById("myChart");
-  var plotdata = {{temps|tojson}};
-  var linechartdata = {
-    datasets: [{
-      {% if "rh" in sensor %}
-      label: "Relative Humidity (%)",
-      backgroundColor: "rgba(153,226,255,0.5)",
-      borderColor: "rgba(153,226,235,1)",
-      pointBackgroundColor: "rgba(153,226,235,1)",
-      {% else %}
-      label: "Temperature (°C)",
-      backgroundColor: "rgba(220,100,94,0.5)",
-      borderColor: "rgba(220,100,94,1)",
-      pointBackgroundColor: "rgba(220,100,94,1)",
-      {% endif %}
-      data: {{temps|tojson}}
-    }]
-  }
-  var myChart = new Chart(ctx, {
-    type: 'line',
-    data: linechartdata,
-    options: {
-      maintainAspectRatio: false,
-      scales: {
-        xAxes: [{
-          type: 'time',
-          distribution: 'linear',
-          time: {
-            tooltipFormat: 'h:mm'
-          }
+  </div>
 
-        }],
-        yAxes: [{
-          ticks: {
-            suggestedMin: {{miny}}-4,
-            suggestedMax: {{maxy}}+4
-          }
-        }]
-      }
-    }
-  });
-</script>
-<table class="table">
-  <thead>
-    <tr>
-      <th>Time</th>
-      <th>Reading</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for smpl in temps %}
-    <tr>
-      <td>{{smpl.tHM.strftime('%H:%M')}}</td>
-      <td>{{smpl.y|round(2)}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
+  <section class="section">
+    <div class="container">
+      <div class="chart-container" style="position: relative; height:80vh; width:100%">
+        <canvas id="myChart"></canvas>
+      </div>
 
-</table>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Reading</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for smpl in temps %}
+          <tr>
+            <td>{{smpl.t}}</td>
+            <td>{{smpl.y|round(2)}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+
+      </table>
+    </div>
+  </section>
+
+
 {% endblock %}

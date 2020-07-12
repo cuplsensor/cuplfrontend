@@ -40,7 +40,7 @@
   </div>
 {% else %}
 <div class="navbar-item">
-  <a class="button" onclick="signin()">Sign in</a>
+  <a class="button" href="{{ url_for('dashboard.signin') }}">Sign in</a>
 </div>
 {% endif %}
 </div>

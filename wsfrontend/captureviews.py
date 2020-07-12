@@ -1,5 +1,6 @@
 from flask import Blueprint, redirect, render_template, url_for, current_app
 from werkzeug.exceptions import NotFound
+from wsapiwrapper.consumer.tag import TagWrapper
 from wsapiwrapper.consumer.capture import CaptureWrapper
 # For GET and POST
 from .defs import auth0_template, optional_auth, route
@@ -25,20 +26,25 @@ def capture(captid, **kwargs):
 @optional_auth
 def temp(captid, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
+
     capt = capturewrapper.get(captid)
     samples = capturewrapper.get_samples(captid)
+
+    tag = tagwrapper.get(tagserial=capt['tagserial'])
 
     plotdata = []
 
     for sample in samples:
-        smpl = {'t': sample['timestamp'], 'tHM': parser.parse(sample['timestamp']), 'y': sample['temp']}
+        smpl = {'t': sample['timestamp'], 'y': sample['temp']}
         plotdata.append(smpl)
 
     maxy = max(plotdata, key=lambda smpl: smpl.get('y')).get('y')
     miny = min(plotdata, key=lambda smpl: smpl.get('y')).get('y')
 
     return auth0_template('plot_page.html'
+                          , tag=tag
                           , capture=capt
                           , temps=plotdata, miny=miny, maxy=maxy, sensor='temp', **kwargs)
 

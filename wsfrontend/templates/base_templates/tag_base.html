@@ -1,19 +1,15 @@
-{% extends "base_templates/base.html" %}
+{% extends "base_templates/page_base.html" %}
 
 {% block subnav %}
 <section class="section">
   <div class="container">
     <div class="buttons has-addons is-centered" style="display:flex;justify-content:flex-start;flex-wrap:nowrap">
   <a id="serialbutton" class="button is-rounded" href="{{ url_for('tagview.tag', serial=tag.serial ) }}">@{{ tag.serial }}</a>
-  <div id="locationtags" class="button is-rounded" style="flex-grow:1; justify-content: flex-start;overflow:hidden;">
-    <div class="tags">
-      <span class="tag is-link">One</span>
-      <span class="tag is-link">Two</span>
-      <span class="tag is-link">Three</span>
-    </div>
+  <div id="subpage" class="button is-rounded" style="flex-grow:1; justify-content: flex-start;overflow:hidden;">
+    {% block subpage %}
+    {% endblock %}
   </div>
 </div>
   </div>
 </section>
-
 {% endblock %}

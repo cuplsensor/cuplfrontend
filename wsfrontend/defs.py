@@ -1,5 +1,6 @@
 from functools import wraps
-from flask import render_template, session, redirect, url_for, request, current_app
+from flask import render_template, session, redirect, url_for, request, current_app, flash
+from datetime import datetime
 import jwt
 
 
@@ -47,7 +48,14 @@ def requires_admin(f):
   @wraps(f)
   def decorated(*args, **kwargs):
     adminapi_token = session.get('ADMINAPI_TOKEN')
-    if (adminapi_token == None) and (current_app.config['ADMIN_SECURE']):
+    if (adminapi_token == None):
+        # No token
+        return redirect(url_for('adminbp.signin', next=request.url))
+    decodedtoken = jwt.decode(adminapi_token, verify=False)
+    unixtimenow = int(datetime.utcnow().timestamp())
+    if unixtimenow > decodedtoken['exp']:
+        # Token expired
+        flash("Token has expired. Sign in again. ", category="error")
         return redirect(url_for('adminbp.signin', next=request.url))
 
     return f(adminapi_token=adminapi_token, *args, **kwargs)

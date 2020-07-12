@@ -20,7 +20,6 @@
 
   <!-- JS
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <script src="https://cdn.auth0.com/js/lock/11.0.1/lock.min.js"></script>
   <script src="https://code.jquery.com/jquery-2.2.2.min.js"   integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="   crossorigin="anonymous"></script>
   <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
   <script type="text/javascript">
@@ -50,17 +49,9 @@
   });
   </script>
   <script type="text/javascript">
-  var lock = new Auth0Lock('{{ auth0clientid }}', '{{ auth0url }}');
-
-  function signin() {
-    window.location.href='{{ url_for('dashboard.signin') }}'
-  }
-
-
   $(document).on('click','#usermenu', function(e){
-
-                    $(this).toggleClass('is-active');
-                });
+      $(this).toggleClass('is-active');
+  });
   </script>
   {% block headerscripts %}
   {% endblock %}
@@ -69,7 +60,7 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="stylesheet" href="{{ url_for('dashboard.static', filename='normalize.css') }}">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
   <link rel="stylesheet" href="{{ url_for('dashboard.static', filename='style.css') }}">
 
   <!-- Favicon
@@ -85,7 +76,6 @@
       <div class="container">
       <div class="navbar-brand">
         {% block logo %}
-
         {% endblock %}
       </div>
 
@@ -128,13 +118,10 @@
   {% endif %}
   {% endwith %}
 
-  <section class="section">
-        <div class="container">
-            <h3>{% block title %}{% endblock %}</h3>
-        </div>
-        {% block main %}
-        {% endblock %}
-  </section>
+  {% block main %}
+  {% endblock %}
+
+
 
 
 
