@@ -1,0 +1,99 @@
+{% macro serial(tag) %}
+<div class="field">
+  <div class="control">
+    <label class="radio"> </label>
+    <input type="text" id="serialinput" name="question" value="{{ tag.serial }}">
+    Serial
+  </div>
+</div>
+{% endmacro %}
+
+{% macro usehttps() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="usehttps" checked>
+    Use HTTPS
+  </div>
+</div>
+{% endmacro %}
+
+{% macro baseurl() %}
+<div class="field">
+  <div class="control">
+    <label class="radio"> </label>
+    <input type="text" id="baseurl" name="question" value="">
+    Base URL
+  </div>
+</div>
+{% endmacro %}
+
+{% macro usehmac() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="usehmac" readonly>
+    Use HMAC
+  </div>
+</div>
+{% endmacro %}
+
+{% macro secretkey(tag) %}
+<div class="field">
+  <div class="control">
+    <label class="radio"> </label>
+    <input type="text" id="secretkeyinput" name="question" value="{{ tag.secretkey }}">
+    HMAC Secret key
+  </div>
+</div>
+{% endmacro %}
+
+{% macro trhradio() %}
+<div class="field">
+  <div class="control">
+    <label class="radio"></label>
+      <input type="radio" id="trhradio" name="question" checked>
+      Temperature & Relative Humidity
+    <label class="radio">
+      <input type="radio" id="tempradio" name="question">
+      Temperature
+    </label>
+  </div>
+</div>
+{% endmacro %}
+
+{% macro smplinterval() %}
+<div class="field">
+  <div class="control">
+    <label class="radio"></label>
+    <input type="number" id="smplintervalinput" name="question" min="0" max="65535" value="10">
+    Sample interval (minutes)
+  </div>
+</div>
+{% endmacro %}
+
+{% macro configtext() %}
+<div class="field">
+    <textarea class="textarea" id="configtext" name="question" min="0" max="90" value="10"></textarea>
+</div>
+{% endmacro %}
+
+{% macro notsupported(feature) %}
+<div id="notSupported" class="is-hidden notification is-danger is-light">
+      Sorry, <b>{{ feature }}</b> is not supported on this device, make sure you're
+      running Chrome 78 or later and have enabled the
+      <code>#enable-experimental-web-platform-features</code> flag in
+      <code>chrome://flags</code>
+    </div>
+{% endmacro %}
+
+{% macro checkfeature(feature) %}
+  // CODELAB: Add feature detection here.
+  if (!("{{feature}}" in navigator)) {
+    const notSupported = document.getElementById('notSupported');
+    notSupported.classList.remove('is-hidden');
+  }
+  else {
+    controller.set_enabled();
+  }
+{% endmacro %}

@@ -1,0 +1,33 @@
+{% extends "base_templates/tag_base.html" %}
+{% import 'base_templates/config_macros.html' as cfg %}
+
+{% block headerscripts %}
+<script src="{{ url_for('dashboard.static', filename='confignfc.js') }}" defer></script>
+{% endblock %}
+
+{% block subpage %}
+Configure via WebNFC
+{% endblock %}
+
+
+{% block main %}
+  <section class="section">
+    <div class="container">
+      {{ cfg.notsupported("WebNFC") }}
+      {{ cfg.trhradio() }}
+      {{ cfg.smplinterval() }}
+      {{ cfg.configtext() }}
+      <button id="btnConnect" type="button">Write to Tag</button>
+    </div>
+    <div class="container">
+      <pre id="log"></pre>
+    </div>
+  </section>
+{% endblock %}
+
+{% block configheader %}
+
+{% endblock %}
+{% block configfooter %}
+
+{% endblock %}

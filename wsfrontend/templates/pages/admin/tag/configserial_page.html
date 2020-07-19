@@ -1,0 +1,45 @@
+{% extends "base_templates/config_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% import 'base_templates/config_macros.html' as cfg %}
+
+{% set tag_active_page = "tagconf" %}
+{% block headerscripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.19.3/moment.js"></script>
+<script src="{{ url_for('dashboard.static', filename='webserial.js') }}" defer></script>
+<script src="{{ url_for('dashboard.static', filename='confignfc.js') }}" defer></script>
+<script>
+
+
+    function initialise() {
+        let controller = new Controller(configsubject);
+        let view = new NavView(controller);
+        let webserialview = new WebSerialView(controller);
+        {{ cfg.checkfeature('serial') }}
+
+        configsubject.notifyAll();
+    }
+</script>
+{% endblock %}
+
+{% block tagmain %}
+  <section class="section">
+    <div class="container">
+      {{ cfg.notsupported("Web Serial") }}
+      {{ cfg.serial(tag) }}
+      {{ cfg.usehttps() }}
+      {{ cfg.baseurl() }}
+      {{ cfg.usehmac() }}
+      {{ cfg.secretkey(tag) }}
+      {{ cfg.trhradio() }}
+      {{ cfg.smplinterval() }}
+      {{ cfg.configtext() }}
+      <button id="btnConnect" type="button" disabled>Write via Serial</button>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <pre id="log"></pre>
+    </div>
+  </section>
+{% endblock %}
+
+

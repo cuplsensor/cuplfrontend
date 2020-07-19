@@ -1,67 +1,18 @@
-{% extends "base_templates/admin_tag_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% extends "base_templates/admin_tag_base.html" %}
+{% import 'base_templates/config_macros.html' as cfg %}
 {% block tagmain %}
 <section class="section">
   <div class="container">
-
-      {% block configheader %}{% endblock %}
-    <div class="field">
-      <div class="control">
-        <label class="radio"> </label>
-        <input type="text" id="serialinput" name="question" value="{{ tag.serial }}">
-        Serial
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="checkbox"></label>
-        <input type="checkbox" id="usehttps" checked>
-        Use HTTPS
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="radio"> </label>
-        <input type="text" id="baseurl" name="question" value="">
-        Base URL
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="checkbox"></label>
-        <input type="checkbox" id="usehmac" readonly>
-        Use HMAC
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="radio"> </label>
-        <input type="text" id="secretkeyinput" name="question" value="{{ tag.secretkey }}">
-        HMAC Secret key
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="radio"></label>
-        <input type="radio" id="trhradio" name="question" checked>
-        Temperature & Relative Humidity
-
-        <label class="radio">
-          <input type="radio" id="tempradio" name="question">
-          Temperature
-        </label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="control">
-        <label class="radio"></label>
-        <input type="number" id="smplintervalinput" name="question" min="0" max="65535" value="10">
-        Sample interval (minutes)
-      </div>
-    </div>
-    <div class="field">
-        <textarea class="textarea" id="configtext" name="question" min="0" max="90" value="10"></textarea>
-    </div>
-      {% block configfooter %}{% endblock %}
+    {% block configheader %}{% endblock %}
+    {{ cfg.serial(tag) }}
+    {{ cfg.usehttps() }}
+    {{ cfg.baseurl() }}
+    {{ cfg.usehmac() }}
+    {{ cfg.secretkey(tag) }}
+    {{ cfg.trhradio() }}
+    {{ cfg.smplinterval() }}
+    {{ cfg.configtext() }}
+    {% block configfooter %}{% endblock %}
   </div>
 </section>
 {% endblock %}

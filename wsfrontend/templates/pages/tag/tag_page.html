@@ -21,8 +21,6 @@
     }
   }
 
-  
-
   function makeCalUrl(sensor, range) {
     var latest = getLatestDateStrings();
     var date_now  = new Date();
@@ -67,6 +65,8 @@
   <div class="container">
     <div class="tile is-ancestor">
       <div class="tile is-6 is-vertical is-parent">
+
+
         <div class="tile is-child box" id="temptile">
           <div class="innertile">
             <span class="icon is-large temperature is-pulled-right">
@@ -76,9 +76,9 @@
               <p class="title">Temperature</p>
               <p class="subtitle">{{ latestsample.temp|round(2) }} °C</p>
             </span>
-
           </div>
         </div>
+
         <div class="tile is-child box" id="rhtile">
           <div class="innertile">
             <span class="icon is-large rh is-pulled-right">
@@ -89,21 +89,30 @@
           </div>
         </div>
       </div>
+
+
       <div class="tile is-6 is-vertical is-parent">
         <div class="tile is-child box">
           <a href="{{ url_for('tagview.battery', serial=tag.serial) }}">
-          <span class="icon is-large battery is-pulled-right">
-            <i class="fas fa-battery-full fa-3x"></i>
-          </span>
-          <p class="title">Battery</p>
-            <p class="subtitle">{{ latestcapture.batvoltagemv|int() }} mV</p></a>
+            <span class="icon is-large battery is-pulled-right">
+              <i class="fas fa-battery-full fa-3x"></i>
+            </span>
+            <p class="title">Battery</p>
+            <p class="subtitle">{{ latestcapture.batvoltagemv|int() }} mV</p>
+          </a>
         </div>
-
 
         <div class="tile is-child box">
-
+          <a href="{{ url_for('tagview.confignfc', serial=tag.serial) }}">
+          <span class="icon is-large is-pulled-right">
+              <i class="fas fa-cog fa-3x"></i>
+            </span>
+            <p class="title">Configure</p>
+            <p class="subtitle">WebNFC</p>
+          </a>
         </div>
       </div>
+
     </div>
 </div>
 </section>

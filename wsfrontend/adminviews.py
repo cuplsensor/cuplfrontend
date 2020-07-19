@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, flash, url_for, current_app, session, request
+from flask import Blueprint, render_template, redirect, flash, url_for, current_app, session, request, abort
 from .defs import requires_admin
 from requests.exceptions import HTTPError
 from wsfrontend.forms.admin import AdminTokenForm
@@ -13,6 +13,12 @@ from wsapiwrapper.admin.tagview import TagViewWrapper
 bp = Blueprint('adminbp', __name__, template_folder='templates', static_folder='static', static_url_path='/admin/static')
 
 
+@bp.errorhandler(HTTPError)
+def handle_api_error(e):
+    desc = str(e)
+    response = render_template('errors/401.html', code=e.response.status_code, desc=desc)
+    return response, e.response.status_code
+
 @bp.route('/')
 def home_page():
     return redirect(url_for('adminbp.tag_list_page'))
@@ -20,7 +26,7 @@ def home_page():
 
 @bp.route('/tags', methods=['GET', 'POST'])
 @requires_admin
-def tag_list_page(adminapi_token, **kwargs):
+def tag_list_page(adminapi_token="", **kwargs):
     form = AddTagForm()
     tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
                             adminapi_token=adminapi_token)
@@ -115,14 +121,23 @@ def tag_tagviews_page(adminapi_token, tagid):
     tagviewlist = tagViewWrapper.get_many(tagid)
     return render_template('pages/admin/tag/tag_tagviews_page.html', tag=tag, tagviewlist=tagviewlist)
 
-@bp.route('/tag/<int:tagid>/configure')
+@bp.route('/tag/<int:tagid>/configserial')
 @requires_admin
-def configure_page(adminapi_token, tagid):
+def configserial_page(adminapi_token, tagid):
     tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
                             adminapi_token=adminapi_token)
 
     tag = tagwrapper.get(tagid)
-    return render_template('pages/admin/tag/configure_page.html', tag=tag)
+    return render_template('pages/admin/tag/configserial_page.html', tag=tag)
+
+@bp.route('tag/<int:tagid>/confignfc')
+@requires_admin
+def confignfc_page(adminapi_token, tagid):
+    tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
+                            adminapi_token=adminapi_token)
+
+    tag = tagwrapper.get(tagid)
+    return render_template('pages/admin/tag/confignfc_page.html', tag=tag)
 
 
 @bp.route('/tag/<int:tagid>/simulate')

@@ -1,10 +1,6 @@
-{% extends "base_templates/page_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
+{% extends "base_templates/tag_base.html" %}  {# base_templates/page_base.html extends base_templates/base.html #}
 
-{% block breadcrumbs %}
-<li><a href="{{ url_for('tagview.box', serial=capture.tagserial ) }}">Box {{ capture.tagserial }}</a></li>
-{% endblock %}
-
-{% block title %}
+{% block subpage %}
 Capture {{ capture.id }}
 {% endblock %}
 {% block subtitle %}

@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ tagview['id'] }}</td>
                 <td>
-                    <a href="{{ url_for('dashboard.user_page', userid=tagview['parent_user']) }}">{{ tagview['parent_user'] }}</a></td>
+                    <a href="{{ url_for('dashboard.user', user_id=tagview['parent_user']) }}">{{ tagview['parent_user'] }}</a></td>
                 <td>{{ tagview['timestamp'] }}</td>
             </tr>
             {% endfor %}

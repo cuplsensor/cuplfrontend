@@ -33,6 +33,7 @@ class ConfigSubject extends BaseSubject {
     this._usehmac = false;
     this._usehttps = false;
     this._smplintervalmins = 10;
+    this._enabled = false;
     this._writepending = false;
   }
 
@@ -118,6 +119,28 @@ class ConfigSubject extends BaseSubject {
     return this._smplintervalmins;
   }
 
+  set enabled(value) {
+    this._enabled = value;
+    this.notifyAll();
+  }
+
+  get enabled() {
+    return this._enabled;
+  }
+
+  writeNfc() {
+    console.log("writing NFC");
+    this.writepending = true;
+    navigator.nfc.push(this.configtext).then(() => {
+      console.log("Completed");
+      this.writepending = false;
+    }).catch(function(error) {
+      console.log("Error");
+      this.writepending = false;
+    });
+    this.notifyAll();
+  }
+
   createConfigLine(key, value) {
     var cline = '<' + key + ':' + value + '>';
     return cline;
@@ -159,6 +182,10 @@ class ConfigSubject extends BaseSubject {
 class Controller {
   constructor(model) {
     this.model = model;
+  }
+
+  set_enabled() {
+    this.model.enabled = true;
   }
 
   handleEvent(e) {
@@ -296,15 +323,9 @@ class NavView {
 
 }
 
+let configsubject = new ConfigSubject();
+
 document.addEventListener('DOMContentLoaded', () => {
   initialise();
 });
 
-let configsubject = new ConfigSubject();
-
-function initialise() {
-  let controller = new Controller(configsubject);
-  let view = new NavView(controller);
-
-  configsubject.notifyAll();
-}

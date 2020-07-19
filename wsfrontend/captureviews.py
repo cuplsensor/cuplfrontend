@@ -26,27 +26,9 @@ def capture(captid, **kwargs):
 @optional_auth
 def temp(captid, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
-    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
-
     capt = capturewrapper.get(captid)
-    samples = capturewrapper.get_samples(captid)
-
-    tag = tagwrapper.get(tagserial=capt['tagserial'])
-
-    plotdata = []
-
-    for sample in samples:
-        smpl = {'t': sample['timestamp'], 'y': sample['temp']}
-        plotdata.append(smpl)
-
-    maxy = max(plotdata, key=lambda smpl: smpl.get('y')).get('y')
-    miny = min(plotdata, key=lambda smpl: smpl.get('y')).get('y')
-
-    return auth0_template('plot_page.html'
-                          , tag=tag
-                          , capture=capt
-                          , temps=plotdata, miny=miny, maxy=maxy, sensor='temp', **kwargs)
+    return redirect(url_for('tagview.temp', serial=capt['tagserial'], captid=captid))
 
 
 @route(bp, '/<int:captid>/rh')
@@ -55,20 +37,7 @@ def rh(captid, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
     capt = capturewrapper.get(captid)
-    samples = capturewrapper.get_samples(captid)
-
-    plotdata = []
-
-    for sample in samples:
-        smpl = {'t': sample['timestamp'], 'tHM': parser.parse(sample['timestamp']), 'y': sample['rh']}
-        plotdata.append(smpl)
-
-    maxy = max(plotdata, key=lambda smpl: smpl.get('y')).get('y')
-    miny = min(plotdata, key=lambda smpl: smpl.get('y')).get('y')
-
-    return auth0_template('plot_page.html'
-                          , capture=capt
-                          , temps=plotdata, miny=miny, maxy=maxy, sensor='rh', **kwargs)
+    return redirect(url_for('tagview.rh', serial=capt['tagserial'], captid=captid))
 
 
 @route(bp, '/<int:captid>/status')
@@ -77,7 +46,4 @@ def status(captid, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
     capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
     capt = capturewrapper.get(captid)
-
-    return auth0_template('status_page.html' \
-                          , capture=capt
-                          , **kwargs)
+    return redirect(url_for('tagview.status', serial=capt['tagserial'], captid=captid))

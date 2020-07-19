@@ -2,7 +2,8 @@
 {% set tag_active_page = tag_active_page|default('taginfo') -%}
 {% set navigation_bar = [
     (url_for('adminbp.tag_page', tagid=tag.id), 'taginfo', 'Info'),
-    (url_for('adminbp.configure_page', tagid=tag.id), 'tagconf', 'Configure'),
+    (url_for('adminbp.configserial_page', tagid=tag.id), 'tagconf', 'Configure (Serial)'),
+    (url_for('adminbp.confignfc_page', tagid=tag.id), 'tagconfnfc', 'Configure (NFC)'),
     (url_for('adminbp.sim_page', tagid=tag.id), 'tagsimulate', 'Simulate'),
     (url_for('adminbp.tag_captures_page', tagid=tag.id), 'tagcaptures', 'Captures'),
     (url_for('adminbp.tag_tagviews_page', tagid=tag.id), 'tagviews', 'TagViews')
