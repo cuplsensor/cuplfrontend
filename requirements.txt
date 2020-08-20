@@ -1,3 +1,5 @@
+--extra-index-url https://testpypi.python.org/pypi
+
 certifi==2019.11.28
 chardet==3.0.4
 click==7.1.2
