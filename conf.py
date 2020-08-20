@@ -19,8 +19,8 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'wsfrontend'
-copyright = '2020, Malcolm Mackay'
+project = 'frontend'
+copyright = '2020, Plotsensor Ltd.'
 author = 'Malcolm Mackay'
 
 # The short X.Y version
@@ -43,11 +43,17 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages'
+    'sphinx.ext.githubpages',
+    'sphinx_rtd_theme',
 ]
 
+autodoc_default_options = {
+    'special-members': '__init__',
+}
+
+
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_doc_templates']
+templates_path = ['docs/_doc_templates']
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -79,13 +85,14 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 #
 # html_theme_options = {}
+html_logo = 'cupl_textonly_white_small.png'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -133,7 +140,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'wsfrontend.tex', 'wsfrontend Documentation',
+    (master_doc, 'cuplfrontend.tex', 'cuplfrontend Documentation',
      'Malcolm Mackay', 'manual'),
 ]
 
@@ -143,7 +150,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'wsfrontend', 'wsfrontend Documentation',
+    (master_doc, 'cuplfrontend', 'cuplfrontend Documentation',
      [author], 1)
 ]
 
