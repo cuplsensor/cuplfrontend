@@ -7,17 +7,6 @@ List of Tags
 {% endblock %}
 
 {% block adminmain %}
- <div class="container">
-        <form method="POST" action="">
-            {{ form.csrf_token }}
-            {{ form.serial.label }} {{ form.serial(size=8) }}
-            {{ form.secretkey.label }} {{ form.secretkey(size=16) }}
-            {{ form.fwversion.label }} {{ form.fwversion(size=8) }}
-            {{ form.hwversion.label }} {{ form.hwversion(size=8) }}
-            {{ form.description.label }} {{ form.description(size=40) }}
-        <input type="submit" value="Go">
-        </form>
-    </div>
 <section class="section">
     <div class="container">
         <table class="table">
@@ -30,6 +19,7 @@ List of Tags
               <th>Hardware Version</th>
               <th>Description</th>
               <th>Time Registered</th>
+              <th></th>
             </tr>
             </thead>
             <tbody>
@@ -38,17 +28,22 @@ List of Tags
               <td>
                   <a href="{{ url_for('adminbp.tag_page', tagid=tag.id) }}">{{ tag.id }}</a>
               </td>
-              <td>{{ tag['serial'] }}</td>
+              <td>
+                  <a href="{{ url_for('tagview.tag', serial=tag.serial) }}">{{ tag.serial }}</a>
+              </td>
               <td>{{ tag['secretkey'] }}</td>
               <td>{{ tag['fwversion'] }}</td>
               <td>{{ tag['hwversion'] }}</td>
               <td>{{ tag['description'] }}</td>
               <td>{{ tag['timeregistered'] }}</td>
+              <td><a href="{{ url_for('adminbp.delete_tag', tagid=tag.id) }}">Delete</a></td>
             </tr>
             {% endfor %}
             </tbody>
         </table>
+        <a class="button" href="{{ url_for('adminbp.add_tag') }}">Add</a>
     </div>
+
 </section>
 
 

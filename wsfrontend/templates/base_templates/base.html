@@ -122,6 +122,33 @@
   {% block main %}
   {% endblock %}
 
+  <div class="footer pt-3 pb-4">
+    <div class="container">
+      <nav class="level">
+        <div class="level-left">
+          <div class="level-item mr-1">
+            <a href="https://github.com/cuplsensor/wsfrontend">cuplfrontend</a>
+          </div>
+          <div class="level-item">
+            by Plotsensor Ltd.
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+          <a href="https://github.com/cuplsensor/wsfrontend/blob/master/LICENSE">Licence</a>
+        </div>
+        <div class="level-item">
+          <a href="{{ url_for('dashboard.version') }}">Version</a>
+        </div>
+        <div class="level-item">
+          <a href="https://wsfrontend.readthedocs.io/en/latest/index.html#index">Docs</a>
+        </div>
+        </div>
+
+      </nav>
+    </div>
+  </div>
+
 
 
 

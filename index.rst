@@ -1,5 +1,5 @@
-websensor Web App Frontend
-==========================
+cupl Frontend Documentation
+=============================
 See also :ref:`wscodec <wscodec:index>` and :ref:`wsbackend <wsbackend:index>`.
 
 .. _index:

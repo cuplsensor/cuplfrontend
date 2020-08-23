@@ -6,13 +6,13 @@
 
 from flask import Flask
 from flask_qrcode import QRcode
+from socket import gethostname
 from .defs import auth0_template
 from .views import bp as viewsbp
 from .tagviews import bp as tagviewsbp
 from .captureviews import bp as captureviewsbp
 from .calviews import bp as calviewsbp
 from .adminviews import bp as adminviewsbp
-
 
 def create_app(package_name, settings_override=None):
     """Returns the consumer application instance"""

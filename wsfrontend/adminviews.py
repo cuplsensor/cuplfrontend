@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, redirect, flash, url_for, current_app, session, request, abort
 from .defs import requires_admin
 from requests.exceptions import HTTPError
-from wsfrontend.forms.admin import AdminTokenForm
+from wsfrontend.forms.admin import AdminTokenForm, SimulateForm
 from wsfrontend.forms.tags import AddTagForm
 from wsapiwrapper.admin import request_admin_token
-from wsapiwrapper.admin.tag import TagWrapper
+from wsapiwrapper.admin.tag import TagWrapper, TagFormat
 from wsapiwrapper.admin.capture import CaptureWrapper
 from wsapiwrapper.admin.user import UserWrapper
 from wsapiwrapper.admin.tagview import TagViewWrapper
@@ -15,22 +15,23 @@ bp = Blueprint('adminbp', __name__, template_folder='templates', static_folder='
 
 @bp.errorhandler(HTTPError)
 def handle_api_error(e):
-    desc = str(e)
-    response = render_template('errors/401.html', code=e.response.status_code, desc=desc)
+    if e.response.status_code == 401:
+        flash(str(e), category="error")
+        response = redirect(url_for('adminbp.signin', next=request.url))
+    else:
+        response = render_template('errors/admin/generic.html', code=e.response.status_code, desc=str(e))
+
     return response, e.response.status_code
 
 @bp.route('/')
 def home_page():
     return redirect(url_for('adminbp.tag_list_page'))
 
-
-@bp.route('/tags', methods=['GET', 'POST'])
+@bp.route('/tags/add', methods=['GET', 'POST'])
 @requires_admin
-def tag_list_page(adminapi_token="", **kwargs):
+def add_tag(adminapi_token):
     form = AddTagForm()
-    tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
-                            adminapi_token=adminapi_token)
-
+    tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'], adminapi_token=adminapi_token)
     if form.validate_on_submit():
         serial = form.serial.data
         secretkey = form.secretkey.data
@@ -41,9 +42,27 @@ def tag_list_page(adminapi_token="", **kwargs):
         flash("Tag added", category="info")
         return redirect(url_for('adminbp.home_page'))
 
-    taglist = tagwrapper.get_many()
+    return render_template('pages/admin/tag/add_tag_page.html', form=form)
 
-    return render_template('pages/admin/tag/tag_list_page.html', form=form, taglist=taglist, **kwargs)
+
+@bp.route('/tag/<int:tagid>/delete')
+@requires_admin
+def delete_tag(adminapi_token, tagid):
+    tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
+                            adminapi_token=adminapi_token)
+    tagwrapper.delete(tagid)
+    return redirect(url_for("adminbp.tag_list_page"))
+
+
+@bp.route('/tags')
+@requires_admin
+def tag_list_page(adminapi_token="", **kwargs):
+
+    tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
+                            adminapi_token=adminapi_token)
+
+    taglist = tagwrapper.get_many()
+    return render_template('pages/admin/tag/tag_list_page.html', taglist=taglist, **kwargs)
 
 
 @bp.route('/captures')
@@ -85,6 +104,15 @@ def capture_page(adminapi_token, captid):
     capture = capturewrapper.get(captid)
     return render_template('pages/admin/capture/capture_page.html', capture=capture)
 
+@bp.route('/capture/<int:captid>/delete')
+@requires_admin
+def delete_capture(adminapi_token, captid):
+    capturewrapper = CaptureWrapper(baseurl=current_app.config['WSB_ORIGIN'],
+                                    adminapi_token=adminapi_token)
+    capturewrapper.delete(captid)
+    nexturl = request.args.get('next') or url_for("adminbp.capture_list_page")
+    return redirect(nexturl)
+
 @bp.route('/tag/<int:tagid>')
 @requires_admin
 def tag_page(adminapi_token, tagid):
@@ -121,6 +149,7 @@ def tag_tagviews_page(adminapi_token, tagid):
     tagviewlist = tagViewWrapper.get_many(tagid)
     return render_template('pages/admin/tag/tag_tagviews_page.html', tag=tag, tagviewlist=tagviewlist)
 
+
 @bp.route('/tag/<int:tagid>/configserial')
 @requires_admin
 def configserial_page(adminapi_token, tagid):
@@ -128,6 +157,7 @@ def configserial_page(adminapi_token, tagid):
                             adminapi_token=adminapi_token)
 
     tag = tagwrapper.get(tagid)
+
     return render_template('pages/admin/tag/configserial_page.html', tag=tag)
 
 @bp.route('tag/<int:tagid>/confignfc')
@@ -140,15 +170,35 @@ def confignfc_page(adminapi_token, tagid):
     return render_template('pages/admin/tag/confignfc_page.html', tag=tag)
 
 
-@bp.route('/tag/<int:tagid>/simulate')
+@bp.route('/tag/<int:tagid>/simulate', methods=['GET', 'POST'])
 @requires_admin
 def sim_page(adminapi_token, tagid):
+    simulateform = SimulateForm()
+
+    if simulateform.frontendurl.data == None:
+        simulateform.frontendurl.data = current_app.config["WSF_ORIGIN"]
+
     tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
                             adminapi_token=adminapi_token)
-
     tag = tagwrapper.get(tagid)
-    simstr = tagwrapper.simulate(tagid=int(tagid), frontendurl=current_app.config["WSF_ORIGIN"])
-    return render_template('pages/admin/tag/sim_page.html', tag=tag, simstr=simstr)
+
+    tagformat = int(simulateform.tagformat.data)
+    simstr = tagwrapper.simulate(tagid=int(tagid),
+                                 frontendurl=simulateform.frontendurl.data,
+                                 nsamples=simulateform.nsamples.data,
+                                 smplintervalmins=simulateform.smplintervalmins.data,
+                                 tagformat=TagFormat(tagformat),
+                                 usehmac=simulateform.usehmac.data,
+                                 batvoltagemv=simulateform.minbatv.data,
+                                 bor=simulateform.bor.data,
+                                 svsh=simulateform.svsh.data,
+                                 wdt=simulateform.wdt.data,
+                                 misc=simulateform.misc.data,
+                                 lpm5wu=simulateform.lpm5wu.data,
+                                 clockfail=simulateform.clockfail.data,
+                                 tagerror=simulateform.tagerror.data
+                                 )
+    return render_template('pages/admin/tag/sim_page.html', tag=tag, simstr=simstr, form=simulateform)
 
 @bp.route('/signin', methods=['GET', 'POST'])
 def signin():

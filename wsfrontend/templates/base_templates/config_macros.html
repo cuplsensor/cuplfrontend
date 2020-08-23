@@ -32,8 +32,108 @@
 <div class="field">
   <div class="control">
     <label class="checkbox"></label>
-    <input type="checkbox" id="usehmac" readonly>
+    <input type="checkbox" id="usehmac">
     Use HMAC
+  </div>
+</div>
+{% endmacro %}
+
+{% macro bor() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="bor">
+    Brown-Out-Reset
+  </div>
+</div>
+{% endmacro %}
+
+{% macro svsh() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="svsh">
+    Supply Voltage Supervisor (High-side) reset
+  </div>
+</div>
+{% endmacro %}
+
+{% macro wdt() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="svsh">
+    Watchdog timer reset
+  </div>
+</div>
+{% endmacro %}
+
+{% macro misc() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="misc">
+    Miscellaneous tag error
+  </div>
+</div>
+{% endmacro %}
+
+{% macro lpm5wu() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="lpm5wu">
+    Low Power Mode x.5 wakeup flag
+  </div>
+</div>
+{% endmacro %}
+
+{% macro clockfail() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="clockfail">
+    Clock failure error
+  </div>
+</div>
+{% endmacro %}
+
+{% macro tagerror() %}
+<div class="field">
+  <div class="control">
+    <label class="checkbox"></label>
+    <input type="checkbox" id="tagerror">
+    Tag error state
+  </div>
+</div>
+{% endmacro %}
+
+{% macro nsamples() %}
+<div class="field">
+  <div class="control">
+    <label class="radio"></label>
+    <input type="number" id="nsamples" name="question" min="0" max="65535" value="10">
+    Number of samples to simulate
+  </div>
+</div>
+{% endmacro %}
+
+{% macro batvoltagemv() %}
+<div class="field">
+  <div class="control">
+    <label class="radio"></label>
+    <input type="number" id="batvoltagemv" name="question" min="0" max="65535" value="2800">
+    Most recently measured battery voltage (mV)
+  </div>
+</div>
+{% endmacro %}
+
+{% macro minbatvoltagemv() %}
+<div class="field">
+  <div class="control">
+    <label class="radio"></label>
+    <input type="number" id="minbatvoltagemv" name="question" min="0" max="65535" value="2200">
+    Minimum battery voltage before sleep (mV)
   </div>
 </div>
 {% endmacro %}

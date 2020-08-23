@@ -3,6 +3,7 @@ request, url_for, session, abort, flash, Response, jsonify, current_app
 from wsapiwrapper.consumer.user import UserWrapper, UserNotFoundException
 from wsapiwrapper.consumer.capture import CaptureWrapper
 from wsapiwrapper.consumer.tagview import TagViewWrapper
+from wsapiwrapper.consumer.version import Version
 
 # For GET and POST
 import requests
@@ -42,7 +43,6 @@ def home_page(**kwargs):
 
     return response
 
-
 @route(bp, '/user/<int:user_id>')
 def user(**kwargs):
     #userobj = users.get_or_404(user_id)
@@ -63,6 +63,11 @@ def currentuser(userobj, **kwargs):
     bvlist = bvwrapper.get(distinct=True)
     return auth0_template('pages/currentuser_page.html', userobj=userobj, bvlist=bvlist, **kwargs)
 
+@route(bp, '/version')
+def version():
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+    version = Version(baseurl=WSB_ORIGIN).get()
+    return render_template('pages/version_page.html', backendversion=version['cuplbackend'], codecversion=version['cuplcodec'])
 
 @route(bp, '/signin')
 def signin():

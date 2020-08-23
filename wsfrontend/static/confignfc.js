@@ -33,6 +33,7 @@ class ConfigSubject extends BaseSubject {
     this._usehmac = false;
     this._usehttps = false;
     this._smplintervalmins = 10;
+    this._minbatv = 2200;
     this._enabled = false;
     this._writepending = false;
   }
@@ -119,6 +120,15 @@ class ConfigSubject extends BaseSubject {
     return this._smplintervalmins;
   }
 
+  set minbatv(value) {
+    this._minbatv = value;
+    this.notifyAll();
+  }
+
+  get minbatv() {
+    return this._minbatv;
+  }
+
   set enabled(value) {
     this._enabled = value;
     this.notifyAll();
@@ -155,8 +165,9 @@ class ConfigSubject extends BaseSubject {
     }
     configlist.push(this.createConfigLine('h', this.usehttps ? '1':'0'));           // HTTPS
     configlist.push(this.createConfigLine('b', this.baseurl));                      // Append Base URL
-    configlist.push(this.createConfigLine('v', this.trhenabled ? '11':'12'));       // Append version string
+    configlist.push(this.createConfigLine('f', this.trhenabled ? '1':'2'));         // Append version string
     configlist.push(this.createConfigLine('t', this.smplintervalmins.toString()));  // Append the sample interval string
+    configlist.push(this.createConfigLine('u', this.minbatv.toString()))
     configlist.push(this.createConfigLine('i', this.usehmac ? '1':'0'));            // Append use HMAC
     if (this.usehmac && (this.secretkey.length === 16)) {
       // Append secret key
@@ -283,6 +294,9 @@ class NavView {
     this.smplintervalinput = document.getElementById('smplintervalinput');
     this.smplintervalinput.addEventListener('input', controller);
 
+    this.minbatv = document.getElementById('minbatvoltagemv');
+    this.minbatv.addEventListener('change', controller);
+
     this.usehttps = document.getElementById('usehttps');
     this.usehttps.addEventListener('click', controller);
 
@@ -310,6 +324,7 @@ class NavView {
     this.baseurlinput.value = updatedmodel.baseurl;
     this.usehttps.checked = updatedmodel.usehttps;
     this.secretkeyinput.value = updatedmodel.secretkey;
+    this.minbatv = updatedmodel.minbatv;
 
     this.usehmac.checked = updatedmodel.secretkey.length > 0;
 

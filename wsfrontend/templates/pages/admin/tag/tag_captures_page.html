@@ -10,6 +10,7 @@
               <th>ID</th>
               <th>Scanned by</th>
               <th>Timestamp</th>
+              <th></th>
             </tr>
             </thead>
             <tbody>
@@ -20,6 +21,7 @@
               </td>
               <td>{{ capture['scanned_by_user'] }}</td>
               <td>{{ capture['timestamp'] }}</td>
+              <td><a href="{{ url_for('adminbp.delete_capture', captid=capture.id, next=request.url) }}">Delete</a></td>
             </tr>
             {% endfor %}
             </tbody>
