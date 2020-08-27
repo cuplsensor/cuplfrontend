@@ -1,13 +1,11 @@
 from flask import Blueprint, redirect, render_template, url_for, current_app
 from werkzeug.exceptions import NotFound
-from wsapiwrapper.consumer.tag import TagWrapper
 from wsapiwrapper.consumer.capture import CaptureWrapper
 # For GET and POST
-from .defs import auth0_template, optional_auth, route
-from dateutil import parser
+from wsfrontend.views.defs import optional_auth, route
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
-bp = Blueprint('captureview', __name__, template_folder='templates/pages/capture', static_folder='static',
+bp = Blueprint('captureview', __name__, template_folder='../../templates/pages/consumer/capture', static_folder='static',
                static_url_path='/static/frontend', url_prefix='/capture')
 
 

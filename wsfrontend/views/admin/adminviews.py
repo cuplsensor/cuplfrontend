@@ -1,16 +1,14 @@
-from flask import Blueprint, render_template, redirect, flash, url_for, current_app, session, request, abort
-from .defs import requires_admin
+from flask import Blueprint, render_template, redirect, flash, url_for, current_app, session, request
+from wsfrontend.views.defs import requires_admin
 from requests.exceptions import HTTPError
 from wsfrontend.forms.admin import AdminTokenForm, SimulateForm
 from wsfrontend.forms.tags import AddTagForm
 from wsapiwrapper.admin import request_admin_token
 from wsapiwrapper.admin.tag import TagWrapper, TagFormat
 from wsapiwrapper.admin.capture import CaptureWrapper
-from wsapiwrapper.admin.user import UserWrapper
-from wsapiwrapper.admin.tagview import TagViewWrapper
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
-bp = Blueprint('adminbp', __name__, template_folder='templates', static_folder='static', static_url_path='/admin/static')
+bp = Blueprint('adminbp', __name__, template_folder='../../templates', static_folder='static', static_url_path='/admin/static')
 
 
 @bp.errorhandler(HTTPError)
@@ -75,25 +73,14 @@ def capture_list_page(adminapi_token):
     return render_template('pages/admin/capture/capture_list_page.html', capturelist=capturelist)
 
 
-@bp.route('/users')
+@bp.route('/capture/<int:captid>')
 @requires_admin
-def user_list_page(adminapi_token):
-    userwrapper = UserWrapper(baseurl=current_app.config['WSB_ORIGIN'],
-                              adminapi_token=adminapi_token)
+def capture_page(adminapi_token, captid):
+    capturewrapper = CaptureWrapper(baseurl=current_app.config['WSB_ORIGIN'],
+                                    adminapi_token=adminapi_token)
 
-    userlist = userwrapper.get_many()
-    return render_template('pages/admin/user/user_list_page.html', userlist=userlist)
-
-
-@bp.route('/user/<int:userid>')
-@requires_admin
-def user_page(adminapi_token, userid):
-    userwrapper = UserWrapper(baseurl=current_app.config['WSB_ORIGIN'],
-                              adminapi_token=adminapi_token)
-
-    user = userwrapper.get(userid)
-    return render_template('pages/admin/user/user_page.html', user=user)
-
+    capture = capturewrapper.get(captid)
+    return render_template('pages/admin/capture/capture_page.html', capture=capture)
 
 @bp.route('/capture/<int:captid>/delete')
 @requires_admin
@@ -103,6 +90,7 @@ def delete_capture(adminapi_token, captid):
     capturewrapper.delete(captid)
     nexturl = request.args.get('next') or url_for("adminbp.capture_list_page")
     return redirect(nexturl)
+
 
 @bp.route('/tag/<int:tagid>')
 @requires_admin
@@ -128,19 +116,6 @@ def tag_captures_page(adminapi_token, tagid):
     return render_template('pages/admin/tag/tag_captures_page.html', tag=tag, capturelist=capturelist)
 
 
-@bp.route('/tag/<int:tagid>/tagviews')
-@requires_admin
-def tag_tagviews_page(adminapi_token, tagid):
-    tagwrapper = TagWrapper(baseurl=current_app.config['WSB_ORIGIN'],
-                            adminapi_token=adminapi_token)
-    tag = tagwrapper.get(tagid)
-
-    tagViewWrapper = TagViewWrapper(baseurl=current_app.config['WSB_ORIGIN'],
-                                    adminapi_token=adminapi_token)
-    tagviewlist = tagViewWrapper.get_many(tagid)
-    return render_template('pages/admin/tag/tag_tagviews_page.html', tag=tag, tagviewlist=tagviewlist)
-
-
 @bp.route('/tag/<int:tagid>/configserial')
 @requires_admin
 def configserial_page(adminapi_token, tagid):
@@ -150,6 +125,7 @@ def configserial_page(adminapi_token, tagid):
     tag = tagwrapper.get(tagid)
 
     return render_template('pages/admin/tag/configserial_page.html', tag=tag)
+
 
 @bp.route('tag/<int:tagid>/confignfc')
 @requires_admin
@@ -191,6 +167,7 @@ def sim_page(adminapi_token, tagid):
                                  )
     return render_template('pages/admin/tag/sim_page.html', tag=tag, simstr=simstr, form=simulateform)
 
+
 @bp.route('/signin', methods=['GET', 'POST'])
 def signin():
     form = AdminTokenForm()
@@ -211,6 +188,7 @@ def signin():
         return redirect(nexturl)
 
     return render_template('pages/admin/signin_page.html', form=form, signinpage=True)
+
 
 @bp.route('/signout')
 def signout():

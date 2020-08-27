@@ -6,13 +6,12 @@
 
 from flask import Flask
 from flask_qrcode import QRcode
-from socket import gethostname
-from .defs import auth0_template
-from .views import bp as viewsbp
-from .tagviews import bp as tagviewsbp
-from .captureviews import bp as captureviewsbp
-from .calviews import bp as calviewsbp
-from .adminviews import bp as adminviewsbp
+from wsfrontend.views.defs import auth0_template
+from wsfrontend.views.consumer.views import bp as consumerviewsbp
+from wsfrontend.views.consumer.tag import bp as consumertagbp
+from wsfrontend.views.consumer.capture import bp as consumercapturebp
+from wsfrontend.views.consumer.cal import bp as consumercalbp
+from wsfrontend.views.admin.adminviews import bp as adminviewsbp
 
 def create_app(package_name, settings_override=None):
     """Returns the consumer application instance"""
@@ -21,10 +20,10 @@ def create_app(package_name, settings_override=None):
     app.config.from_object('config')
     app.config.from_object(settings_override)
 
-    app.register_blueprint(viewsbp)
-    app.register_blueprint(tagviewsbp)
-    app.register_blueprint(calviewsbp)
-    app.register_blueprint(captureviewsbp)
+    app.register_blueprint(consumerviewsbp)
+    app.register_blueprint(consumertagbp)
+    app.register_blueprint(consumercalbp)
+    app.register_blueprint(consumercapturebp)
     app.register_blueprint(adminviewsbp, url_prefix='/admin')
 
     app.errorhandler(404)(handle_error)

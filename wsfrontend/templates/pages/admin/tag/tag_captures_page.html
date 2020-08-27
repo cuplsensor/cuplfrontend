@@ -17,7 +17,7 @@
             {% for capture in capturelist %}
             <tr>
               <td>
-                  <a href="{{ url_for('adminbp.capture_page', captid=capture.id) }}">{{ capture['id'] }}</a>
+                  <a href="{{ url_for('captureview.capture', captid=capture.id) }}">{{ capture['id'] }}</a>
               </td>
               <td>{{ capture['scanned_by_user'] }}</td>
               <td>{{ capture['timestamp'] }}</td>

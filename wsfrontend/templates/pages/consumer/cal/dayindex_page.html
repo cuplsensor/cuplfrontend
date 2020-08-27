@@ -43,26 +43,27 @@ window.addEventListener('load', initialise);
 
 
 {% block main %}
-  <div class="container">
-    <nav id="daynav" class="level">
-      <div class="level-left">
-        <div class="level-item is-pulled-left">
-        <div id="daybuttons" class="buttons has-addons is-pulled-left">
-          <a class="button" id="leftbutton">
-            <span class="icon is-small">
-              <i class="fas fa-angle-left"></i>
-            </span>
-          </a>
-          <a class="button" id="todaybutton">
-            Today
-          </a>
-          <a class="button" id="rightbutton">
-            <span class="icon is-small">
-              <i class="fas fa-angle-right"></i>
-            </span>
-          </a>
-        </div>
-      </div>
+  <section class="section">
+      <div class="container">
+        <nav id="daynav" class="level">
+          <div class="level-left">
+            <div class="level-item is-pulled-left">
+            <div id="daybuttons" class="buttons has-addons is-pulled-left">
+              <a class="button" id="leftbutton">
+                <span class="icon is-small">
+                  <i class="fas fa-angle-left"></i>
+                </span>
+              </a>
+              <a class="button" id="todaybutton">
+                Today
+              </a>
+              <a class="button" id="rightbutton">
+                <span class="icon is-small">
+                  <i class="fas fa-angle-right"></i>
+                </span>
+              </a>
+            </div>
+          </div>
         <div class="level-item">
         <input type="date" id="datepicker" style="height:2.25em; margin-left:0.5em">
       </div>
@@ -81,6 +82,7 @@ window.addEventListener('load', initialise);
       </div>
     </nav>
   </div>
+  </section>
 <section class="section">
   <div class="container">
     <div class="tabs">

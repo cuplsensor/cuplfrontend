@@ -1,19 +1,14 @@
-from flask import Blueprint, redirect, render_template, \
-    request, url_for, session, abort, flash, Response, jsonify, current_app
-# from ..services import tags, viewlogitems
+from flask import Blueprint, redirect, render_template, url_for, session, current_app
 from werkzeug.exceptions import NotFound
 from wsapiwrapper.consumer.capture import CaptureWrapper
 from wsapiwrapper.consumer.tag import TagWrapper
 from wsapiwrapper.consumer.tagview import TagViewWrapper
 
 # For GET and POST
-import requests
-import json
-import os
-from .defs import auth0_template, requires_auth, optional_auth, route
+from wsfrontend.views.defs import auth0_template, optional_auth, route
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
-bp = Blueprint('tagview', __name__, template_folder='templates/pages/tag', static_folder='static',
+bp = Blueprint('tagview', __name__, template_folder='../../templates/pages/consumer/tag', static_folder='static',
                static_url_path='/static/frontend', url_prefix='/tag')
 
 

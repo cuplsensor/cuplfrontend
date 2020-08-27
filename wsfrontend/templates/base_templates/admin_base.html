@@ -37,7 +37,6 @@
 {% set navigation_bar = [
     (url_for('adminbp.tag_list_page'), 'admintags', 'Tags'),
     (url_for('adminbp.capture_list_page'), 'admincaptures', 'Captures'),
-    (url_for('adminbp.user_list_page'), 'adminusers', 'Users')
 ] -%}
 
 {% set active_page = active_page|default('admintags') -%}
