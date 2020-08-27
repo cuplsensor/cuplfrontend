@@ -2,6 +2,16 @@
 {% import 'base_templates/config_macros.html' as cfg %}
 {% set tag_active_page = "tagsimulate" %}
 
+{% block headerscripts %}
+<script defer>
+    $(document).ready(function() {
+        document.getElementById("frontendurl").value = window.location.protocol + '//' + window.location.host;
+    });
+
+
+</script>
+{% endblock %}
+
 {% block tagmain %}
 <section class="section">
   <div class="container">

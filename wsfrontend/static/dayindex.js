@@ -73,8 +73,9 @@ class BoxSubject extends BaseSubject {
 }
 
 class CalendarSubject extends BoxSubject {
-  constructor(locapiurl) {
+  constructor(locapiurl, caljsonurl) {
     super(locapiurl); // Call the super class constructor.
+    this.caljsonurl = caljsonurl;
     this.range = null;
     this.date = null;
     this.capsamples = null;
@@ -210,7 +211,7 @@ class CalendarSubject extends BoxSubject {
     var settings = {
       "async": true,
       "crossDomain": false,
-      "url": "",
+      "url": this.caljsonurl,
       "method": "POST",
       "headers": {
         "cache-control": "no-cache",
@@ -387,23 +388,8 @@ class CalendarController extends BoxController {
       case 'todaybutton':
         this.dateToToday();
         break;
-      case 'newdesc_savebtn':
-        var newlocobj = this.formToObj(this.newlocform);
-        var actionurl = this.newlocform.getAttribute("action");
-        this.model.postNewLocation(newlocobj, actionurl);
-        break;
-      case 'editdesc_savebtn':
-        var locid = this.editlocform.elements['editloc-location_id'].value;
-        var editedlocobj = this.formToObj(this.editlocform);
-        var actionurl = this.editlocform.getAttribute("action");
-        actionurl = actionurl.slice(0,-1);
-        this.model.editLocation(locid, actionurl, editedlocobj);
-        break;
-      case 'editdesc_deletebtn':
-        var locid = this.editlocform.elements['editloc-location_id'].value;
-        var actionurl = this.editlocform.getAttribute("action");
-        actionurl = actionurl.slice(0,-1);
-        this.model.deleteLocation(locid, actionurl);
+      case 'downloadcsvbutton':
+        this.downloadcsv();
         break;
       default:
         handled = false;
@@ -421,6 +407,30 @@ class CalendarController extends BoxController {
       }
 
       this.model.notifyAll();
+    }
+
+    downloadcsv() {
+      var samplesarray = this.model.capsamples.samples;
+      var tzoffsetmins = moment(this.model.date).tz(this.model.tz).utcOffset();
+      var csvarray = [];
+
+      for (var el in samplesarray)
+      {
+        var timestamp = samplesarray[el]['timestamp'] + 'Z';
+        var row = {
+          Datetime: moment(timestamp).utcOffset(tzoffsetmins).format('YYYY-MM-DD HH:mm:ss'),
+          Temperature: samplesarray[el]['temp'].toFixed(2),
+
+        };
+
+        if ('rh' in samplesarray[el]) {
+          row['Relative Humidity'] = samplesarray[el]['rh'].toFixed(2);
+        }
+        csvarray.push(row);
+      }
+
+      downloadCSV({ filename: "stock-data.csv", data:csvarray });
+
     }
 
 }
@@ -458,51 +468,6 @@ class UrlMaker {
   }
 }
 
-class LocationListView extends UrlMaker {
-  constructor(controller, baseurl) {
-    super(baseurl);
-    this.controller = controller;
-    this.controller.model.subscribe(this);
-    this.controller.populateList();
-    this.loctags = document.getElementById('locationtags');
-  }
-
-  update(modeldata) {
-    var locationitems = modeldata.recentlocations;
-
-    // Remove all children
-    while (this.loctags.firstChild) {
-      this.loctags.removeChild(this.loctags.firstChild);
-    }
-
-    if (locationitems !== null) {
-      var tagscontainer = document.createElement('div');
-      tagscontainer.setAttribute("class", "tags");
-      tagscontainer.setAttribute("style", "flex-wrap:nowrap;")
-
-      for (let item of locationitems.entries()) {
-        var locationitem = item[1]; // Hack
-        var loctext = locationitem.location.description;
-        var newtag = document.createElement('a');
-        var range = 'day';
-        var sensor = modeldata.sensor;
-        var dateobj = new Date(locationitem.timestampPosix);
-        var dateymd = this.getDateAsYmd(dateobj);
-        var taghref = this.makeUrl(range, sensor, dateymd, )
-
-
-        newtag.setAttribute("class", "tag is-link");
-
-        newtag.appendChild(document.createTextNode(loctext));
-
-        tagscontainer.appendChild(newtag);
-
-      }
-      this.loctags.appendChild(tagscontainer);
-    }
-  }
-}
-
 class NavView {
   constructor(controller) {
     this.controller = controller;
@@ -533,6 +498,9 @@ class NavView {
 
     this.todaybutton = document.getElementById('todaybutton');
     this.todaybutton.addEventListener('click', controller);
+
+    this.downloadcsvbutton = document.getElementById('downloadcsvbutton');
+    this.downloadcsvbutton.addEventListener('click', controller);
 
     this.controller.model.subscribe(this);
   }
@@ -714,42 +682,10 @@ class TableView {
     this.controller = controller;
     this.controller.model.subscribe(this);
     this.tablediv = document.getElementById('samplesdiv');
-    this.newdescmodal = document.getElementById('newdescmodal');
-    this.editdescmodal = document.getElementById('editdescmodal');
-    this.newlocform = document.getElementById('newlocation');
-    this.editlocform = document.getElementById('editlocation');
-
-    this.captsampleid = document.getElementById('newloc-capturesample_id');
-    this.locationid = document.getElementById('editloc-location_id');
-    this.editdesc_location = document.getElementById('editloc-description');
-    this.newdesc_location = document.getElementById('newloc-description');
-
-    this.editdesc_savebtn = document.getElementById('editdesc_savebtn');
-    this.editdesc_cancelbtn = document.getElementById('editdesc_cancelbtn');
-    this.editdesc_closebtn = document.getElementById('editdesc_closebtn');
-    this.editdesc_deletebtn = document.getElementById('editdesc_deletebtn');
-
-    this.newdesc_savebtn = document.getElementById('newdesc_savebtn');
-    this.newdesc_cancelbtn = document.getElementById('newdesc_cancelbtn');
-    this.newdesc_closebtn = document.getElementById('newdesc_closebtn');
-
-    this.newdesc_cancelbtn.addEventListener('click', this);
-    this.newdesc_closebtn.addEventListener('click', this);
-    this.newdesc_savebtn.addEventListener('click', this);
-    this.newdesc_savebtn.addEventListener('click', controller);
-    this.newlocform.addEventListener('submit', this);
-    this.editlocform.addEventListener('submit', this);
-
-    this.editdesc_cancelbtn.addEventListener('click', this);
-    this.editdesc_closebtn.addEventListener('click', this);
-    this.editdesc_savebtn.addEventListener('click', this);
-    this.editdesc_savebtn.addEventListener('click', controller);
-    this.editdesc_deletebtn.addEventListener('click', this);
-    this.editdesc_deletebtn.addEventListener('click', controller);
   }
 
   handleEvent(e) {
-    switch(e.type) {
+    switch (e.type) {
       case "click":
         this.clickHandler(e.currentTarget);
         break;
@@ -765,37 +701,6 @@ class TableView {
     }
   }
 
-  clickHandler(target) {
-    if (target.classList.contains("tag")) {
-      this.showLocModal(target);
-    } else {
-      switch(target.id) {
-        case "newdesc_cancelbtn":
-        case "newdesc_closebtn":
-        case "newdesc_savebtn":
-        case "editdesc_cancelbtn":
-        case "editdesc_closebtn":
-        case "editdesc_savebtn":
-        case "editdesc_deletebtn":
-          this.hideLocModal();
-          break;
-      }
-    }
-  }
-
-  submitHandler(target) {
-    var event = new Event('click');
-    switch(target.id) {
-      case "newlocation":
-        this.newdesc_savebtn.dispatchEvent(event);
-        break;
-      case "editlocation":
-        this.editdesc_savebtn.dispatchEvent(event);
-        break;
-    }
-
-  }
-
   tableHeader(datestr) {
     var newtable = document.createElement('table');
     var newtablehead = document.createElement('thead');
@@ -804,7 +709,6 @@ class TableView {
     var trcolheadings = document.createElement('tr');
     var thtime = document.createElement('th');
     var threading = document.createElement('th');
-    var thlocation = document.createElement('th');
     var newtablebody = document.createElement('tbody');
 
     newtable.setAttribute("class", "table");
@@ -818,7 +722,6 @@ class TableView {
 
     trcolheadings.appendChild(thtime);
     trcolheadings.appendChild(threading);
-    trcolheadings.appendChild(thlocation);
     newtablehead.appendChild(trtableheadingrow);
     newtablehead.appendChild(trcolheadings);
     newtable.appendChild(newtablehead);
@@ -828,88 +731,29 @@ class TableView {
     return newtablebody;
   }
 
-  tableRow(newtablebody, timestr, measstr, locel) {
+  tableRow(newtablebody, timestr, measstr) {
     var rowelement = document.createElement('tr');
     var dtelement = document.createElement('td');
     var yelement = document.createElement('td');
-    var locelement = document.createElement('td');
     var dttext = document.createTextNode(timestr);
     var ytext = document.createTextNode(measstr);
 
     dtelement.appendChild(dttext);
     yelement.appendChild(ytext);
-    locelement.appendChild(locel)
 
     rowelement.appendChild(dtelement);
     rowelement.appendChild(yelement);
-    rowelement.appendChild(locelement);
 
     newtablebody.appendChild(rowelement);
-  }
-
-  locationEl(sample, mrloc) {
-    var textvar = null;
-    var tagelement = document.createElement('a');
-    tagelement.classList.add('tag');
-    tagelement.setAttribute("data-action", "new");
-
-    if ((mrloc == null) || (typeof(mrloc) == undefined)) {
-      textvar = 'Add Location';
-    } else {
-      textvar = mrloc.description;
-      if (sample.location == mrloc) {
-        tagelement.classList.add('is-link');
-        tagelement.setAttribute("data-action", "edit");
-        tagelement.setAttribute("data-location-id", sample.location.id); // For the controller
-        tagelement.setAttribute("data-location-desc", sample.location.description);
-      }
-    }
-
-    var tagtext = document.createTextNode(textvar);
-    tagelement.appendChild(tagtext);
-    tagelement.setAttribute("data-captsampleid", sample['id']); // For the controller.
-    tagelement.addEventListener('click', this);
-    tagelement.addEventListener('click', this.controller);
-    return tagelement;
-  }
-
-  showLocModal(target) {
-    var action = target.getAttribute("data-action");
-    if (action == "edit") {
-      this.editdesc_location.value = target.getAttribute("data-location-desc");
-      this.locationid.value = target.getAttribute("data-location-id");
-      this.editdescmodal.classList.add('is-active');
-    } else {
-      this.editdesc_location.value = target.getAttribute("data-location-desc");
-      this.captsampleid.value = target.getAttribute("data-captsampleid"); // Set captsampleid in the form
-      this.newdescmodal.classList.add('is-active');
-    }
-
-
-  }
-
-  hideLocModal() {
-    if (this.editdescmodal.classList.contains('is-active')) {
-      this.editdescmodal.classList.remove('is-active');
-    }
-
-    if (this.newdescmodal.classList.contains('is-active')) {
-      this.newdescmodal.classList.remove('is-active');
-    }
   }
 
   update(modeldata) {
     var index;
     var tablelist = document.getElementsByTagName("table");
     var newtablebody = null;
-    var mostrecentlocation = null;
 
     if (modeldata.capsamples == null) {
       return;
-    }
-
-    if (modeldata.capsamples.mrloc !== null) {
-      mostrecentlocation = modeldata.capsamples.mrloc;
     }
 
     // Remove all tables.
@@ -931,11 +775,7 @@ class TableView {
         prevdatestr = datestr;
       }
 
-      if (sample.location != null) {
-        mostrecentlocation = sample.location;
-      }
-      var locel = this.locationEl(sample, mostrecentlocation);
-      this.tableRow(newtablebody, timestr, measstr, locel);
+      this.tableRow(newtablebody, timestr, measstr);
     }
   }
 }

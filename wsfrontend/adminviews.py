@@ -95,15 +95,6 @@ def user_page(adminapi_token, userid):
     return render_template('pages/admin/user/user_page.html', user=user)
 
 
-@bp.route('/capture/<int:captid>')
-@requires_admin
-def capture_page(adminapi_token, captid):
-    capturewrapper = CaptureWrapper(baseurl=current_app.config['WSB_ORIGIN'],
-                                    adminapi_token=adminapi_token)
-
-    capture = capturewrapper.get(captid)
-    return render_template('pages/admin/capture/capture_page.html', capture=capture)
-
 @bp.route('/capture/<int:captid>/delete')
 @requires_admin
 def delete_capture(adminapi_token, captid):

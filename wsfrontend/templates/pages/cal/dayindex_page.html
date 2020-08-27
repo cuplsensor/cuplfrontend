@@ -11,23 +11,26 @@
 var respobj;
 var range = {{range|tojson}};
 var sensor = {{sensor|tojson}};
+{% if year is not none %}
 var dateymd = {
   'year': {{year|tojson}},
   'month': {{month|tojson}},
   'day': {{day|tojson}}
 };
+{% else %}
+var dateymd = null;
+{% endif %}
 var baseurl = '{{ url_for('calview.index', serial=tag.serial) }}';
 var locationsurl = '';
+var caljsonurl = '{{ url_for('calview.caljson', serial=tag.serial) }}'
 
 function initialise() {
-  let calsubject = new CalendarSubject(locationsurl);
+  let calsubject = new CalendarSubject(locationsurl, caljsonurl);
   let calcontroller = new CalendarController(calsubject, sensor, range, dateymd);
   let chartview = new ChartView(calcontroller);
   let tableview = new TableView(calcontroller);
   let navview = new NavView(calcontroller);
   let urlview = new UrlView(calcontroller, baseurl);
-  let loclistview = new LocationListView(calcontroller, baseurl);
-
   calsubject.notifyAll();
 }
 
@@ -100,7 +103,7 @@ window.addEventListener('load', initialise);
 
 <div class="container" id="samplesdiv">
   <div class="is-pulled-right">
-  <a href='#' class="button" id="csvbutton">
+  <a href='#' class="button" id="downloadcsvbutton">
     <span class="icon">
       <i class="fas fa-download"></i>
     </span>
@@ -116,48 +119,4 @@ window.addEventListener('load', initialise);
 </div>
 </section>
 
-<div id="editdescmodal" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Edit Sensor Location</p>
-      <button id="editdesc_closebtn" class="delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-      <!-- Content ... -->
-      <form id="editlocation" enctype="application/json" action="">
-        {{ editlocform.csrf_token }}
-        {{ editlocform.location_id }}
-        {{ editlocform.description(class_="input", placeholder="e.g. cupboard under the stairs") }}
-      </form>
-    </section>
-    <footer class="modal-card-foot">
-      <button id="editdesc_savebtn" class="button is-success">Save</button>
-      <button id="editdesc_cancelbtn" class="button">Cancel</button>
-      <button id="editdesc_deletebtn" class="button is-danger">Delete</button>
-    </footer>
-  </div>
-</div>
-
-<div id="newdescmodal" class="modal">
-  <div class="modal-background"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Add Sensor Location</p>
-      <button id="newdesc_closebtn" class="delete" aria-label="close"></button>
-    </header>
-    <section class="modal-card-body">
-      <!-- Content ... -->
-      <form id="newlocation" enctype="application/json" action="">
-        {{ newlocform.csrf_token }}
-        {{ newlocform.capturesample_id }}
-        {{ newlocform.description(class_="input", placeholder="e.g. cupboard under the stairs") }}
-      </form>
-    </section>
-    <footer class="modal-card-foot">
-      <button id="newdesc_savebtn" class="button is-success">Save</button>
-      <button id="newdesc_cancelbtn" class="button">Cancel</button>
-    </footer>
-  </div>
-</div>
 {% endblock %}
