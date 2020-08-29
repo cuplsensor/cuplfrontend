@@ -124,22 +124,17 @@ class StarView {
     this.star.addEventListener('click', controller);
 
     this.controller.model.subscribe(this);
-    this.controller.model.notifyAll();
   }
 
   update(updatedmodel) {
-    var iconfill = this.star.getElementsByClassName("bi-star-fill")[0];
-    var iconempty = this.star.getElementsByClassName("bi-star")[0];
 
     if (updatedmodel.is_starred(this.star.getAttribute("id"))) {
         // Solid star
-        iconfill.setAttribute('display', 'block');
-        iconempty.setAttribute('display', 'none');
+        this.star.innerHTML = '<svg width="1em" height="1em" display="block" viewBox="0 0 16 16" class="bi bi-star-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>';
 
     } else {
         // Regular star
-        iconfill.setAttribute('display', 'none');
-        iconempty.setAttribute('display', 'block');
+        this.star.innerHTML = '<svg width="1em" height="1em" display="block" viewBox="0 0 16 16" class="bi bi-star" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.523-3.356c.329-.314.158-.888-.283-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767l-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288l1.847-3.658 1.846 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.564.564 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/></svg>';
     }
   }
 }
@@ -149,6 +144,8 @@ class HomePageView {
     this.controller = controller;
 
     this.rootelement = document.getElementById(rootelementid);
+    this.starviews = [];
+    this.recentviews = [];
 
     this.controller.model.subscribe(this);
     this.controller.model.notifyAll();
@@ -156,6 +153,12 @@ class HomePageView {
 
   tabulate(taglist, headingstr) {
       var ntags = taglist.length;
+      var starlist = [];
+
+      var section = document.createElement('section');
+      section.classList.add("section");
+      var container = document.createElement('div');
+      container.classList.add("container");
 
       // Create the heading element.
       var heading = document.createElement("h5");
@@ -166,23 +169,24 @@ class HomePageView {
       heading.classList.add(["is-5"]);
       heading.classList.add(["mb-3"]);
       // Append heading to the root element.
-      this.rootelement.appendChild(heading);
+      container.appendChild(heading);
 
       // Create the table element.
       var tbl = document.createElement('table');
+      // Add the table class.
+      tbl.classList.add("table");
+
       // Create the body element.
       var tbody = document.createElement('tbody');
-      // Add the table class.
-      tbody.classList.add("table");
 
       for (var i=0; i < ntags; i++) {
           // Create the row element.
           var tr = document.createElement('tr');
           // Assign the serial string.
           var str_serial = taglist[i];
+
           // Create serial column.
           var td_serial = document.createElement('td');
-          // Set the id of the 
           // Create serial anchor.
           var a_serial = document.createElement('a');
           // Set link in the anchor.
@@ -193,27 +197,62 @@ class HomePageView {
           td_serial.appendChild(a_serial);
           // Append serial column to the row.
           tr.appendChild(td_serial);
+
+          // Create the star column.
+          var td_star = document.createElement('td');
+          // Create the star anchor.
+          var a_star = document.createElement('a');
+          // Set the id of the star anchor
+          a_star.setAttribute("id", str_serial);
+          // Set the classes of the star anchor
+          a_star.classList.add("star");
+          // Append the anchor to the column element.
+          td_star.appendChild(a_star);
+          // Append serial column to the row.
+          tr.appendChild(td_star);
+
           // Append the row to the table body.
           tbody.appendChild(tr);
+          // Add the tdserial DOM element to a list.
+          starlist.push(a_star);
       }
 
       // Append the table body to the table.
       tbl.appendChild(tbody);
-      // Append the table to the root element.
-      this.rootelement.appendChild(tbl);
+      // Append table to the container.
+      container.appendChild(tbl);
+      // Append the container to the section.
+      section.appendChild(container);
+      // Append the section to the root element.
+      this.rootelement.appendChild(section);
+      // Return the tdserial elements. These will have starviews added to them.
+      return starlist;
   }
 
   update(updatedmodel) {
+        // Clear the root element
+      this.rootelement.innerHTML = '';
+      this.starviews = [];
+      this.recentviews = [];
+
       // Build two lists.
-      this.tabulate(updatedmodel.starred, "Starred Tags");
-      this.tabulate(updatedmodel.recents, "Recent Tags");
+      var starlist = this.tabulate(updatedmodel.starred, "Starred Tags");
+      var recentlist = this.tabulate(updatedmodel.recents, "Recent Tags");
+
+      for (var i=0; i < starlist.length; i++) {
+          this.starviews.push(new StarView(this.controller, starlist[i]));
+      }
+
+      for (var i=0; i < recentlist.length; i++) {
+          this.recentviews.push(new StarView(this.controller, recentlist[i]));
+      }
   }
 }
 
 function init_homepage() {
     let historysubject = new HistorySubject();
     let historycontroller = new HistoryController(historysubject);
-    let homepageview = new HomePageView(historycontroller, 'starredrecentlists');
+    homepageview = new HomePageView(historycontroller, 'starredrecentlists');
 }
 
 function init_tagpage() {
@@ -223,5 +262,6 @@ function init_tagpage() {
     let historycontroller = new HistoryController(historysubject);
 
     let starview = new StarView(historycontroller, star);
+    historysubject.notifyAll();
 }
 
