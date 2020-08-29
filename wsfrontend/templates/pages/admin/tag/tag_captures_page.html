@@ -8,7 +8,6 @@
             <thead>
             <tr>
               <th>ID</th>
-              <th>Scanned by</th>
               <th>Timestamp</th>
               <th></th>
             </tr>
@@ -19,7 +18,6 @@
               <td>
                   <a href="{{ url_for('captureview.capture', captid=capture.id) }}">{{ capture['id'] }}</a>
               </td>
-              <td>{{ capture['scanned_by_user'] }}</td>
               <td>{{ capture['timestamp'] }}</td>
               <td><a href="{{ url_for('adminbp.delete_capture', captid=capture.id, next=request.url) }}">Delete</a></td>
             </tr>

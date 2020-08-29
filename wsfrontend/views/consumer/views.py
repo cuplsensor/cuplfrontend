@@ -8,7 +8,7 @@ from wsfrontend.views.defs import auth0_template, optional_auth, route
 
 
 # static_url_path needed because of http://stackoverflow.com/questions/22152840/flask-blueprint-static-directory-does-not-work
-bp = Blueprint('dashboard', __name__, template_folder='../../templates', static_folder='static', static_url_path='/wsfrontend/static')
+bp = Blueprint('dashboard', __name__, template_folder='../../templates', static_folder='../../static', static_url_path='/wsfrontend/static')
 
 
 @bp.route('/')

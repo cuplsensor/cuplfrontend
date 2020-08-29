@@ -6,7 +6,7 @@
 """
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField, RadioField, BooleanField
+from wtforms import StringField, SubmitField, IntegerField, RadioField, BooleanField, PasswordField
 from wtforms.validators import DataRequired
 
 __all__ = ['AdminTokenForm', 'SimulateForm']
@@ -14,7 +14,7 @@ __all__ = ['AdminTokenForm', 'SimulateForm']
 
 class AdminTokenForm(FlaskForm):
     client_id = StringField('client_id', validators=[DataRequired()])
-    client_secret = StringField('client_secret', validators=[DataRequired()])
+    client_secret = PasswordField('client_secret', validators=[DataRequired()])
     submit = SubmitField('Add')
 
 

@@ -3,6 +3,15 @@
 {% block subtitle %}
 {% endblock %}
 
+{% block headerscripts %}
+<script src="{{ url_for('dashboard.static', filename='star.js') }}"></script>
+<script>$(window).on('load', init_homepage);</script>
+{% endblock %}
+
 {% block main %}
+<section class="section">
+    <div id="starredrecentlists" class="container">
+    </div>
+</section>
 
 {% endblock %}

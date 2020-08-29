@@ -57,10 +57,12 @@
 
 {% block main %}
 <section class="section">
-        <div class="container">
-            <h3>{% block title %}{% endblock %}</h3>
-        </div>
+    <div class="container">
+        <h5 class="mb-0">{% block title %}{% endblock %}</h5>
+    </div>
+</section>
+
         {% block adminmain %}
         {% endblock %}
-  </section>
+
 {% endblock %}
