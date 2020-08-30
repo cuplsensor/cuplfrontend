@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, url_for, session, current_app
+from flask import Blueprint, redirect, render_template, url_for, current_app, jsonify
 from werkzeug.exceptions import NotFound
 from wsapiwrapper.consumer.capture import CaptureWrapper
 from wsapiwrapper.consumer.tag import TagWrapper
@@ -17,8 +17,30 @@ def handle_error(e):
     return render_template('errors/%s.html' % e.code), e.code
 
 
+@route(bp, '/<string:serial>/summary')
+def tagsummary(serial):
+    WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
+    tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
+    tag = tagwrapper.get(tagserial=serial)
+
+    capturewrapper = CaptureWrapper(baseurl=WSB_ORIGIN)
+    latestcapture = capturewrapper.get_list(serial, offset=0, limit=1)[0]
+    latestsample = capturewrapper.get_samples(capture_id=latestcapture['id'],
+                                              offset=0,
+                                              limit=1)[0]
+    response = {'temp': "%.2f" % round(latestsample['temp'], 2),
+                'rh': "%.2f" % round(latestsample['rh'], 2),
+                'description': tag['description']}
+
+    return jsonify(response)
+
+
+
+
+
+
+
 @route(bp, '/<string:serial>')
-@optional_auth
 def tag(serial, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)
@@ -30,11 +52,6 @@ def tag(serial, **kwargs):
                                               offset=0,
                                               limit=1)[0]
 
-    # Post a TagView
-    if 'access_token' in session.keys():
-        tvwrapper = TagViewWrapper(baseurl=WSB_ORIGIN, tokenstr=session['access_token'])
-        tvwrapper.post(tagserial=serial)
-
     return auth0_template('tag_page.html'
                           , tag=tag
                           , latestcapture=latestcapture
@@ -43,7 +60,6 @@ def tag(serial, **kwargs):
 
 
 @route(bp, '/<string:serial>/battery')
-@optional_auth
 def battery(serial, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
 
@@ -61,7 +77,6 @@ def battery(serial, **kwargs):
                           , temps=batterymvlist, miny=1500, maxy=4000, sensor='battery', **kwargs)
 
 @route(bp, '/<string:serial>/confignfc')
-@optional_auth
 def confignfc(serial, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
 
@@ -71,7 +86,6 @@ def confignfc(serial, **kwargs):
     return auth0_template('confignfc_page.html', tag=tag, **kwargs)
 
 @route(bp, '/<string:serial>/capture/<int:captid>')
-@optional_auth
 def capture(captid, **kwargs):
     return redirect(url_for('captureview.temp', captid=captid))
 
@@ -101,19 +115,16 @@ def plot_sensor(captid, sensor, **kwargs):
                           , temps=plotdata, miny=miny, maxy=maxy, sensor=sensor, **kwargs)
 
 @route(bp, '/<string:serial>/capture/<int:captid>/temp')
-@optional_auth
 def temp(captid, **kwargs):
     return plot_sensor(captid, 'temp', **kwargs)
 
 
 @route(bp, '/<string:serial>/capture/<int:captid>/rh')
-@optional_auth
 def rh(captid, **kwargs):
     return plot_sensor(captid, 'rh', **kwargs)
 
 
 @route(bp, '/<string:serial>/capture/<int:captid>/status')
-@optional_auth
 def status(serial, captid, **kwargs):
     WSB_ORIGIN = current_app.config["WSB_ORIGIN"]
     tagwrapper = TagWrapper(baseurl=WSB_ORIGIN)

@@ -151,6 +151,50 @@ class HomePageView {
     this.controller.model.notifyAll();
   }
 
+  appendsummary(tr, responsedata) {
+      // Create a temperature column.
+      var td_temp = document.createElement('td');
+      // Create temperature element.
+      var p_temp = document.createElement('p');
+      // Create text element.
+      var text_temp = document.createTextNode(responsedata['temp'] + '°C');
+      // Create a rh column.
+      var td_rh = document.createElement('td');
+      // Create rh element.
+      var p_rh = document.createElement('p');
+      // Create text element.
+      var text_rh = document.createTextNode(responsedata['rh'] + '%');
+      // Create a description column.
+      var td_description = document.createElement('td');
+      // Create rh element.
+      var p_description = document.createElement('p');
+      // Create text element.
+      var text_description = document.createTextNode(responsedata['description']);
+
+      p_temp.appendChild(text_temp);
+      td_temp.appendChild(p_temp);
+      tr.appendChild(td_temp);
+
+      p_rh.appendChild(text_rh);
+      td_rh.appendChild(p_rh);
+      tr.appendChild(td_rh);
+
+      p_description.appendChild(text_description);
+      td_description.appendChild(p_description);
+      tr.appendChild(td_description);
+  }
+
+  parseresponse(tr, callback, response) {
+      if (response.status !== 200) {
+        console.log('Looks like there was a problem. Status Code: ' +
+          response.status);
+        return;
+      }
+
+      // Examine the text in the response
+      response.json().then(callback.bind(null, tr));
+  }
+
   tabulate(taglist, headingstr) {
       var ntags = taglist.length;
       var starlist = [];
@@ -210,6 +254,8 @@ class HomePageView {
           td_star.appendChild(a_star);
           // Append serial column to the row.
           tr.appendChild(td_star);
+          // Run a fetch request.
+          fetch('/tag/'+str_serial+'/summary').then(this.parseresponse.bind(null, tr, this.appendsummary));
 
           // Append the row to the table body.
           tbody.appendChild(tr);
@@ -225,7 +271,7 @@ class HomePageView {
       section.appendChild(container);
       // Append the section to the root element.
       this.rootelement.appendChild(section);
-      // Return the tdserial elements. These will have starviews added to them.
+      // Return the a_star elements. These will have starviews added to them.
       return starlist;
   }
 
