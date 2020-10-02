@@ -1,17 +1,67 @@
-import {Link} from "react-router-dom";
 import React from "react";
 
-function BasePage(props) {
+
+export function BulmaField(props) {
   return (
-    <div>
-      <Header />
+      <div className="field">
         {props.children}
-      <Footer />
-    </div>
+      </div>
   );
 }
 
-function Footer() {
+export function BulmaControl(props) {
+  return (
+      <div className="control">
+        {props.children}
+      </div>
+  );
+}
+
+export function BulmaSubmit() {
+  return (
+        <input className="button is-link" type="submit" value="Log in" />
+      );
+}
+
+export function BulmaInput(props) {
+  return (
+    <input className="input" id={props.id} type={props.type} value={props.value} onChange={props.changeHandler} />
+  );
+}
+
+export function BulmaLabel(props) {
+  return (
+    <label className="label">
+      {props.children}
+    </label>
+  );
+}
+
+export function Section(props) {
+  return (
+    <section className="section">
+      <div className="container">
+        {props.children}
+      </div>
+    </section>
+  );
+}
+
+export function ErrorMessage(props) {
+  const error = props.error;
+  if (error) {
+    return (
+        <div className="notification is-danger is-light">
+            {error.message}
+        </div>
+    );
+  }
+  else {
+      return ("");
+  }
+}
+
+export function Footer() {
   return (
   <div className="footer pt-3 pb-4">
     <div className="container">
@@ -42,7 +92,7 @@ function Footer() {
   );
 }
 
-function Header() {
+export function Header(props) {
   return <nav className="navbar" role="navigation" aria-label="main navigation">
     <div className="container">
       <div className="navbar-brand">
@@ -58,22 +108,7 @@ function Header() {
 
       </div>
 
-      <div id="navbarBasicExample" className="navbar-menu">
-
-        <div className="navbar-end">
-          <div className="navbar-item">
-            <Link to="/random">Random</Link>
-          </div>
-          <div className="navbar-item">
-            <div className="buttons">
-              <Link className="button" to="/admin">Admin</Link>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      {props.children}
     </div>
   </nav>
 }
-
-export default BasePage;
