@@ -1,12 +1,10 @@
 import LoginForm from "./LoginForm";
-import {Footer, Header, Section} from "./BasePage";
+import {BasePage, Footer, Header, Section} from "./BasePage";
 import React from "react";
 import {Link, Redirect, useLocation} from "react-router-dom";
 import Cookies from 'universal-cookie';
 
-export function AdminListTags() {
-    return <AdminPage pagetitle="List of Tags" activetab="tags" />
-}
+
 
 export function AdminListCaptures() {
     return <AdminPage pagetitle="List of Captures" activetab="captures" />
@@ -25,7 +23,7 @@ export function AdminLogin() {
     );
 }
 
-export function AdminBasePage(props) {
+function AdminBasePage(props) {
     const isLoggedIn = props.isLoggedIn;
   return (
     <div>
@@ -76,14 +74,13 @@ function RedirectToLogin(props) {
     }} />);
 }
 
-class AdminPage extends React.Component {
+export class AdminPage extends BasePage {
     constructor(props) {
         super(props);
         const pagetitle = props.pagetitle;
         const activetab = props.activetab || '';
         this.state = {
             redirect: false,
-            admintoken: '',
             pagetitle: pagetitle,
             activetab: activetab
         };
@@ -91,11 +88,10 @@ class AdminPage extends React.Component {
 
     componentDidMount() {
         const cookies = new Cookies();
-        let admintoken = cookies.get('admintoken');
-        if (admintoken == null) {
+        this.admintoken = cookies.get('admintoken');
+        if (this.admintoken == null) {
             this.setState({'redirect': true});
         }
-        this.setState({'admintoken': admintoken});
     }
 
     render() {
@@ -118,6 +114,7 @@ class AdminPage extends React.Component {
                     </ul>
                 </div>
                 <h5>{this.state.pagetitle}</h5>
+                {this.props.children}
             </AdminBasePage>
         );
     }

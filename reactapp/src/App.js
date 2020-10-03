@@ -6,7 +6,8 @@ import {
   useLocation
 } from "react-router-dom";
 import {ConsumerBasePage} from "./ConsumerPage";
-import {AdminLogin, AdminListTags, AdminListCaptures, AdminListWebhooks} from "./AdminPage";
+import {AdminLogin, AdminListCaptures, AdminListWebhooks} from "./AdminPage";
+import AdminListTags from "./AdminListTagsPage";
 import './App.css';
 
 

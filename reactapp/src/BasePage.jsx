@@ -1,5 +1,18 @@
 import React from "react";
 
+export class BasePage extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+  }
+}
+
 
 export function BulmaField(props) {
   return (
@@ -17,9 +30,9 @@ export function BulmaControl(props) {
   );
 }
 
-export function BulmaSubmit() {
+export function BulmaSubmit(props) {
   return (
-        <input className="button is-link" type="submit" value="Log in" />
+        <input className="button is-link" type="submit" value={props.value} />
       );
 }
 
@@ -112,3 +125,4 @@ export function Header(props) {
     </div>
   </nav>
 }
+

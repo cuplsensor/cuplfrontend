@@ -1,12 +1,12 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
-import {BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
+import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
 import {postData} from "./api.js";
 import Cookies from 'universal-cookie';
 
 
 
-class LoginForm extends React.Component {
+class LoginForm extends BasePage {
   constructor(props) {
     super(props);
 
@@ -18,13 +18,6 @@ class LoginForm extends React.Component {
 
   handleChange(event) {
     this.setState({[event.target.id]: event.target.value});
-  }
-
-  handleErrors(response) {
-      if (!response.ok) {
-          throw Error(response.statusText);
-      }
-      return response;
   }
 
   extractBody(response) {
@@ -72,7 +65,7 @@ class LoginForm extends React.Component {
             </BulmaField>
             <BulmaField>
               <BulmaControl>
-                <BulmaSubmit />
+                <BulmaSubmit value="Log in" />
               </BulmaControl>
             </BulmaField>
           </form>
