@@ -8,6 +8,7 @@ import {
 import {ConsumerBasePage} from "./ConsumerPage";
 import {AdminLogin, AdminListCaptures, AdminListWebhooks} from "./AdminPage";
 import AdminListTags from "./AdminListTagsPage";
+import AdminTag from "./AdminTagPage";
 import './App.css';
 
 
@@ -28,6 +29,9 @@ function App() {
           </Route>
           <Route exact path="/admin/tags">
             <AdminListTags />
+          </Route>
+          <Route exact path="/admin/tag/:id">
+            <AdminTag />
           </Route>
           <Route exact path="/admin/captures">
               <AdminListCaptures />

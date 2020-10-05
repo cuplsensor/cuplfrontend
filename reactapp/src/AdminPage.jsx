@@ -102,15 +102,9 @@ export class AdminPage extends BasePage {
             <AdminBasePage isLoggedIn={true}>
                 <div className="tabs">
                     <ul id="navigation">
-                        <ListElement activeon="tags" activetab={this.state.activetab}>
-                            <a href="/admin/tags">Tags</a>
-                        </ListElement>
-                        <ListElement activeon="captures" activetab={this.state.activetab}>
-                            <a href="/admin/captures">Captures</a>
-                        </ListElement>
-                        <ListElement activeon="webhooks" activetab={this.state.activetab}>
-                            <a href="/admin/webhooks">Webhooks</a>
-                        </ListElement>
+                        <ListElement name="Tags" url="/admin/tags" active={this.state.activetab} />
+                        <ListElement name="Captures" url="/admin/captures" active={this.state.activetab} />
+                        <ListElement name="Webhooks" url="/admin/webhooks" active={this.state.activetab} />
                     </ul>
                 </div>
                 <h5>{this.state.pagetitle}</h5>
@@ -120,20 +114,35 @@ export class AdminPage extends BasePage {
     }
 }
 
-function ListElement(props) {
-    const activetab = props.activetab;
-    const activeon = props.activeon;
-    if (activeon === activetab) {
+export function MenuListElement(props) {
+    if (props.name.toLowerCase() === props.active.toLowerCase()) {
         return (
-          <li className="is-active">
-              {props.children}
+          <li>
+              <a className="is-active" href={props.url}>{props.name}</a>
           </li>
         );
     } else {
         return (
             <li>
-                {props.children}
+                <a href={props.url}>{props.name}</a>
             </li>
         );
     }
 }
+
+export function ListElement(props) {
+    if (props.name.toLowerCase() === props.active.toLowerCase()) {
+        return (
+          <li className="is-active">
+              <a href={props.url}>{props.name}</a>
+          </li>
+        );
+    } else {
+        return (
+            <li>
+                <a href={props.url}>{props.name}</a>
+            </li>
+        );
+    }
+}
+
