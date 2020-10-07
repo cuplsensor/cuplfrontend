@@ -25,9 +25,10 @@ export function AdminLogin() {
 
 function AdminBasePage(props) {
     const isLoggedIn = props.isLoggedIn;
+    const bc = props.bc;
   return (
     <div>
-      <AdminHeader isLoggedIn={isLoggedIn} />
+      <AdminHeader bc={bc} isLoggedIn={isLoggedIn} />
           <Section>
               {props.children}
           </Section>
@@ -40,7 +41,33 @@ function AdminHeader(props) {
     const isLoggedIn = props.isLoggedIn;
     return (
         <Header>
+            <div className="navbar-brand">
+
+                    <div className="navbar-item ">
+                        <div className="flex">
+                            <div className="item">
+                                <div className="inline-block">cupl</div>
+                            </div>
+                            <div className="item">
+                                <div className="inline-block">{props.bc}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+
+           </div>
+
             <div id="navbarBasicExample" className="navbar-menu">
+                <div className="navbar-start ">
+
+                </div>
                 <div className="navbar-end">
                   <div className="navbar-item">
                       <Link className="button" to="/">Consumer</Link>
@@ -99,19 +126,40 @@ export class AdminPage extends BasePage {
           return <RedirectToLogin />
         }
         return(
-            <AdminBasePage isLoggedIn={true}>
-                <div className="tabs">
-                    <ul id="navigation">
-                        <ListElement name="Tags" url="/admin/tags" active={this.state.activetab} />
-                        <ListElement name="Captures" url="/admin/captures" active={this.state.activetab} />
-                        <ListElement name="Webhooks" url="/admin/webhooks" active={this.state.activetab} />
-                    </ul>
+            <AdminBasePage bc={this.props.bc} isLoggedIn={true}>
+                <div className="columns">
+                    <aside className="menu column is-2 is-fullheight">
+                        {this.props.menu}
+                    </aside>
+                    <div className="column is-10">
+                        {this.props.children}
+                    </div>
                 </div>
-                <h5>{this.state.pagetitle}</h5>
-                {this.props.children}
             </AdminBasePage>
         );
     }
+}
+
+export function AdminBC(props) {
+    return (
+      <nav className="breadcrumb is-left is-size-6 menu-label" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="#">Admin</a></li>
+        </ul>
+      </nav>
+    );
+}
+
+export function AdminMenu(props) {
+    return (
+        <div>
+            <ul className="menu-list">
+                <MenuListElement name="Tags" url="/admin/tags" active={props.activetab} />
+                <MenuListElement name="Captures" url="/admin/captures" active={props.activetab} />
+                <MenuListElement name="Webhooks" url="/admin/webhooks" active={props.activetab} />
+            </ul>
+        </div>
+    );
 }
 
 export function MenuListElement(props) {

@@ -153,3 +153,13 @@ a {
 #serialbutton {
   color:#1EAEDB;
 }
+
+.flex {
+  display: flex;
+  align-items: baseline;
+}
+.inline-block {
+  display: inline-block;
+}
+
+.item:first-child { font-size: 150%; padding-right: 0.5em; }

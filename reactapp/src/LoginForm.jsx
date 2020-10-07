@@ -12,13 +12,10 @@ class LoginForm extends BasePage {
 
     this.state = {client_id: '', client_secret: '', redirect: false};
 
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({[event.target.id]: event.target.value});
-  }
+
 
   extractBody(response) {
       return response.body();

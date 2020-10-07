@@ -3,6 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
   useLocation
 } from "react-router-dom";
 import {ConsumerBasePage} from "./ConsumerPage";
@@ -10,6 +11,7 @@ import {AdminLogin, AdminListCaptures, AdminListWebhooks} from "./AdminPage";
 import AdminListTags from "./AdminListTagsPage";
 import AdminTag from "./AdminTagPage";
 import './App.css';
+import SimulatePage from "./SimulatePage";
 
 
 
@@ -27,11 +29,17 @@ function App() {
           <Route exact path="/admin/login">
             <AdminLogin />
           </Route>
+          <Route exact path="/admin">
+            <Redirect to={`/admin/tags`} />
+          </Route>
           <Route exact path="/admin/tags">
             <AdminListTags />
           </Route>
-          <Route exact path="/admin/tag/:id">
-            <AdminTag />
+          <Route exact path="/admin/tag/:id" render={props => (
+              <Redirect to={`/admin/tag/${props.match.params.id}/simulate`} />
+          )} />
+          <Route exact path="/admin/tag/:id/simulate">
+            <SimulatePage />
           </Route>
           <Route exact path="/admin/captures">
               <AdminListCaptures />

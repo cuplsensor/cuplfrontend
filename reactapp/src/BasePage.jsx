@@ -3,6 +3,22 @@ import React from "react";
 export class BasePage extends React.Component {
   constructor(props) {
     super(props);
+
+    this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleRadioChange(event) {
+    this.setState({[event.target.name]: event.target.value});
+  }
+
+  handleCheckChange(event) {
+    this.setState({[event.target.id]: event.target.checked});
+  }
+
+  handleChange(event) {
+    this.setState({[event.target.id]: event.target.value});
   }
 
   handleErrors(response) {
@@ -39,6 +55,18 @@ export function BulmaSubmit(props) {
 export function BulmaInput(props) {
   return (
     <input className="input" id={props.id} type={props.type} value={props.value} onChange={props.changeHandler} />
+  );
+}
+
+export function BulmaCheckbox(props) {
+  return (
+    <input className="checkbox" id={props.id} type={props.type} checked={props.value} onChange={props.changeHandler} />
+  );
+}
+
+export function BulmaRadio(props) {
+  return (
+    <input className="radio" value={props.value} name={props.name} id={props.id} type={props.type} checked={props.checked} onChange={props.changeHandler} />
   );
 }
 
@@ -108,19 +136,6 @@ export function Footer() {
 export function Header(props) {
   return <nav className="navbar" role="navigation" aria-label="main navigation">
     <div className="container">
-      <div className="navbar-brand">
-
-        <a className="navbar-item" href="/"><h4>plotsensor</h4></a>
-
-        <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false"
-           data-target="navbarBasicExample">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
-
-      </div>
-
       {props.children}
     </div>
   </nav>

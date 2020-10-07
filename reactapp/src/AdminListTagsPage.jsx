@@ -1,6 +1,6 @@
 import React from "react";
-import {AdminPage} from "./AdminPage"
-import { withRouter } from "react-router-dom";
+import {AdminPage, AdminMenu, AdminBC} from "./AdminPage"
+import { Link, withRouter } from "react-router-dom";
 import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, ErrorMessage} from "./BasePage";
 import {postData, getData} from "./api";
 
@@ -79,7 +79,7 @@ function Pagination(props) {
 function TagListItem(props) {
       return (
         <tr>
-            <td>{props.tag['id']}</td>
+            <td><Link to={"/admin/tag/" + props.tag['id']}>{props.tag['id']}</Link></td>
             <td>{props.tag['serial']}</td>
             <td>{props.tag['secretkey']}</td>
             <td>{props.tag['fwversion']}</td>
@@ -185,7 +185,7 @@ class AdminListTags extends AdminPage {
           tagitems.push(<TagListItem key={tag.id} tag={tag} />)
       }
       return(
-          <AdminPage pagetitle="List of Tags" activetab="tags">
+          <AdminPage bc={<AdminBC />} menu={<AdminMenu activetab='tags' />}>
             <ErrorMessage error={error} />
             <table className="table">
                 <thead>
@@ -210,7 +210,6 @@ class AdminListTags extends AdminPage {
                   </BulmaControl>
                 </BulmaField>
             </form>
-
           </AdminPage>
       );
   }

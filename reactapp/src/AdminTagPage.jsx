@@ -4,14 +4,10 @@ import {BulmaControl, BulmaField, BulmaSubmit, ErrorMessage} from "./BasePage";
 import React from "react";
 import {withRouter} from "react-router-dom";
 
-class AdminTag extends AdminPage {
+class AdminTagPage extends AdminPage {
   constructor(props) {
     super(props);
-
-
-
   }
-
 
   componentDidMount() {
       super.componentDidMount();
@@ -39,47 +35,43 @@ class AdminTag extends AdminPage {
   render() {
       const error = this.state.error;
       const tagid = this.props.match.params.id;
-      const activesubtab = 'Simulate';
+      const activetab = 'Simulate';
       return (
-          <AdminPage activetab="tags">
-              <div class="columns">
-
-              <aside className="menu column is-2 is-fullheight">
-                  <p className="menu-label is-size-5">
-                      <nav className="breadcrumb is-left is-small" aria-label="breadcrumbs">
-                          <ul>
-                              <li><a href="#">Admin</a></li>
-                              <li><a href="#">Tags</a></li>
-                              <li  class="is-active"><a href="#" aria-current="page">{'Tag ' + tagid}</a></li>
-                          </ul>
-                      </nav>
-                  </p>
-                  <ul className="menu-list">
-                      <MenuListElement name="Configure (serial)" url="/admin/tags" active={activesubtab} />
-                      <MenuListElement name="Configure (NFC)" url="/admin/captures" active={activesubtab} />
-                      <MenuListElement name="Simulate" url="/admin/webhooks" active={activesubtab} />
-                      <MenuListElement name="Captures" url="/admin/webhooks" active={activesubtab} />
-                      <MenuListElement name="Webhook" url="/admin/webhooks" active={activesubtab} />
-                  </ul>
-              </aside>
-                  <div className="column is-1">
-                  <h5>Simulate</h5>
-              </div>
-
-              </div>
-
-
-
-
-
-
-
-
-
-
+          <AdminPage bc={<AdminTagBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
+              {this.props.children}
           </AdminPage>);
 
   }
 }
 
-export default withRouter(AdminTag);
+
+function AdminTagBC(props) {
+    return (
+      <nav className="breadcrumb is-left is-size-6 menu-label" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="#">Admin</a></li>
+            <li><a href="/admin/tags">Tags</a></li>
+            <li className="is-active"><a href="#" aria-current="page">{'Tag ' + props.tagid}</a></li>
+        </ul>
+      </nav>
+    );
+}
+
+function AdminTagMenu(props) {
+    return (
+        <div>
+            <ul className="menu-list">
+                <MenuListElement name="Edit" url={'/admin/tag/' + props.tagid + '/edit'} active={props.activetab}/>
+                <MenuListElement name="Program" url={'/admin/tag/' + props.tagid + '/program'} active={props.activetab}/>
+                <MenuListElement name="Configure (serial)" url="/admin/tags" active={props.activetab}/>
+                <MenuListElement name="Configure (NFC)" url="/admin/captures" active={props.activetab}/>
+                <MenuListElement name="Simulate" url={'/admin/tag/' + props.tagid + '/simulate'} active={props.activetab}/>
+                <MenuListElement name="Captures" url="/admin/webhooks" active={props.activetab}/>
+                <MenuListElement name="Webhook" url="/admin/webhooks" active={props.activetab}/>
+            </ul>
+        </div>
+    );
+}
+
+export default withRouter(AdminTagPage);
+
