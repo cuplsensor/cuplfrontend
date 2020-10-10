@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 export function ConsumerBasePage(props) {
   return (
     <div>
-      <ConsumerHeader />
+      <ConsumerHeader bc={props.bc} />
         <Section>
             {props.children}
         </Section>
@@ -14,19 +14,9 @@ export function ConsumerBasePage(props) {
   );
 }
 
-function ConsumerHeader() {
+function ConsumerHeader(props) {
     return (
-        <Header>
-            <div className="navbar-brand">
-                <a className="navbar-item" href="/"><h4>plotsensor</h4></a>
-
-                <a role="button" className="navbar-burger burger" aria-label="menu" aria-expanded="false"
-                   data-target="navbarBasicExample">
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                  <span aria-hidden="true"></span>
-                </a>
-            </div>
+        <Header bc={props.bc}>
             <div id="navbarBasicExample" className="navbar-menu">
                 <div className="navbar-end">
                   <div className="navbar-item">

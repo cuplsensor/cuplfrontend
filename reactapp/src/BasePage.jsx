@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 export class BasePage extends React.Component {
   constructor(props) {
@@ -136,6 +137,30 @@ export function Footer() {
 export function Header(props) {
   return <nav className="navbar" role="navigation" aria-label="main navigation">
     <div className="container">
+            <div className="navbar-brand">
+                    <div className="navbar-item ">
+                        <div className="flex">
+                            <div className="item">
+                                <div className="inline-block">
+                                  <Link to="/">
+                                    cupl
+                                  </Link>
+
+                                </div>
+                            </div>
+                            <div className="item">
+                                <div className="inline-block">{props.bc}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </a>
+           </div>
+
       {props.children}
     </div>
   </nav>

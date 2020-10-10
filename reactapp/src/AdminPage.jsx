@@ -16,8 +16,7 @@ export function AdminListWebhooks() {
 
 export function AdminLogin() {
     return (
-        <AdminBasePage isLoggedIn={false}>
-            <h5>Log in</h5>
+        <AdminBasePage bc={<AdminLoginBC />} isLoggedIn={false}>
             <LoginForm />
         </AdminBasePage>
     );
@@ -40,30 +39,7 @@ function AdminBasePage(props) {
 function AdminHeader(props) {
     const isLoggedIn = props.isLoggedIn;
     return (
-        <Header>
-            <div className="navbar-brand">
-
-                    <div className="navbar-item ">
-                        <div className="flex">
-                            <div className="item">
-                                <div className="inline-block">cupl</div>
-                            </div>
-                            <div className="item">
-                                <div className="inline-block">{props.bc}
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                    <span aria-hidden="true"></span>
-                </a>
-
-           </div>
-
+        <Header bc={props.bc}>
             <div id="navbarBasicExample" className="navbar-menu">
                 <div className="navbar-start ">
 
@@ -93,12 +69,19 @@ function AdminLogOutButton(props) {
 }
 
 
-function RedirectToLogin(props) {
+export function RedirectToLogin(props) {
     const location = useLocation();
-    return (<Redirect to={{
-        pathname: `/admin/login`,
-        state: {referrer: location}
-    }} />);
+    const error = props.error;
+    if (error) {
+          if (error.message === "UNAUTHORIZED") {
+              return (
+                  <Redirect to={{
+                    pathname: `/admin/login`,
+                    state: {referrer: location, error: error}}} />
+                  );
+          }
+        }
+    return ('');
 }
 
 export class AdminPage extends BasePage {
@@ -121,6 +104,16 @@ export class AdminPage extends BasePage {
         }
     }
 
+    redirectToLogin(error) {
+        if (error) {
+          if (error.message === "UNAUTHORIZED") {
+              return true;
+          }
+        }
+        return false;
+    }
+
+
     render() {
         if (this.state.redirect === true) {
           return <RedirectToLogin />
@@ -139,6 +132,17 @@ export class AdminPage extends BasePage {
         );
     }
 }
+
+function AdminLoginBC(props) {
+    return (
+      <nav className="breadcrumb is-left is-size-6 menu-label" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="#">Log in</a></li>
+        </ul>
+      </nav>
+    );
+}
+
 
 export function AdminBC(props) {
     return (

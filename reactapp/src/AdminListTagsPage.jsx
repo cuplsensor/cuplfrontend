@@ -1,6 +1,6 @@
 import React from "react";
-import {AdminPage, AdminMenu, AdminBC} from "./AdminPage"
-import { Link, withRouter } from "react-router-dom";
+import {AdminPage, AdminMenu, AdminBC, RedirectToLogin} from "./AdminPage"
+import {Link, Redirect, withRouter} from "react-router-dom";
 import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, ErrorMessage} from "./BasePage";
 import {postData, getData} from "./api";
 
@@ -138,7 +138,7 @@ class AdminListTags extends AdminPage {
       const bearertoken = `Bearer ${admintoken}`;
       getData('https://b3.websensor.io/api/admin/tags',
         {'Authorization': bearertoken },
-          {'per_page': 3, 'page': page}
+          {'per_page': 10, 'page': page}
         )
         .then(this.handleErrors)
         .then(this.parsePages)
@@ -147,7 +147,7 @@ class AdminListTags extends AdminPage {
             this.setState({tags: json});
         },
         (error) => {
-          this.setState({error});
+          this.setState({error: error});
         });
   }
 
@@ -166,7 +166,7 @@ class AdminListTags extends AdminPage {
             this.componentDidMount();
         },
         (error) => {
-          this.setState({error});
+          this.setState({error: error});
         });
     event.preventDefault();
   }
@@ -184,9 +184,16 @@ class AdminListTags extends AdminPage {
       for (const tag of tags) {
           tagitems.push(<TagListItem key={tag.id} tag={tag} />)
       }
+      if (error) {
+          if (error.message === "UNAUTHORIZED") {
+              return <RedirectToLogin error={error} />
+          }
+      }
+
       return(
           <AdminPage bc={<AdminBC />} menu={<AdminMenu activetab='tags' />}>
             <ErrorMessage error={error} />
+
             <table className="table">
                 <thead>
                     <tr>

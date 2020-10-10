@@ -1,9 +1,9 @@
 import AdminTagPage from "./AdminTagPage";
 import {getData} from "./api";
-import {AdminPage} from "./AdminPage";
+import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio} from "./BasePage";
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 var QRCode = require('qrcode.react');
 
 
@@ -107,7 +107,11 @@ class SimulatePage extends AdminPage {
 
     render() {
       const error = this.state.error;
-
+      if (error) {
+          if (error.message === "UNAUTHORIZED") {
+              return <RedirectToLogin error={error} />
+          }
+      }
       return (
           <AdminTagPage>
               <Section>
@@ -176,12 +180,7 @@ class SimulatePage extends AdminPage {
                               <BulmaCheckbox id="tagerror" type="checkbox" value={this.state.tagerror || false} changeHandler={this.handleCheckChange}/>
                           </BulmaControl>
                       </div>
-                      <div className="field is-grouped">
-                          <BulmaControl>
-                              {/* https://jsfiddle.net/ndebellas/y4dLcqkx/ */}
-                              <input className="button is-link" type="submit" value="Update"/>
-                          </BulmaControl>
-                      </div>
+                      {/* https://jsfiddle.net/ndebellas/y4dLcqkx/ */}
               </form>
               </Section>
                 <Section>

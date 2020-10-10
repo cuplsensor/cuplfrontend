@@ -12,6 +12,12 @@ import AdminListTags from "./AdminListTagsPage";
 import AdminTag from "./AdminTagPage";
 import './App.css';
 import SimulatePage from "./SimulatePage";
+import HomePage from "./HomePage";
+import ConsumerTagPage from "./ConsumerTagPage";
+import ConsumerCapturesPage from "./ConsumerCapturesPage";
+import {getData} from "./api";
+import ConsumerRandomTagPage from "./ConsumerRandomTagPage";
+import ConsumerCapturePage from "./ConsumerCapturePage";
 
 
 
@@ -24,8 +30,21 @@ function App() {
             renders the first one that matches the current URL. */}
         <Switch>
           <Route exact path="/">
-            <Home />
+            <HomePage />
           </Route>
+          <Route exact path="/random">
+            <ConsumerRandomTagPage />
+          </Route>
+          <Route exact path="/tag/:serial/" render={props =>
+            <ConsumerTagPage serial={props.match.params.serial}/>
+          } />
+          <Route exact path="/tag/:serial/captures" render={props =>
+            <ConsumerCapturesPage serial={props.match.params.serial}/>
+          } />
+          <Route exact path="/tag/:serial/captures/:id" render={props =>
+            <ConsumerCapturePage serial={props.match.params.serial} id={props.match.params.id}/>
+          } />
+
           <Route exact path="/admin/login">
             <AdminLogin />
           </Route>
@@ -54,10 +73,6 @@ function App() {
       </div>
     </Router>
   );
-}
-
-function Home() {
-  return <ConsumerBasePage>a</ConsumerBasePage>;
 }
 
 function NoMatch() {

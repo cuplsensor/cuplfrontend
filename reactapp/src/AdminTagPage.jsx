@@ -1,8 +1,8 @@
-import {AdminPage, ListElement, MenuListElement} from "./AdminPage";
+import {AdminPage, ListElement, MenuListElement, RedirectToLogin} from "./AdminPage";
 import {getData, postData} from "./api";
 import {BulmaControl, BulmaField, BulmaSubmit, ErrorMessage} from "./BasePage";
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 
 class AdminTagPage extends AdminPage {
   constructor(props) {
@@ -36,6 +36,11 @@ class AdminTagPage extends AdminPage {
       const error = this.state.error;
       const tagid = this.props.match.params.id;
       const activetab = 'Simulate';
+      if (error) {
+          if (error.message === "UNAUTHORIZED") {
+              return <RedirectToLogin error={error} />
+          }
+      }
       return (
           <AdminPage bc={<AdminTagBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               {this.props.children}

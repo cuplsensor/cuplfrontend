@@ -23,7 +23,10 @@ export async function getData(url = '', extraheaders = {}, params = {}) {
   const headers = Object.assign({}, defaultheader, extraheaders);
 
   var url = new URL(url);
-  url.search = new URLSearchParams(params).toString();
+
+  for (var key in params) {
+    url.searchParams.append(key, params[key]);
+  }
 
   // Default options are marked with *
   const response = await fetch(url, {

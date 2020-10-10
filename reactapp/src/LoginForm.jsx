@@ -9,8 +9,13 @@ import Cookies from 'universal-cookie';
 class LoginForm extends BasePage {
   constructor(props) {
     super(props);
+    var error = false;
 
-    this.state = {client_id: '', client_secret: '', redirect: false};
+    if (this.props.location.state)
+    {
+        error = this.props.location.state.error;
+    }
+    this.state = {client_id: '', client_secret: '', redirect: false, error: error};
 
     this.handleSubmit = this.handleSubmit.bind(this);
   }
