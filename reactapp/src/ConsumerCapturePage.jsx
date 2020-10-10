@@ -5,6 +5,8 @@ import {getData, postData} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
 import {ConsumerTagBC} from "./ConsumerTagPage";
 import {DateTime} from 'luxon';
+import {Chart} from 'chart.js';
+import 'chartjs-adapter-luxon';
 
 
 
@@ -18,8 +20,33 @@ class ConsumerCapturePage extends React.Component {
         capture = props.location.state.capture;
     }
 
-    this.state = {'error': false, 'capture': capture};
+    this.state = {'error': false, 'capture': capture, 'chartsamples': []};
+  }
 
+
+
+  renderChart() {
+      var chartsamples = [];
+      for (const sample of this.state.samples) {
+          chartsamples.push({'time': DateTime.fromISO(sample['timestamp']), 'value': sample['temp']});
+      }
+      this.setState({chartsamples: chartsamples});
+  }
+
+  getCaptureSamples(samples_url) {
+      getData(samples_url,
+          {},
+          {page: 1, per_page: 100}
+        )
+        .then(this.handleErrors)
+        .then(response => response.json())
+        .then(json => {
+            this.setState({samples: json});
+            this.renderChart();
+        },
+        (error) => {
+          this.setState({error});
+        });
   }
 
   componentDidMount() {
@@ -29,13 +56,14 @@ class ConsumerCapturePage extends React.Component {
         .then(this.handleErrors)
         .then(response => response.json())
         .then(json => {
-            console.log(json);
             this.setState({capture: json})
-
+            this.getCaptureSamples(this.state.capture.samples_url);
         },
         (error) => {
           this.setState({error});
         });
+      } else {
+          this.getCaptureSamples(this.state.capture.samples_url);
       }
   }
 
@@ -52,10 +80,80 @@ class ConsumerCapturePage extends React.Component {
 
       return (
           <ConsumerBasePage bc={<ConsumerCaptureBC serial={tagserial} capture_id={capture_id} />}>
+              <div id="chart-container">
+                  <LineChart data={this.state.chartsamples} color="rgba(220,100,94,1)" title="temperature"/>
+              </div>
 
           </ConsumerBasePage>
       );
   }
+}
+
+class LineChart extends React.Component {
+    constructor(props) {
+        super(props);
+        this.chartRef = React.createRef();
+    }
+
+    componentDidUpdate() {
+        this.myChart.data.labels = this.props.data.map(d => d.time);
+        this.myChart.data.datasets[0].data = this.props.data.map(d => d.value);
+        this.myChart.update();
+    }
+
+    componentDidMount() {
+        this.myChart = new Chart(this.chartRef.current, {
+                          type: 'line',
+                          options: {
+                            scales: {
+                              xAxes: [
+                                {
+                                  type: 'time',
+                                  time: {
+                                    unit: 'week'
+                                  }
+                                }
+                              ],
+                              yAxes: [
+                                {
+                                  ticks: {
+                                    min: 0
+                                  }
+                                }
+                              ]
+                            }
+                          },
+                        data: {
+                              labels: this.props.data.map(d => d.time),
+                                datasets: [{
+                                  label: this.props.title,
+                                  data: this.props.data.map(d => d.value),
+                                  fill: 'none',
+                                  backgroundColor: this.props.color,
+                                  pointRadius: 3,
+                                  borderColor: this.props.color,
+                                  borderWidth: 1,
+                                  lineTension: 0,
+                                  yAxesID: "id1"
+                                },
+                                {
+                                  label: this.props.title,
+                                  data: this.props.data.map(d => d.value),
+                                  fill: 'none',
+                                  backgroundColor: this.props.color,
+                                  pointRadius: 3,
+                                  borderColor: this.props.color,
+                                  borderWidth: 1,
+                                  lineTension: 0,
+                                  yAxesID: "id2"
+                                }]
+                        }
+                    });
+    }
+
+    render() {
+        return <canvas ref={this.chartRef} />;
+    }
 }
 
 function ConsumerCaptureBC(props) {

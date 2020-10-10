@@ -103,8 +103,6 @@ class ConsumerTagPage extends React.Component {
               </div>
               <div className="container mt-5">
                   <LatestCaptureLink capture={latest_capture} />
-
-
               </div>
           </ConsumerBasePage>
       );

@@ -70,6 +70,12 @@ a {
   justify-content: start;
 }
 
+#chart-container {
+  position: relative;
+  height:80vh;
+  width:100%;
+}
+
 .temperature {
   color: rgba(220,100,94,1);
 }
