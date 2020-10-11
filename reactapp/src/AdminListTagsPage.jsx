@@ -2,7 +2,7 @@ import React from "react";
 import {AdminPage, AdminMenu, AdminBC, RedirectToLogin} from "./AdminPage"
 import {Link, Redirect, withRouter} from "react-router-dom";
 import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, ErrorMessage} from "./BasePage";
-import {postData, getData} from "./api";
+import {postData, getData, handleErrors} from "./api";
 
 function PaginationPrevious(props) {
     if (props.exists) {
@@ -53,7 +53,6 @@ function Pagination(props) {
     }
     if (props.prevExists) {
         previsfirst = (props.pages['prev']['page'] === props.pages['first']['page']);
-        console.log(previsfirst);
     }
     const currenthref = `?page=${props.currentPage}`;
     return (<nav className="pagination" role="navigation" aria-label="pagination">
@@ -137,7 +136,7 @@ class AdminListTags extends AdminPage {
       console.log(page);
       const bearertoken = `Bearer ${admintoken}`;
       getData('https://b3.websensor.io/api/admin/tags',
-        {'Authorization': bearertoken },
+        {'Authorization': bearertoken},
           {'per_page': 10, 'page': page}
         )
         .then(this.handleErrors)
@@ -160,7 +159,7 @@ class AdminListTags extends AdminPage {
       postData('https://b3.websensor.io/api/admin/tags',
         {},
         {'Authorization': bearertoken })
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.componentDidMount();

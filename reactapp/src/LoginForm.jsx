@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
 import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {postData} from "./api.js";
+import {postData, handleErrors} from "./api.js";
 import Cookies from 'universal-cookie';
 
 
@@ -29,7 +29,7 @@ class LoginForm extends BasePage {
   handleSubmit(event) {
     postData('https://b3.websensor.io/api/admin/token',
         {'client_id': this.state.client_id, 'client_secret': this.state.client_secret})
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             const cookies = new Cookies();

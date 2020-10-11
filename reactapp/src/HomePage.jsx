@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
 import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {getData, postData} from "./api.js";
+import {getData, postData, handleErrors} from "./api.js";
 import Cookies from 'universal-cookie';
 import {ConsumerBasePage} from "./ConsumerPage";
 
@@ -32,7 +32,7 @@ class HomePage extends React.Component {
                   'vfmtb64': vfmtb64
                 }
             )
-            .then(this.handleErrors)
+            .then(handleErrors)
             .then(response => response.json())
             .then(json => {
                 this.setState({capture: json})

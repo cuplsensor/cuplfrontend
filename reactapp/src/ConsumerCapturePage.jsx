@@ -1,9 +1,7 @@
 import React from "react";
-import {Redirect, Link, withRouter } from "react-router-dom";
-import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {getData, postData} from "./api.js";
+import {withRouter } from "react-router-dom";
+import {getAllData, getData, handleErrors} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
-import {ConsumerTagBC} from "./ConsumerTagPage";
 import {DateTime} from 'luxon';
 import {Chart} from 'chart.js';
 import 'chartjs-adapter-luxon';
@@ -25,45 +23,59 @@ class ConsumerCapturePage extends React.Component {
 
 
 
-  renderChart() {
-      var chartsamples = [];
-      for (const sample of this.state.samples) {
-          chartsamples.push({'time': DateTime.fromISO(sample['timestamp']), 'value': sample['temp']});
-      }
-      this.setState({chartsamples: chartsamples});
-  }
 
-  getCaptureSamples(samples_url) {
-      getData(samples_url,
+  async getCaptureSamples(samples_url) {
+      const samples = await getAllData(samples_url,
           {},
-          {page: 1, per_page: 100}
-        )
-        .then(this.handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            this.setState({samples: json});
-            this.renderChart();
-        },
-        (error) => {
-          this.setState({error});
+          50
+      );
+
+      // Add timestamp here.
+      for (const sample of samples) {
+
+      }
+
+      const sampleswithtime = samples.map(function(el) {
+          var o = Object.assign({}, el);
+          o.time = DateTime.fromISO(el['timestamp'], {zone: 'utc'});
+          return o;
         });
+
+
+      sampleswithtime.sort(function(a, b) {
+          var keyA = a.time,
+            keyB = b.time;
+          // Compare the 2 dates
+          if (keyA < keyB) return -1;
+          if (keyA > keyB) return 1;
+          return 0;
+        });
+
+      return new Promise(resolve => {resolve(sampleswithtime)});
   }
 
   componentDidMount() {
+
       if (this.state.capture == null) {
         getData('https://b3.websensor.io/api/consumer/captures/' + this.props.id,
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.setState({capture: json})
-            this.getCaptureSamples(this.state.capture.samples_url);
+            this.getCaptureSamples(this.state.capture.samples_url)
+                .then((samples) => {
+                  this.setState({'chartsamples': samples});
+              });
         },
         (error) => {
           this.setState({error});
         });
       } else {
-          this.getCaptureSamples(this.state.capture.samples_url);
+          this.getCaptureSamples(this.state.capture.samples_url)
+              .then((samples) => {
+                  this.setState({'chartsamples': samples});
+              });
       }
   }
 
@@ -78,10 +90,12 @@ class ConsumerCapturePage extends React.Component {
           capture_id = this.state.capture.id;
       }
 
+
       return (
           <ConsumerBasePage bc={<ConsumerCaptureBC serial={tagserial} capture_id={capture_id} />}>
               <div id="chart-container">
-                  <LineChart data={this.state.chartsamples} color="rgba(220,100,94,1)" title="temperature"/>
+                  <LineChart data={this.state.chartsamples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
+                  rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
               </div>
 
           </ConsumerBasePage>
@@ -97,7 +111,8 @@ class LineChart extends React.Component {
 
     componentDidUpdate() {
         this.myChart.data.labels = this.props.data.map(d => d.time);
-        this.myChart.data.datasets[0].data = this.props.data.map(d => d.value);
+        this.myChart.data.datasets[0].data = this.props.data.map(d => d.temp);
+        this.myChart.data.datasets[1].data = this.props.data.map(d => d.rh);
         this.myChart.update();
     }
 
@@ -105,6 +120,9 @@ class LineChart extends React.Component {
         this.myChart = new Chart(this.chartRef.current, {
                           type: 'line',
                           options: {
+                             tooltips : {
+                                mode : 'index', intersect: false,
+                            },
                             scales: {
                               xAxes: [
                                 {
@@ -114,38 +132,42 @@ class LineChart extends React.Component {
                                   }
                                 }
                               ],
-                              yAxes: [
-                                {
-                                  ticks: {
-                                    min: 0
-                                  }
-                                }
-                              ]
+                                yAxes: [{
+                                    id: 'tempAxis',
+                                    type: 'linear',
+                                    position: 'left',
+                                }, {
+                                    id: 'rhAxis',
+                                    type: 'linear',
+                                    position: 'right',
+                                    display: true
+                                }],
                             }
                           },
                         data: {
                               labels: this.props.data.map(d => d.time),
                                 datasets: [{
-                                  label: this.props.title,
-                                  data: this.props.data.map(d => d.value),
+                                  label: this.props.temptitle,
+                                  data: this.props.data.map(d => d.temp),
                                   fill: 'none',
-                                  backgroundColor: this.props.color,
+                                  backgroundColor: this.props.tempcolor,
                                   pointRadius: 3,
-                                  borderColor: this.props.color,
+                                  borderColor: this.props.tempcolor,
                                   borderWidth: 1,
                                   lineTension: 0,
-                                  yAxesID: "id1"
+                                  yAxisID: 'tempAxis',
                                 },
                                 {
-                                  label: this.props.title,
-                                  data: this.props.data.map(d => d.value),
+                                  label: this.props.rhtitle,
+                                  data: this.props.data.map(d => d.rh),
                                   fill: 'none',
-                                  backgroundColor: this.props.color,
+                                  backgroundColor: this.props.rhcolor,
                                   pointRadius: 3,
-                                  borderColor: this.props.color,
+                                  borderColor: this.props.rhcolor,
                                   borderWidth: 1,
                                   lineTension: 0,
-                                  yAxesID: "id2"
+                                  yAxisID: "rhAxis",
+                                  hidden: false
                                 }]
                         }
                     });

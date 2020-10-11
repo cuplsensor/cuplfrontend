@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
 import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {getData, postData} from "./api.js";
+import {getData, handleErrors} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
 import {DateTime} from 'luxon';
 
@@ -20,7 +20,7 @@ class ConsumerTagPage extends React.Component {
           {},
           {page: 1, per_page: 1}
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             if (json[0] == null) {
@@ -39,7 +39,7 @@ class ConsumerTagPage extends React.Component {
           {},
           {page: 1, per_page: 1}
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.setState({latest_sample: json[0]});
@@ -52,7 +52,7 @@ class ConsumerTagPage extends React.Component {
   componentDidMount() {
     getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.setState({tag: json})

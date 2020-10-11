@@ -1,5 +1,5 @@
 import AdminTagPage from "./AdminTagPage";
-import {getData} from "./api";
+import {getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio} from "./BasePage";
 import React from "react";
@@ -44,7 +44,7 @@ class SimulatePage extends AdminPage {
       getData('https://b3.websensor.io/api/admin/tag/' + tagid,
         {'Authorization': bearertoken }
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.setState({
@@ -81,7 +81,7 @@ class SimulatePage extends AdminPage {
                 'clockfail': this.state.clockfail,
                 'tagerror': this.state.tagerror}
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.setState({'simulateurl': json})

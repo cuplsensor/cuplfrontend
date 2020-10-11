@@ -17,6 +17,8 @@ export async function postData(url = '', data = {}, extraheaders = {}) {
   return response; // parses JSON response into native JavaScript objects
 }
 
+
+
 // Example POST method implementation:
 export async function getData(url = '', extraheaders = {}, params = {}) {
   const defaultheader = {'Content-Type': 'application/json'}
@@ -37,4 +39,59 @@ export async function getData(url = '', extraheaders = {}, params = {}) {
     headers: headers,
   });
   return response; // parses JSON response into native JavaScript objects
+}
+
+export async function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+  }
+
+/* https://zellwk.com/blog/async-await-in-loops/ */
+async function getRemainingPages(response, url, extraheaders, per_page) {
+    var parse = require('parse-link-header');
+    const link = response.headers.get('link');
+    const parsedlink = parse(link);
+    const lastpage = parsedlink['last']['page'];
+    var pagesToGet = [];
+    for (var page = 2; page <= lastpage; page++) {
+        pagesToGet.push(page);
+    }
+    const promises = pagesToGet.map(async page => {
+        return getData(url, extraheaders, {page: page, per_page: per_page})
+        .then(handleErrors)
+        .then(response => {
+              return response
+        });
+    });
+
+    return promises;
+}
+
+// Get all pages in a paginated request.
+export async function getAllData(url = '', extraheaders = {}, per_page = 10) {
+  var jsonlist = [];
+  const params = {page: 1, per_page: per_page};
+  const firstresponse = await getData(url, extraheaders, params)
+          .then(handleErrors)
+          .then(response => {
+              return response
+          });
+
+  const pagepromises = await getRemainingPages(firstresponse, url, extraheaders, per_page);
+  var allresponses = await Promise.all(pagepromises);
+  allresponses.push(firstresponse);
+
+  const jsonpromises = allresponses.map(async response => {
+      return response.json()
+    });
+
+  const alljson = await Promise.all(jsonpromises);
+
+  for (const json of alljson) {
+      jsonlist.push(...json);
+  }
+
+  return new Promise(resolve => {resolve(jsonlist)});
 }

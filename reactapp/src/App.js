@@ -44,7 +44,6 @@ function App() {
           <Route exact path="/tag/:serial/captures/:id" render={props =>
             <ConsumerCapturePage serial={props.match.params.serial} id={props.match.params.id}/>
           } />
-
           <Route exact path="/admin/login">
             <AdminLogin />
           </Route>

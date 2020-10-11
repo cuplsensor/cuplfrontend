@@ -1,6 +1,6 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
-import {getData} from "./api.js";
+import {getData, handleErrors} from "./api.js";
 
 
 
@@ -14,7 +14,7 @@ class ConsumerRandomTagPage extends React.Component {
   componentDidMount() {
     getData('https://b3.websensor.io/api/consumer/random/tag',
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             this.setState({serial: json['serial']})

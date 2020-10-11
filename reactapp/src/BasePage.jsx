@@ -22,12 +22,7 @@ export class BasePage extends React.Component {
     this.setState({[event.target.id]: event.target.value});
   }
 
-  handleErrors(response) {
-    if (!response.ok) {
-        throw Error(response.statusText);
-    }
-    return response;
-  }
+
 }
 
 

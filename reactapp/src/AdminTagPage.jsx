@@ -4,33 +4,11 @@ import {BulmaControl, BulmaField, BulmaSubmit, ErrorMessage} from "./BasePage";
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
 
-class AdminTagPage extends AdminPage {
+class AdminTagPage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {'error': false};
   }
-
-  componentDidMount() {
-      super.componentDidMount();
-      const admintoken = this.admintoken;
-      const page = new URLSearchParams(this.props.location.search).get("page") || 1;
-      const bearertoken = `Bearer ${admintoken}`;
-      getData('https://b3.websensor.io/api/admin/tags',
-        {'Authorization': bearertoken },
-          {'per_page': 3, 'page': page}
-        )
-        .then(this.handleErrors)
-        .then(this.parsePages)
-        .then(response => response.json())
-        .then(json => {
-            this.setState({tags: json});
-        },
-        (error) => {
-          this.setState({error});
-        });
-      this.setState({activesubtab: 'Simulate'});
-
-  }
-
 
   render() {
       const error = this.state.error;

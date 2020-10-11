@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
 import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {getData, postData} from "./api.js";
+import {getData, handleErrors} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
 import {ConsumerTagBC} from "./ConsumerTagPage";
 import {DateTime} from 'luxon';
@@ -20,7 +20,7 @@ class ConsumerCapturesPage extends React.Component {
   componentDidMount() {
       getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(response => response.json())
         .then(json => {
             //this.getLatestCapture(json['captures_url']);
