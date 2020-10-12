@@ -85,18 +85,32 @@ class ConsumerTagPage extends React.Component {
               <div className="container">
                   <div className="columns">
                       <div className="column">
-                          <NavPanel title="Temperature" subtitle={latest_temp} iconpath={require("./thermometer-half-solid.svg")}/>
-                          <NavPanel title="Relative Humidity" subtitle={latest_rh} iconpath={require("./tint-solid.svg")}/>
-                          <NavPanel title="Webhook" subtitle="" iconpath={require("./webhooks.svg")}/>
+                          <NavPanel
+                              title="Temperature"
+                              subtitle={latest_temp}
+                              iconpath={require("./thermometer-half-solid.svg")}
+                              link={"/tag/"+this.props.serial+"/calendar"}
+                          />
+                          <NavPanel
+                              title="Relative Humidity"
+                              subtitle={latest_rh}
+                              iconpath={require("./tint-solid.svg")}/>
+                          <NavPanel
+                              title="Webhook"
+                              subtitle=""
+                              iconpath={require("./webhooks.svg")}/>
                       </div>
-
 
                       <div className="column">
-                          <NavPanel title="Battery" subtitle={latest_batvoltagemv} iconpath={require("./battery-full-solid.svg")}/>
-                          <NavPanel title="Configure" subtitle="WebNFC" iconpath={require("./cogs-solid.svg")}/>
+                          <NavPanel
+                              title="Battery"
+                              subtitle={latest_batvoltagemv}
+                              iconpath={require("./battery-full-solid.svg")}/>
+                          <NavPanel
+                              title="Configure"
+                              subtitle="WebNFC"
+                              iconpath={require("./cogs-solid.svg")}/>
                       </div>
-
-
 
                   </div>
 
@@ -134,7 +148,7 @@ function NavPanel(props) {
                        style={{backgroundImage: `url(${props.iconpath}`,
                                backgroundRepeat: "no-repeat",
                                backgroundPosition: "right"}}>
-                      <a href="#">
+                      <a href={props.link}>
                           <p className="title">{props.title}</p>
                           <p className="subtitle">{props.subtitle}</p>
                       </a>

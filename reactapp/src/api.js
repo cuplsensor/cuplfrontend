@@ -1,4 +1,6 @@
 // Example POST method implementation:
+import {DateTime} from "luxon";
+
 export async function postData(url = '', data = {}, extraheaders = {}) {
   const defaultheader = {'Content-Type': 'application/json'}
   const headers = Object.assign({}, defaultheader, extraheaders);
@@ -95,3 +97,28 @@ export async function getAllData(url = '', extraheaders = {}, per_page = 10) {
 
   return new Promise(resolve => {resolve(jsonlist)});
 }
+
+export async function getSamples(samples_url) {
+      const samples = await getAllData(samples_url,
+          {},
+          10
+      );
+
+      // Add timestamp here.
+      const sampleswithtime = samples.map(function(el) {
+          var o = Object.assign({}, el);
+          o.time = DateTime.fromISO(el['timestamp'], {zone: 'utc'});
+          return o;
+        });
+
+      sampleswithtime.sort(function(a, b) {
+          var keyA = a.time,
+            keyB = b.time;
+          // Compare the 2 dates
+          if (keyA < keyB) return -1;
+          if (keyA > keyB) return 1;
+          return 0;
+        });
+
+      return new Promise(resolve => {resolve(sampleswithtime)});
+  }

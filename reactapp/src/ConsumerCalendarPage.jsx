@@ -6,28 +6,28 @@ import {LineChart} from "./LineChart";
 import 'chartjs-adapter-luxon';
 
 
-class ConsumerCapturePage extends React.Component {
+class ConsumerCalendarPage extends React.Component {
   constructor(props) {
     super(props);
 
-    var capture = null;
+    var tag = null;
 
     if (props.location.state) {
-        capture = props.location.state.capture;
+        tag = props.location.state.tag;
     }
 
-    this.state = {'error': false, 'capture': capture, 'samples': []};
+    this.state = {'error': false, 'tag': tag, 'samples': []};
   }
 
   componentDidMount() {
-      if (this.state.capture == null) {
-        getData('https://b3.websensor.io/api/consumer/captures/' + this.props.id,
+      if (this.state.tag == null) {
+        getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
         )
         .then(handleErrors)
         .then(response => response.json())
         .then(json => {
-            this.setState({capture: json})
-            getSamples(this.state.capture.samples_url)
+            this.setState({tag: json})
+            getSamples(this.state.tag.samples_url)
                 .then((samples) => {
                   this.setState({'samples': samples});
               });
@@ -36,7 +36,7 @@ class ConsumerCapturePage extends React.Component {
           this.setState({error});
         });
       } else {
-          getSamples(this.state.capture.samples_url)
+          getSamples(this.state.tag.samples_url)
               .then((samples) => {
                   this.setState({'samples': samples});
               });
@@ -47,15 +47,12 @@ class ConsumerCapturePage extends React.Component {
       const error = this.state.error;
       var tagserial = "";
 
-      var capture_id = "";
-
-      if (this.state.capture) {
-          tagserial = this.state.capture.tagserial;
-          capture_id = this.state.capture.id;
+      if (this.state.tag) {
+          tagserial = this.state.tag.serial;
       }
 
       return (
-          <ConsumerBasePage bc={<ConsumerCaptureBC serial={tagserial} capture_id={capture_id} />}>
+          <ConsumerBasePage bc={<ConsumerCalendarBC serial={tagserial} />}>
               <div id="chart-container">
                   <LineChart data={this.state.samples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
                   rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
@@ -67,16 +64,15 @@ class ConsumerCapturePage extends React.Component {
 }
 
 
-function ConsumerCaptureBC(props) {
+function ConsumerCalendarBC(props) {
     return (
       <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
         <ul>
             <li><a href={`/tag/${props.serial}`}>{props.serial}</a></li>
-            <li><a href={`/tag/${props.serial}/captures/`}>Captures</a></li>
-            <li className="is-active"><a href="#" aria-current="page">{props.capture_id}</a></li>
+            <li className="is-active"><a href="#" aria-current="page">Calendar</a></li>
         </ul>
       </nav>
     );
 }
 
-export default withRouter(ConsumerCapturePage);
+export default withRouter(ConsumerCalendarPage);

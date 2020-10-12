@@ -18,6 +18,7 @@ import ConsumerCapturesPage from "./ConsumerCapturesPage";
 import {getData} from "./api";
 import ConsumerRandomTagPage from "./ConsumerRandomTagPage";
 import ConsumerCapturePage from "./ConsumerCapturePage";
+import ConsumerCalendarPage from "./ConsumerCalendarPage";
 
 
 
@@ -43,6 +44,9 @@ function App() {
           } />
           <Route exact path="/tag/:serial/captures/:id" render={props =>
             <ConsumerCapturePage serial={props.match.params.serial} id={props.match.params.id}/>
+          } />
+          <Route exact path="/tag/:serial/calendar" render={props =>
+            <ConsumerCalendarPage serial={props.match.params.serial}/>
           } />
           <Route exact path="/admin/login">
             <AdminLogin />
