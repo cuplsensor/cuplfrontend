@@ -11,7 +11,7 @@ class ConsumerTagPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {'error': false, 'tag': '', 'latest_capture': ''};
+    this.state = {'error': false, 'tag': ''};
 
   }
 
@@ -67,7 +67,7 @@ class ConsumerTagPage extends React.Component {
   render() {
       const error = this.state.error;
       const latest_sample = this.state.latest_sample;
-      const latest_capture = this.state.latest_capture;
+      const latest_capture = this.state.latest_capture || '';
       var latest_temp = "-- °C";
       var latest_rh = "-- %";
       var latest_batvoltagemv = "-- mV";
@@ -76,7 +76,7 @@ class ConsumerTagPage extends React.Component {
           latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
           latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
       }
-      if (latest_capture) {
+      if (typeof(latest_capture) != "string") {
           latest_batvoltagemv = latest_capture.batvoltagemv + " mV";
       }
 
@@ -139,9 +139,6 @@ function LatestCaptureLink(props) {
 }
 
 function NavPanel(props) {
-    const iconstr = require("./tint-solid.svg");
-    const iconpath = `${iconstr}`;
-    console.log(iconpath);
     return (
         <div className="tile box" >
                   <div className="tile is-child"

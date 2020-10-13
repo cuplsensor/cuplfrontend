@@ -1,4 +1,3 @@
-// Example POST method implementation:
 import {DateTime} from "luxon";
 
 export async function postData(url = '', data = {}, extraheaders = {}) {

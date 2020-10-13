@@ -60,6 +60,7 @@ class HomePage extends React.Component {
           <ConsumerBasePage>Loading...</ConsumerBasePage>
         );
       }
+
       return (
           <ConsumerBasePage>a</ConsumerBasePage>
       );

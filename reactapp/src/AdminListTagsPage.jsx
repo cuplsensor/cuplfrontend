@@ -139,7 +139,7 @@ class AdminListTags extends AdminPage {
         {'Authorization': bearertoken},
           {'per_page': 10, 'page': page}
         )
-        .then(this.handleErrors)
+        .then(handleErrors)
         .then(this.parsePages)
         .then(response => response.json())
         .then(json => {
