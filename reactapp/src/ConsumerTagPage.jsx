@@ -71,6 +71,7 @@ class ConsumerTagPage extends React.Component {
       var latest_temp = "-- °C";
       var latest_rh = "-- %";
       var latest_batvoltagemv = "-- mV";
+      var calendar_link = '#';
 
       if (latest_sample) {
           latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
@@ -78,8 +79,10 @@ class ConsumerTagPage extends React.Component {
       }
       if (typeof(latest_capture) != "string") {
           latest_batvoltagemv = latest_capture.batvoltagemv + " mV";
+          calendar_link = "/tag/"+this.props.serial+"/calendar/day/"+latest_capture.timestamp;
       }
 
+      console.log(latest_capture);
       return (
           <ConsumerBasePage bc={<ConsumerTagBC serial={this.props.serial} />}>
               <div className="container">
@@ -89,12 +92,15 @@ class ConsumerTagPage extends React.Component {
                               title="Temperature"
                               subtitle={latest_temp}
                               iconpath={require("./thermometer-half-solid.svg")}
-                              link={"/tag/"+this.props.serial+"/calendar"}
+                              link={calendar_link}
                           />
                           <NavPanel
                               title="Relative Humidity"
                               subtitle={latest_rh}
-                              iconpath={require("./tint-solid.svg")}/>
+                              iconpath={require("./tint-solid.svg")}
+                              link={calendar_link}
+                          />
+
                           <NavPanel
                               title="Webhook"
                               subtitle=""

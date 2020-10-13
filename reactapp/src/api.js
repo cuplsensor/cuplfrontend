@@ -97,16 +97,16 @@ export async function getAllData(url = '', extraheaders = {}, per_page = 10) {
   return new Promise(resolve => {resolve(jsonlist)});
 }
 
-export async function getSamples(samples_url) {
+export async function getSamples(samples_url, zone) {
       const samples = await getAllData(samples_url,
           {},
-          10
+          100
       );
 
       // Add timestamp here.
       const sampleswithtime = samples.map(function(el) {
           var o = Object.assign({}, el);
-          o.time = DateTime.fromISO(el['timestamp'], {zone: 'utc'});
+          o.time = DateTime.fromISO(el['timestamp'], {zone: 'utc'}).setZone(zone);
           return o;
         });
 

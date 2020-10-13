@@ -1,5 +1,7 @@
 import React from "react";
+import {DateTime} from "luxon";
 import {Chart} from "chart.js";
+import 'chartjs-adapter-luxon';
 
 export class LineChart extends React.Component {
     constructor(props) {
@@ -26,7 +28,17 @@ export class LineChart extends React.Component {
                                 {
                                   type: 'time',
                                   time: {
-                                    unit: 'week'
+                                    unit: 'hour',
+                                    parser: function (dateTimeIn) {
+                                        // An unfortunate hack to get around the fact that Chart.JS with the Luxon adapter
+                                        // always uses the local timezone to format ticks and tooltips and not the supplied zone
+                                        // data from Luxon. This might be fixed time Chart.JS 3.
+                                        // What this does is change the underlying timestamp, whilst simultaenously changing the zone
+                                        // to ensure that the displayed local time does not change.
+                                        return dateTimeIn.setZone('local', { keepLocalTime: true });
+                                    }
+
+
                                   }
                                 }
                               ],

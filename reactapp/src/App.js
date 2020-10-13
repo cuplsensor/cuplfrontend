@@ -19,6 +19,7 @@ import {getData} from "./api";
 import ConsumerRandomTagPage from "./ConsumerRandomTagPage";
 import ConsumerCapturePage from "./ConsumerCapturePage";
 import ConsumerCalendarPage from "./ConsumerCalendarPage";
+import {DateTime} from "luxon";
 
 
 
@@ -45,8 +46,18 @@ function App() {
           <Route exact path="/tag/:serial/captures/:id" render={props =>
             <ConsumerCapturePage serial={props.match.params.serial} id={props.match.params.id}/>
           } />
-          <Route exact path="/tag/:serial/calendar" render={props =>
-            <ConsumerCalendarPage serial={props.match.params.serial}/>
+          <Route exact path="/tag/:serial/calendar/:range/:timestamp" render={props =>
+            <CalendarRedirect serial={props.match.params.serial}
+                              range={props.match.params.range}
+                              timestamp={props.match.params.timestamp} />
+          } />
+          <Route exact path="/tag/:serial/calendar/:range/:year/:month/:day" render={props =>
+            <ConsumerCalendarPage serial={props.match.params.serial}
+                                  range={props.match.params.range}
+                                  year={props.match.params.year}
+                                  month={props.match.params.month}
+                                  day={props.match.params.day}
+            />
           } />
           <Route exact path="/admin/login">
             <AdminLogin />
@@ -75,6 +86,19 @@ function App() {
         </Switch>
       </div>
     </Router>
+  );
+}
+
+// Redirect from timestamp.
+function CalendarRedirect(props) {
+  // Convert UTC timestamp to a local datetime
+  const dtlocal = DateTime.fromISO(props.timestamp, {zone:'utc'}).toLocal();
+  // Extract year month and day.
+  const year = dtlocal.year;
+  const month = dtlocal.month;
+  const day = dtlocal.day;
+  return (
+    <Redirect to={`/tag/${props.serial}/calendar/${props.range}/${year}/${month}/${day}`} />
   );
 }
 

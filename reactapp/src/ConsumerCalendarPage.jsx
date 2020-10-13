@@ -1,10 +1,13 @@
 import React from "react";
-import {withRouter } from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
-import 'chartjs-adapter-luxon';
+
 import {DateTime} from "luxon";
+import 'chartjs-adapter-luxon';
+
+
 
 class ConsumerCalendarPage extends React.Component {
   constructor(props) {
@@ -16,8 +19,43 @@ class ConsumerCalendarPage extends React.Component {
         tag = props.location.state.tag;
     }
 
-    this.state = {'error': false, 'tag': tag, 'samples': []};
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleRangeChange = this.handleRangeChange.bind(this);
+
+
+    const zone = new URLSearchParams(this.props.location.search).get("tz") || 'local';
+    const dateToday = DateTime.local()
+    const range = this.props.range || 'day';
+    const year = this.props.year || dateToday.year;
+    const month = this.props.month || dateToday.month;
+    const day = this.props.day || dateToday.day;
+
+
+    const date = DateTime.fromObject({year:year, month:month, day:day, zone:zone});
+
+    this.state = {'error': false, 'tag': tag, 'samples': [], 'range': 'day', 'date': date};
   }
+
+  updateURL() {
+      const serial = this.state.tag.serial;
+      const range = this.state.range;
+      const day = this.state.date.day;
+      const month = this.state.date.month;
+      const year = this.state.date.year;
+      const zone = this.state.date.zoneName;
+      const url = `/tag/${serial}/calendar/${range}/${year}/${month}/${day}`;
+      const params = "?tz=" + zone;
+      const search = new URLSearchParams(params).toString();
+      this.props.history.push({pathname: url, search: search});
+  }
+
+  handleDateChange(date) {
+      this.setState({'date': date}, this.updateURL);
+  }
+
+  handleRangeChange(range) {
+        this.setState({'range': range}, this.updateURL);
+    }
 
   componentDidMount() {
       if (this.state.tag == null) {
@@ -26,8 +64,8 @@ class ConsumerCalendarPage extends React.Component {
         .then(handleErrors)
         .then(response => response.json())
         .then(json => {
-            this.setState({tag: json})
-            getSamples(this.state.tag.samples_url)
+            this.setState({tag: json}, this.updateURL)
+            getSamples(this.state.tag.samples_url, this.state.date.zone)
                 .then((samples) => {
                   this.setState({'samples': samples});
               });
@@ -36,11 +74,13 @@ class ConsumerCalendarPage extends React.Component {
           this.setState({error});
         });
       } else {
-          getSamples(this.state.tag.samples_url)
+          this.updateURL();
+          getSamples(this.state.tag.samples_url, this.state.date.zone)
               .then((samples) => {
                   this.setState({'samples': samples});
               });
       }
+
   }
 
   render() {
@@ -53,7 +93,10 @@ class ConsumerCalendarPage extends React.Component {
 
       return (
           <ConsumerBasePage bc={<ConsumerCalendarBC serial={tagserial} />}>
-              <CalendarForm />
+              <nav id="daynav" className="level">
+                  <DatePicker date={this.state.date} onDateChange={this.handleDateChange} />
+                  <RangePicker range={this.state.range} onRangeChange={this.handleRangeChange} />
+              </nav>
               <div id="chart-container">
                   <LineChart data={this.state.samples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
                   rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
@@ -67,14 +110,13 @@ class RangePicker extends React.Component {
     constructor(props) {
         super(props);
 
-        this.state = {'range': 'day'};
-
         this.handleClick = this.handleClick.bind(this);
     }
 
     handleClick(event) {
         event.preventDefault();
-        this.setState({'range': event.target.id});
+        //this.setState({'range': event.target.id});
+        this.props.onRangeChange(event.target.id);
     }
 
     render() {
@@ -82,15 +124,15 @@ class RangePicker extends React.Component {
         var weekClassName = "button";
         var monthClassName = "button";
 
-        if (this.state.range === "day") {
+        if (this.props.range === "day") {
             dayClassName = "button is-active";
         }
 
-        if (this.state.range === "week") {
+        if (this.props.range === "week") {
             weekClassName = "button is-active";
         }
 
-        if (this.state.range === "month") {
+        if (this.props.range === "month") {
             monthClassName = "button is-active";
         }
 
@@ -107,11 +149,9 @@ class RangePicker extends React.Component {
 }
 
 
-class CalendarForm extends React.Component {
+class DatePicker extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {date: DateTime.local()};
 
         this.forwardOneDay = this.forwardOneDay.bind(this);
         this.backOneDay = this.backOneDay.bind(this);
@@ -121,34 +161,34 @@ class CalendarForm extends React.Component {
 
     toToday(event) {
         event.preventDefault();
-        const newDate = DateTime.local();
-        this.setState({date: newDate});
+        const newDate = DateTime.fromObject({zone: this.props.date.zone});
+        this.props.onDateChange(newDate);
     }
 
     forwardOneDay(event) {
         event.preventDefault();
-        const newDate = this.state.date.plus({days : 1});
-        this.setState({date: newDate});
+        const newDate = this.props.date.plus({days : 1});
+        this.props.onDateChange(newDate);
     }
 
     backOneDay(event) {
         event.preventDefault();
-        const newDate = this.state.date.minus({days: 1});
-        this.setState({date: newDate});
+        const newDate = this.props.date.minus({days: 1});
+        this.props.onDateChange(newDate);
     }
 
     toDatePicker(event) {
         event.preventDefault();
         var datestr = event.target.value;
-        const newDate = DateTime.fromISO(datestr);
-        this.setState({date: newDate});
+        const newDate = DateTime.fromISO(datestr, {zone: this.props.date.zone});
+        this.props.onDateChange(newDate);
     }
 
 
     render() {
         const leftsvg = require("./angle-left-solid.svg");
         const rightsvg = require("./angle-right-solid.svg");
-        return  (<nav id="daynav" className="level">
+        return  (
             <div className="level-left">
                 <div className="level-item is-pulled-left">
                     <div id="daybuttons" className="buttons has-addons is-pulled-left">
@@ -165,15 +205,12 @@ class CalendarForm extends React.Component {
                 </div>
                 <div className="level-item">
                     <input type="date"
-                           value={this.state.date.toISODate()}
+                           value={this.props.date.toISODate()}
                            id="datepicker"
                            onChange={this.toDatePicker}
                            style={{height:'2.25em', marginLeft:'0.5em'}}/>
                 </div>
             </div>
-
-            <RangePicker />
-        </nav>
         )};
 }
 
