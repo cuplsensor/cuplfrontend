@@ -47,7 +47,7 @@ class ConsumerCalendarPage extends React.Component {
       }
 
       if (!startDatesEqual || !endDatesEqual) {
-          const startISO = sEDates.startDate.toISO();
+          const startISO = sEDates.startDate.toISO(); // Was using UTC here but should not be needed.
           const endISO = sEDates.endDate.toISO();
           const extraparams = {starttimestr: startISO, endtimestr: endISO};
 

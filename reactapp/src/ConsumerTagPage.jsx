@@ -75,7 +75,9 @@ class ConsumerTagPage extends React.Component {
 
       if (latest_sample) {
           latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
-          latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
+          if (latest_sample['rh'] !== null) {
+              latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
+          }
       }
       if (typeof(latest_capture) != "string") {
           latest_batvoltagemv = latest_capture.batvoltagemv + " mV";
