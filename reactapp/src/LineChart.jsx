@@ -7,13 +7,36 @@ export class LineChart extends React.Component {
     constructor(props) {
         super(props);
         this.chartRef = React.createRef();
+        this.ticksCallback = this.ticksCallback.bind(this);
+        this.parserCallback = this.parserCallback.bind(this);
+        this.DateTime = DateTime;
     }
 
     componentDidUpdate() {
+        const xmin = this.props.xmin || null;
+        const xmax = this.props.xmax || null;
+        console.log(typeof(xmin));
+        console.log(xmin);
+        if (xmin !== null) {
+            this.myChart.options.scales.xAxes[0].ticks.min = xmin;
+            //this.myChart.options.scales.xAxes[0].ticks.max = xmax;
+        }
+
         this.myChart.data.labels = this.props.data.map(d => d.time);
         this.myChart.data.datasets[0].data = this.props.data.map(d => d.temp);
         this.myChart.data.datasets[1].data = this.props.data.map(d => d.rh);
         this.myChart.update();
+    }
+
+    parserCallback
+
+    ticksCallback(value, index, values) {
+        if (values.length > 0) {
+          return values[index]['value'];
+        }
+        else {
+          return value;
+        }
     }
 
     componentDidMount() {
@@ -37,8 +60,12 @@ export class LineChart extends React.Component {
                                         // to ensure that the displayed local time does not change.
                                         return dateTimeIn.setZone('local', { keepLocalTime: true });
                                     }
-
-
+                                  },
+                                  ticks: {
+                                      // Create scientific notation labels
+                                      callback: function(value, index, values) {
+                                        return this.ticksCallback(value, index, values).bind(this);
+                                    }.bind(this)
                                   }
                                 }
                               ],

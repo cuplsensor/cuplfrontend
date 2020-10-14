@@ -30,10 +30,25 @@ class ConsumerCalendarPage extends React.Component {
     const month = this.props.month || dateToday.month;
     const day = this.props.day || dateToday.day;
 
-
     const date = DateTime.fromObject({year:year, month:month, day:day, zone:zone});
 
-    this.state = {'error': false, 'tag': tag, 'samples': [], 'range': 'day', 'date': date};
+    this.state = {'error': false, 'tag': tag, 'samples': [], 'range': range, 'date': date, 'sEDates': {}};
+  }
+
+  updateAll() {
+      this.updateURL();
+
+      const sEDates = this.startEndDates(this.state.date, this.state.range);
+      if (sEDates !== this.state.sEDates) {
+          const startISO = sEDates.startDate.toUTC().toISO();
+          const endISO = sEDates.endDate.toUTC().toISO();
+          const extraparams = {starttimestr: startISO, endtimestr: endISO};
+
+          getSamples(this.state.tag.samples_url, extraparams, this.state.date.zone)
+                    .then((samples) => {
+                      this.setState({'samples': samples, 'sEDates': sEDates});
+                  });
+      }
   }
 
   updateURL() {
@@ -49,12 +64,30 @@ class ConsumerCalendarPage extends React.Component {
       this.props.history.push({pathname: url, search: search});
   }
 
+  // Calculate start and end dates for the selected date.
+  startEndDates(selDate, range) {
+      var startDate = selDate.set({hour: 0, minute: 0, second: 0, millisecond: 0});
+      var endDate;
+
+      if (range == "day") {
+          endDate = startDate.plus({days: 1});
+      } else if (range == "week") {
+          startDate = startDate.set({weekday: 1}); // Set to Monday.
+          endDate = startDate.plus({weeks: 1}); // Set to Monday of the next week.
+      } else if (range == "month") {
+          startDate = startDate.set({day: 1}); // Set to first day of the month.
+          endDate = startDate.plus({months: 1}); // Set to the first day of the start of the next month.
+      }
+      console.log(startDate);
+      return {startDate: startDate, endDate: endDate};
+  }
+
   handleDateChange(date) {
-      this.setState({'date': date}, this.updateURL);
+      this.setState({'date': date}, this.updateAll);
   }
 
   handleRangeChange(range) {
-        this.setState({'range': range}, this.updateURL);
+      this.setState({'range': range}, this.updateAll);
     }
 
   componentDidMount() {
@@ -64,23 +97,14 @@ class ConsumerCalendarPage extends React.Component {
         .then(handleErrors)
         .then(response => response.json())
         .then(json => {
-            this.setState({tag: json}, this.updateURL)
-            getSamples(this.state.tag.samples_url, this.state.date.zone)
-                .then((samples) => {
-                  this.setState({'samples': samples});
-              });
+            this.setState({tag: json}, this.updateAll)
         },
         (error) => {
           this.setState({error});
         });
       } else {
-          this.updateURL();
-          getSamples(this.state.tag.samples_url, this.state.date.zone)
-              .then((samples) => {
-                  this.setState({'samples': samples});
-              });
+          this.updateAll();
       }
-
   }
 
   render() {
@@ -98,8 +122,14 @@ class ConsumerCalendarPage extends React.Component {
                   <RangePicker range={this.state.range} onRangeChange={this.handleRangeChange} />
               </nav>
               <div id="chart-container">
-                  <LineChart data={this.state.samples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
-                  rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
+                  <LineChart data={this.state.samples}
+                             tempcolor="rgba(220,100,94,1)"
+                             temptitle="temperature"
+                             rhcolor="rgba(153,226,255,1)"
+                             rhtitle="RH"
+                             xmin={this.state.sEDates.startDate}
+                             // xmax={this.state.sEDates.endDate}
+                  />
               </div>
           </ConsumerBasePage>
       );

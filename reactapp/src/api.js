@@ -50,7 +50,7 @@ export async function handleErrors(response) {
   }
 
 /* https://zellwk.com/blog/async-await-in-loops/ */
-async function getRemainingPages(response, url, extraheaders, per_page) {
+async function getRemainingPages(response, url, extraparams, extraheaders, per_page) {
     var parse = require('parse-link-header');
     const link = response.headers.get('link');
     const parsedlink = parse(link);
@@ -60,10 +60,12 @@ async function getRemainingPages(response, url, extraheaders, per_page) {
         pagesToGet.push(page);
     }
     const promises = pagesToGet.map(async page => {
-        return getData(url, extraheaders, {page: page, per_page: per_page})
+        const defaultparams = {page: page, per_page: per_page};
+        const params = Object.assign({}, defaultparams, extraparams);
+        return getData(url, extraheaders, params)
         .then(handleErrors)
         .then(response => {
-              return response
+              return response;
         });
     });
 
@@ -71,16 +73,17 @@ async function getRemainingPages(response, url, extraheaders, per_page) {
 }
 
 // Get all pages in a paginated request.
-export async function getAllData(url = '', extraheaders = {}, per_page = 10) {
+export async function getAllData(url = '', extraheaders = {}, extraparams = {}, per_page = 10) {
   var jsonlist = [];
-  const params = {page: 1, per_page: per_page};
+  const defaultparams = {page: 1, per_page: per_page};
+  const params = Object.assign({}, defaultparams, extraparams);
   const firstresponse = await getData(url, extraheaders, params)
           .then(handleErrors)
           .then(response => {
               return response
           });
 
-  const pagepromises = await getRemainingPages(firstresponse, url, extraheaders, per_page);
+  const pagepromises = await getRemainingPages(firstresponse, url, extraparams, extraheaders, per_page);
   var allresponses = await Promise.all(pagepromises);
   allresponses.push(firstresponse);
 
@@ -97,9 +100,10 @@ export async function getAllData(url = '', extraheaders = {}, per_page = 10) {
   return new Promise(resolve => {resolve(jsonlist)});
 }
 
-export async function getSamples(samples_url, zone) {
+export async function getSamples(samples_url, extraparams, zone) {
       const samples = await getAllData(samples_url,
           {},
+          extraparams,
           100
       );
 
