@@ -7,19 +7,19 @@ export class LineChart extends React.Component {
     constructor(props) {
         super(props);
         this.chartRef = React.createRef();
-        this.ticksCallback = this.ticksCallback.bind(this);
-        this.parserCallback = this.parserCallback.bind(this);
         this.DateTime = DateTime;
     }
 
     componentDidUpdate() {
         const xmin = this.props.xmin || null;
         const xmax = this.props.xmax || null;
-        console.log(typeof(xmin));
-        console.log(xmin);
+
         if (xmin !== null) {
             this.myChart.options.scales.xAxes[0].ticks.min = xmin;
-            //this.myChart.options.scales.xAxes[0].ticks.max = xmax;
+        }
+
+        if (xmax !== null) {
+            this.myChart.options.scales.xAxes[0].ticks.max = xmax;
         }
 
         this.myChart.data.labels = this.props.data.map(d => d.time);
@@ -28,14 +28,18 @@ export class LineChart extends React.Component {
         this.myChart.update();
     }
 
-    parserCallback
-
-    ticksCallback(value, index, values) {
-        if (values.length > 0) {
-          return values[index]['value'];
-        }
-        else {
-          return value;
+    parserCallback(dateTimeIn) {
+        // An unfortunate hack to get around the fact that Chart.JS with the Luxon adapter
+        // always uses the local timezone to format ticks and tooltips and not the supplied zone
+        // data from Luxon. This might be fixed time Chart.JS 3.
+        // What this does is change the underlying timestamp, whilst simultaenously changing the zone
+        // to ensure that the displayed local time does not change.
+        if (typeof dateTimeIn.setZone == "function") {
+            return dateTimeIn.setZone('local', { keepLocalTime: true });
+        } else {
+            // In the case of the xmin and xmax values, invalid DateTime objects are passed to this function.
+            // The setZone function cannot be called on these, so I recreate these objects as DateTime first.
+            return this.DateTime.fromMillis(dateTimeIn.ts, {zone: dateTimeIn._zone.zoneName}).setZone('local', { keepLocalTime: true });
         }
     }
 
@@ -51,20 +55,9 @@ export class LineChart extends React.Component {
                                 {
                                   type: 'time',
                                   time: {
-                                    unit: 'hour',
+                                    unit: 'day',
                                     parser: function (dateTimeIn) {
-                                        // An unfortunate hack to get around the fact that Chart.JS with the Luxon adapter
-                                        // always uses the local timezone to format ticks and tooltips and not the supplied zone
-                                        // data from Luxon. This might be fixed time Chart.JS 3.
-                                        // What this does is change the underlying timestamp, whilst simultaenously changing the zone
-                                        // to ensure that the displayed local time does not change.
-                                        return dateTimeIn.setZone('local', { keepLocalTime: true });
-                                    }
-                                  },
-                                  ticks: {
-                                      // Create scientific notation labels
-                                      callback: function(value, index, values) {
-                                        return this.ticksCallback(value, index, values).bind(this);
+                                        return this.parserCallback(dateTimeIn);
                                     }.bind(this)
                                   }
                                 }

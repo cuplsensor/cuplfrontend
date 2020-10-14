@@ -36,12 +36,19 @@ class ConsumerCalendarPage extends React.Component {
   }
 
   updateAll() {
+      var startDatesEqual = false;
+      var endDatesEqual = false;
       this.updateURL();
 
       const sEDates = this.startEndDates(this.state.date, this.state.range);
-      if (sEDates !== this.state.sEDates) {
-          const startISO = sEDates.startDate.toUTC().toISO();
-          const endISO = sEDates.endDate.toUTC().toISO();
+      if (this.state.sEDates.startDate && this.state.sEDates.endDate) {
+          startDatesEqual = sEDates.startDate.toMillis() === this.state.sEDates.startDate.toMillis();
+          endDatesEqual = sEDates.endDate.toMillis() === this.state.sEDates.endDate.toMillis();
+      }
+
+      if (!startDatesEqual || !endDatesEqual) {
+          const startISO = sEDates.startDate.toISO();
+          const endISO = sEDates.endDate.toISO();
           const extraparams = {starttimestr: startISO, endtimestr: endISO};
 
           getSamples(this.state.tag.samples_url, extraparams, this.state.date.zone)
@@ -78,7 +85,6 @@ class ConsumerCalendarPage extends React.Component {
           startDate = startDate.set({day: 1}); // Set to first day of the month.
           endDate = startDate.plus({months: 1}); // Set to the first day of the start of the next month.
       }
-      console.log(startDate);
       return {startDate: startDate, endDate: endDate};
   }
 
@@ -128,7 +134,7 @@ class ConsumerCalendarPage extends React.Component {
                              rhcolor="rgba(153,226,255,1)"
                              rhtitle="RH"
                              xmin={this.state.sEDates.startDate}
-                             // xmax={this.state.sEDates.endDate}
+                             xmax={this.state.sEDates.endDate}
                   />
               </div>
           </ConsumerBasePage>
