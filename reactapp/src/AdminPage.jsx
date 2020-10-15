@@ -1,14 +1,8 @@
 import LoginForm from "./LoginForm";
-import {BasePage, Footer, Header, Section} from "./BasePage";
+import {Footer, Header, Section} from "./BasePage";
 import React from "react";
 import {Link, Redirect, useLocation} from "react-router-dom";
-import Cookies from 'universal-cookie';
 
-
-
-export function AdminListCaptures() {
-    return <AdminPage pagetitle="List of Captures" activetab="captures" />
-}
 
 export function AdminListWebhooks() {
     return <AdminPage pagetitle="List of Webhooks" activetab="webhooks" />
@@ -68,7 +62,6 @@ function AdminLogOutButton(props) {
     }
 }
 
-
 export function RedirectToLogin(props) {
     const location = useLocation();
     const error = props.error;
@@ -84,53 +77,19 @@ export function RedirectToLogin(props) {
     return ('');
 }
 
-export class AdminPage extends BasePage {
-    constructor(props) {
-        super(props);
-        const pagetitle = props.pagetitle;
-        const activetab = props.activetab || '';
-        this.state = {
-            redirect: false,
-            pagetitle: pagetitle,
-            activetab: activetab
-        };
-    }
-
-    componentDidMount() {
-        const cookies = new Cookies();
-        this.admintoken = cookies.get('admintoken');
-        if (this.admintoken == null) {
-            this.setState({'redirect': true});
-        }
-    }
-
-    redirectToLogin(error) {
-        if (error) {
-          if (error.message === "UNAUTHORIZED") {
-              return true;
-          }
-        }
-        return false;
-    }
-
-
-    render() {
-        if (this.state.redirect === true) {
-          return <RedirectToLogin />
-        }
+export function AdminPage(props) {
         return(
-            <AdminBasePage bc={this.props.bc} isLoggedIn={true}>
+            <AdminBasePage bc={props.bc} isLoggedIn={true}>
                 <div className="columns">
                     <aside className="menu column is-2 is-fullheight">
-                        {this.props.menu}
+                        {props.menu}
                     </aside>
                     <div className="column is-10">
-                        {this.props.children}
+                        {props.children}
                     </div>
                 </div>
             </AdminBasePage>
         );
-    }
 }
 
 function AdminLoginBC(props) {

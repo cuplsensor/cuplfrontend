@@ -1,5 +1,5 @@
 import AdminTagPage from "./AdminTagPage";
-import {getData, handleErrors} from "./api";
+import {GetAdminToken, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio} from "./BasePage";
 import React from "react";
@@ -7,11 +7,12 @@ import {Redirect, withRouter} from "react-router-dom";
 var QRCode = require('qrcode.react');
 
 
-class SimulatePage extends AdminPage {
+class SimulatePage extends React.Component {
   constructor(props) {
     super(props);
     const frontendurl = window.location.origin;
 
+    GetAdminToken.call(this);
     this.submitOnChange = true;
 
 
@@ -37,7 +38,6 @@ class SimulatePage extends AdminPage {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
-      super.componentDidMount();
       const admintoken = this.admintoken;
       const tagid = this.props.match.params.id;
       const bearertoken = `Bearer ${admintoken}`;

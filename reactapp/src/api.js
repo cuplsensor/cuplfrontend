@@ -1,4 +1,5 @@
 import {DateTime} from "luxon";
+import Cookies from 'universal-cookie';
 
 export async function postData(url = '', data = {}, extraheaders = {}) {
   const defaultheader = {'Content-Type': 'application/json'}
@@ -125,3 +126,12 @@ export async function getSamples(samples_url, extraparams, zone) {
 
       return new Promise(resolve => {resolve(sampleswithtime)});
   }
+
+
+  export function GetAdminToken() {
+    const cookies = new Cookies();
+    this.admintoken = cookies.get('admintoken');
+    if (this.admintoken == null) {
+        this.setState({'redirect': true});
+    }
+}

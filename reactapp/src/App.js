@@ -7,9 +7,9 @@ import {
   useLocation
 } from "react-router-dom";
 import {ConsumerBasePage} from "./ConsumerPage";
-import {AdminLogin, AdminListCaptures, AdminListWebhooks} from "./AdminPage";
-import AdminListTags from "./AdminListTagsPage";
-import AdminTag from "./AdminTagPage";
+import {AdminLogin, AdminListWebhooks} from "./AdminPage";
+import AdminTagsList from "./AdminTagsListPage";
+import AdminCapturesListPage from "./AdminCapturesListPage";
 import './App.css';
 import SimulatePage from "./SimulatePage";
 import HomePage from "./HomePage";
@@ -66,7 +66,7 @@ function App() {
             <Redirect to={`/admin/tags`} />
           </Route>
           <Route exact path="/admin/tags">
-            <AdminListTags />
+            <AdminTagsList />
           </Route>
           <Route exact path="/admin/tag/:id" render={props => (
               <Redirect to={`/admin/tag/${props.match.params.id}/simulate`} />
@@ -75,7 +75,7 @@ function App() {
             <SimulatePage />
           </Route>
           <Route exact path="/admin/captures">
-              <AdminListCaptures />
+              <AdminCapturesListPage />
           </Route>
           <Route exact path="/admin/webhooks">
               <AdminListWebhooks />
