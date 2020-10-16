@@ -1,4 +1,4 @@
-import AdminTagPage from "./AdminTagPage";
+import AdminTagPage, {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
 import {GetAdminToken, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio} from "./BasePage";
@@ -106,6 +106,8 @@ class SimulatePage extends React.Component {
 
 
     render() {
+      const tagid = this.props.match.params.id;
+      const activetab = 'Simulate';
       const error = this.state.error;
       if (error) {
           if (error.message === "UNAUTHORIZED") {
@@ -113,7 +115,7 @@ class SimulatePage extends React.Component {
           }
       }
       return (
-          <AdminTagPage>
+          <AdminPage bc={<AdminTagSimulateBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
               <form onSubmit={this.handleSubmit}>
                       <div className="field is-grouped is-grouped-multiline">
@@ -194,9 +196,17 @@ class SimulatePage extends React.Component {
                 <QRCode size={500} value={this.state.simulateurl} />
                 </Section>
 
-          </AdminTagPage>);
+          </AdminPage>);
 
   }
+}
+
+function AdminTagSimulateBC(props) {
+    return(
+        <AdminTagBC tagid={props.tagid}>
+            <li className="is-active"><a href="#" aria-current="page">Simulate</a></li>
+        </AdminTagBC>
+    );
 }
 
 

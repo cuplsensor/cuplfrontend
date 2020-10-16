@@ -10,6 +10,7 @@ import {ConsumerBasePage} from "./ConsumerPage";
 import {AdminLogin, AdminListWebhooks} from "./AdminPage";
 import AdminTagsList from "./AdminTagsListPage";
 import AdminCapturesListPage from "./AdminCapturesListPage";
+import AdminTagCapturesPage from "./AdminTagCapturesPage";
 import './App.css';
 import SimulatePage from "./SimulatePage";
 import HomePage from "./HomePage";
@@ -71,6 +72,9 @@ function App() {
           <Route exact path="/admin/tag/:id" render={props => (
               <Redirect to={`/admin/tag/${props.match.params.id}/simulate`} />
           )} />
+          <Route exact path="/admin/tag/:id/captures">
+            <AdminTagCapturesPage />
+          </Route>
           <Route exact path="/admin/tag/:id/simulate">
             <SimulatePage />
           </Route>

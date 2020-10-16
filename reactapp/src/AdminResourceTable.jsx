@@ -8,18 +8,9 @@ import {postData, getData, handleErrors, GetAdminToken} from "./api";
 import {DateTime} from "luxon";
 
 
-function CaptureListItem(props) {
-      const timestamp = DateTime.fromISO(props.capture['timestamp']).toLocaleString(DateTime.DATETIME_MED);
-      return (
-        <tr>
-            <td>{props.capture['id']}</td>
-            <td><Link to={"/admin/tag/" + props.capture['parent_tag']}>{props.capture['parent_tag']}</Link></td>
-            <td>{timestamp}</td>
-        </tr>
-      );
-  }
 
-export class AdminCapturesList extends React.Component {
+
+export class AdminResourceTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -34,7 +25,7 @@ export class AdminCapturesList extends React.Component {
   componentDidMount() {
       const page = new URLSearchParams(this.props.location.search).get("page") || 1;
       const bearertoken = `Bearer ${this.admintoken}`;
-      getData('https://b3.websensor.io/api/admin/captures',
+      getData(this.props.url,
         {'Authorization': bearertoken},
           {'per_page': 10, 'page': page}
         )
@@ -42,7 +33,7 @@ export class AdminCapturesList extends React.Component {
         .then(this.parsePages)
         .then(response => response.json())
         .then(json => {
-            this.setState({captures: json});
+            this.setState({resources: json});
         },
         (error) => {
           this.setState({error: error});
@@ -51,14 +42,15 @@ export class AdminCapturesList extends React.Component {
 
   render() {
       const error = this.state.error;
-      const captures = this.state.captures || [];
+      const resources = this.state.resources || [];
       const currentPage = this.state.currentPage;
       const prevExists = this.state.prevExists;
       const nextExists = this.state.nextExists;
+      const listitem = this.props.listitem;
       const pages = this.state.pages;
-      let captureitems = [];
-      for (const capture of captures) {
-          captureitems.push(<CaptureListItem key={capture.id} capture={capture} />)
+      let resourceitems = [];
+      for (const resource of resources) {
+          resourceitems.push(<this.props.ListItem key={resource.id} resource={resource} />)
       }
       if (error) {
           if (error.message === "UNAUTHORIZED") {
@@ -71,14 +63,10 @@ export class AdminCapturesList extends React.Component {
               <ErrorMessage error={error} />
             <table className="table">
                 <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Parent Tag</th>
-                        <th>Timestamp (UTC)</th>
-                    </tr>
+                    <this.props.HeaderItem />
                 </thead>
                 <tbody>
-                {captureitems}
+                    {resourceitems}
                 </tbody>
             </table>
             <Pagination currentPage={currentPage} pages={pages} prevExists={prevExists} nextExists={nextExists}/>
@@ -86,6 +74,3 @@ export class AdminCapturesList extends React.Component {
       );
   }
 }
-
-//export default withRouter(AdminCapturesList);
-
