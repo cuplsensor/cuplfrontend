@@ -2,15 +2,29 @@ import React from "react";
 import {AdminPage, AdminMenu, AdminBC, RedirectToLogin} from "./AdminPage"
 import {Link} from "react-router-dom";
 import {withRouter, BrowserRouter} from "react-router-dom"
-import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, ErrorMessage} from "./BasePage";
+import {ErrorMessage} from "./BasePage";
 import {Pagination, parsePages} from "./Pagination";
-import {postData, getData, handleErrors, GetAdminToken} from "./api";
-import {DateTime} from "luxon";
-
-
+import {getData, handleErrors, GetAdminToken} from "./api";
 
 
 export class AdminResourceTable extends React.Component {
+    constructor(props) {
+        super(props);
+
+        GetAdminToken.call(this);
+    }
+
+    render() {
+        const bearertoken = `Bearer ${this.admintoken}`;
+        const extraheaders = {'Authorization': bearertoken};
+        return(
+            <ResourceTable {...this.props} extraheaders={extraheaders} />
+            );
+
+    }
+}
+
+export class ResourceTable extends React.Component {
   constructor(props) {
     super(props);
 
@@ -24,9 +38,9 @@ export class AdminResourceTable extends React.Component {
 
   componentDidMount() {
       const page = new URLSearchParams(this.props.location.search).get("page") || 1;
-      const bearertoken = `Bearer ${this.admintoken}`;
+
       getData(this.props.url,
-        {'Authorization': bearertoken},
+        this.props.extraheaders,
           {'per_page': 10, 'page': page}
         )
         .then(handleErrors)

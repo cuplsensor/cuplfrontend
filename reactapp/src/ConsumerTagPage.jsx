@@ -84,7 +84,6 @@ class ConsumerTagPage extends React.Component {
           calendar_link = "/tag/"+this.props.serial+"/calendar/day/"+latest_capture.timestamp;
       }
 
-      console.log(latest_capture);
       return (
           <ConsumerBasePage bc={<ConsumerTagBC serial={this.props.serial} />}>
               <div className="container">
@@ -124,7 +123,7 @@ class ConsumerTagPage extends React.Component {
 
               </div>
               <div className="container mt-5">
-                  <LatestCaptureLink capture={latest_capture} />
+                  <LatestCaptureLink capture={latest_capture} tag={this.state.tag} />
               </div>
           </ConsumerBasePage>
       );
@@ -140,7 +139,7 @@ function LatestCaptureLink(props) {
            <div>
                <Link to={{pathname: `/tag/${props.capture.tagserial}/captures/${props.capture.id}`, state:{capture:props.capture}}}>Latest capture</Link> taken {latest_timestamp}.
                <br/>
-               <Link to={{pathname: `/tag/${props.capture.tagserial}/captures/`}}>List</Link> of all captures.
+               <Link to={{pathname: `/tag/${props.capture.tagserial}/captures/`, state:{tag:props.tag}}}>List</Link> of all captures.
            </div>
        );
     }
