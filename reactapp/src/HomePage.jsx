@@ -1,8 +1,7 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
 import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {getData, postData, handleErrors} from "./api.js";
-import Cookies from 'universal-cookie';
+import {getData, postData, handleErrors, setCookie} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
 
 
@@ -35,6 +34,7 @@ class HomePage extends React.Component {
             .then(handleErrors)
             .then(response => response.json())
             .then(json => {
+                setCookie('tagtoken_'+json['tagserial'], json['tagtoken'], 9);
                 this.setState({capture: json})
             },
             (error) => {

@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
 import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
-import {getData, handleErrors} from "./api.js";
+import {getData, handleErrors, getCookie} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
 import {DateTime} from 'luxon';
 
@@ -11,8 +11,10 @@ class ConsumerTagPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {'error': false, 'tag': ''};
+    this.state = {'error': false, 'tag': '', 'editdesc': false};
 
+    this.editbuttonClickHandler = this.editbuttonClickHandler.bind(this);
+    this.closebuttonHandler = this.closebuttonHandler.bind(this);
   }
 
   getLatestCapture(captures_url) {
@@ -50,6 +52,8 @@ class ConsumerTagPage extends React.Component {
   }
 
   componentDidMount() {
+    const tagtoken = getCookie('tagtoken_' + this.props.serial);
+    this.setState({tagtoken: tagtoken});
     getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
         )
         .then(handleErrors)
@@ -62,6 +66,17 @@ class ConsumerTagPage extends React.Component {
         (error) => {
           this.setState({error});
         });
+
+  }
+
+  closebuttonHandler(event) {
+      event.preventDefault();
+      this.setState({editdesc: false});
+  }
+
+  editbuttonClickHandler(event) {
+      event.preventDefault();
+      this.setState({editdesc: true});
   }
 
   render() {
@@ -122,12 +137,56 @@ class ConsumerTagPage extends React.Component {
                   </div>
 
               </div>
+              <Description clickHandler={this.editbuttonClickHandler} tagtoken={this.state.tagtoken} description={this.state.tag.description} />
               <div className="container mt-5">
                   <LatestCaptureLink capture={latest_capture} tag={this.state.tag} />
               </div>
+              <DescriptionEditor closebtnHandler={this.closebuttonHandler} editdesc={this.state.editdesc} />
+
           </ConsumerBasePage>
       );
   }
+}
+
+function DescriptionEditor(props) {
+    return (
+        <div className={props.editdesc ? 'modal is-active': 'modal'}>
+          <div className="modal-background" onClick={props.closebtnHandler}></div>
+            <div className="modal-card">
+                <header className="modal-card-head">
+                    <p className="modal-card-title">Edit Description</p>
+                    <button className="delete" aria-label="close" onClick={props.closebtnHandler}></button>
+                </header>
+                <section className="modal-card-body">
+
+                </section>
+                <footer className="modal-card-foot">
+                    <button className="button is-success">Save changes</button>
+                    <button className="button" onClick={props.closebtnHandler}>Cancel</button>
+                </footer>
+            </div>
+       </div>
+    );
+}
+
+function Description(props) {
+    if (props.description) {
+        return(
+            <div className="container mt-5">
+                <p><DescriptionLabel clickHandler={props.clickHandler} tagtoken={props.tagtoken}/> {props.description} </p>
+            </div>
+        );
+    } else {
+        return('');
+    }
+}
+
+function DescriptionLabel(props) {
+    if (props.tagtoken) {
+        return(<a href='#' onClick={props.clickHandler}>Edit Description:</a>)
+    } else {
+        return("Description:");
+    }
 }
 
 function LatestCaptureLink(props) {

@@ -171,3 +171,19 @@ export async function getSamples(samples_url, extraparams, zone) {
         this.setState({'redirect': true});
     }
 }
+
+export function setCookie(name, value, minutes) {
+  var expires = "";
+  if (minutes) {
+    var dateplusminutes = new DateTime.utc().plus({minutes: minutes});
+    expires = "; expires=" + dateplusminutes.toHTTP();
+    console.log(expires);
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/; sameSite=Strict";
+}
+
+export function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
