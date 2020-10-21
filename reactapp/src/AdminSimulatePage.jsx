@@ -7,7 +7,7 @@ import {Redirect, withRouter} from "react-router-dom";
 var QRCode = require('qrcode.react');
 
 
-class SimulatePage extends React.Component {
+class AdminSimulatePage extends React.Component {
   constructor(props) {
     super(props);
     const frontendurl = window.location.origin;
@@ -36,6 +36,9 @@ class SimulatePage extends React.Component {
             };
 
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
       const admintoken = this.admintoken;
@@ -210,4 +213,4 @@ function AdminTagSimulateBC(props) {
 }
 
 
-export default withRouter(SimulatePage);
+export default withRouter(AdminSimulatePage);

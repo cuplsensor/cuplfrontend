@@ -7,12 +7,15 @@ import {
   useLocation
 } from "react-router-dom";
 import {ConsumerBasePage} from "./ConsumerPage";
-import {AdminLogin, AdminListWebhooks} from "./AdminPage";
+import {AdminLogin} from "./AdminPage";
 import AdminTagsList from "./AdminTagsListPage";
 import AdminCapturesListPage from "./AdminCapturesListPage";
+import AdminWebhooksListPage from "./AdminWebhooksListPage";
+import AdminEditPage from "./AdminEditPage";
+import AdminWebhookPage from "./AdminWebhookPage";
 import AdminTagCapturesPage from "./AdminTagCapturesPage";
 import './App.css';
-import SimulatePage from "./SimulatePage";
+import AdminSimulatePage from "./AdminSimulatePage";
 import HomePage from "./HomePage";
 import ConsumerTagPage from "./ConsumerTagPage";
 import ConsumerCapturesPage from "./ConsumerCapturesPage";
@@ -72,17 +75,23 @@ function App() {
           <Route exact path="/admin/tag/:id" render={props => (
               <Redirect to={`/admin/tag/${props.match.params.id}/simulate`} />
           )} />
+          <Route exact path="/admin/tag/:id/edit">
+            <AdminEditPage />
+          </Route>
           <Route exact path="/admin/tag/:id/captures">
             <AdminTagCapturesPage />
           </Route>
           <Route exact path="/admin/tag/:id/simulate">
-            <SimulatePage />
+            <AdminSimulatePage />
+          </Route>
+          <Route exact path="/admin/tag/:id/webhook">
+            <AdminWebhookPage />
           </Route>
           <Route exact path="/admin/captures">
               <AdminCapturesListPage />
           </Route>
           <Route exact path="/admin/webhooks">
-              <AdminListWebhooks />
+              <AdminWebhooksListPage />
           </Route>
           <Route path="*">
             <NoMatch />

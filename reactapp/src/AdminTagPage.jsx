@@ -1,20 +1,18 @@
 import {AdminPage, ListElement, MenuListElement, RedirectToLogin} from "./AdminPage";
 import {getData, postData} from "./api";
-import {BulmaControl, BulmaField, BulmaSubmit, ErrorMessage} from "./BasePage";
 import React from "react";
+import {AdminBC} from "./AdminPage"
 import {Redirect, withRouter} from "react-router-dom";
 
 
 export function AdminTagBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6 menu-label" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="#">Admin</a></li>
+        <AdminBC>
             <li><a href="/admin/tags">Tags</a></li>
             <li className="is-active"><a href="#" aria-current="page">{props.tagid}</a></li>
             {props.children}
-        </ul>
-      </nav>
+        </AdminBC>
+
     );
 }
 

@@ -3,11 +3,6 @@ import {Footer, Header, Section} from "./BasePage";
 import React from "react";
 import {Link, Redirect, useLocation} from "react-router-dom";
 
-
-export function AdminListWebhooks() {
-    return <AdminPage pagetitle="List of Webhooks" activetab="webhooks" />
-}
-
 export function AdminLogin() {
     return (
         <AdminBasePage bc={<AdminLoginBC />} isLoggedIn={false}>
@@ -94,9 +89,9 @@ export function AdminPage(props) {
 
 function AdminLoginBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6 menu-label" aria-label="breadcrumbs">
+      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
         <ul>
-            <li><a href="#">Log in</a></li>
+            <li><a href="#">Log In</a></li>
         </ul>
       </nav>
     );
@@ -105,9 +100,10 @@ function AdminLoginBC(props) {
 
 export function AdminBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6 menu-label" aria-label="breadcrumbs">
+      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
         <ul>
             <li><a href="#">Admin</a></li>
+            {props.children}
         </ul>
       </nav>
     );

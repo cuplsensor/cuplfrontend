@@ -15,6 +15,7 @@ function TagHeaderItem() {
             <th>Secret Key</th>
             <th>Firmware Version</th>
             <th>Hardware Version</th>
+            <th>Description</th>
             <th>Created On (UTC)</th>
         </tr>
     );
@@ -29,10 +30,19 @@ function TagListItem(props) {
             <td>{props.resource['secretkey']}</td>
             <td>{props.resource['fwversion']}</td>
             <td>{props.resource['hwversion']}</td>
+            <td>{props.resource['description']}</td>
             <td>{timestamp}</td>
         </tr>
       );
   }
+
+  function AdminTagsBC(props) {
+    return(
+        <AdminBC>
+            <li className="is-active"><a href="#" aria-current="page">Tags</a></li>
+        </AdminBC>
+    );
+}
 
 class AdminTagsList extends React.Component {
   constructor(props) {
@@ -71,7 +81,7 @@ class AdminTagsList extends React.Component {
       }
 
       return(
-          <AdminPage bc={<AdminBC />} menu={<AdminMenu activetab='tags' />}>
+          <AdminPage bc={<AdminTagsBC />} menu={<AdminMenu activetab='tags' />}>
             <AdminResourceTable
                 {...this.props}
                 ListItem={TagListItem}

@@ -3,11 +3,19 @@ import {AdminPage, AdminMenu, AdminBC} from "./AdminPage"
 import {Link, withRouter} from "react-router-dom";
 import {AdminResourceTable} from "./AdminResourceTable";
 import {DateTime} from "luxon";
+import {AdminTagBC} from "./AdminTagPage";
 
+function AdminCapturesBC(props) {
+    return(
+        <AdminBC>
+            <li className="is-active"><a href="#" aria-current="page">Captures</a></li>
+        </AdminBC>
+    );
+}
 
 export function AdminCapturesListPage(props) {
     return(
-          <AdminPage bc={<AdminBC />} menu={<AdminMenu activetab='captures' />}>
+          <AdminPage bc={<AdminCapturesBC />} menu={<AdminMenu activetab='captures' />}>
             <AdminResourceTable
                 {...props}
                 ListItem={CapturesListItem}
