@@ -48,6 +48,9 @@ export class DescriptionWidget extends React.Component {
                 this.props.submitDone();
             }
         }.bind(this)).catch(error => {
+            if (error.message === "UNAUTHORIZED") {
+                error.message = error.message + " Invalid token. Scan tag again."
+            }
           this.props.submitError(error);
         });
 

@@ -22,7 +22,7 @@ class HomePage extends React.Component {
       const vfmtb64 = urlparams.get('v');
 
       if (serial && statusb64 && timeintb64 && circbufb64 && vfmtb64) {
-          this.setState({loading: true});
+          this.setState({loading: true, serial: serial});
           postData('https://b3.websensor.io/api/consumer/captures',
             {'serial': serial,
                   'statusb64': statusb64,
@@ -38,6 +38,9 @@ class HomePage extends React.Component {
                 this.setState({capture: json})
             },
             (error) => {
+              if (error.message === "CONFLICT") {
+                  error.message += " a new capture cannot be identical to a previous one."
+              }
               this.setState({error: error});
             });
       }
@@ -52,7 +55,13 @@ class HomePage extends React.Component {
       if (capture) {
           const tagserial = capture['tagserial'];
           if (tagserial !== undefined) {
-              return <Redirect to={"/tag/"+tagserial} />
+              return <Redirect to={{pathname: "/tag/"+tagserial}} />
+          }
+      }
+      if (error) {
+          const tagserial = this.state.serial;
+          if (tagserial !== undefined) {
+              return <Redirect to={{pathname: "/tag/"+tagserial, state: {error: this.state.error}}} />
           }
       }
       if (loading) {

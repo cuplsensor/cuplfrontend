@@ -11,8 +11,13 @@ import {DateTime} from 'luxon';
 class ConsumerTagPage extends React.Component {
   constructor(props) {
     super(props);
+    var error = false;
 
-    this.state = {'error': false, 'tag': ''};
+    if (this.props.location.state) {
+        error = this.props.location.state.error;
+    }
+
+    this.state = {'error': error, 'tag': ''};
 
     this.submitDone = this.submitDone.bind(this);
     this.submitError = this.submitError.bind(this);
