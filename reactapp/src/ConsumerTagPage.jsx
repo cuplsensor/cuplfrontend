@@ -1,8 +1,9 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
-import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
+import {ErrorMessage} from "./BasePage";
 import {getData, handleErrors, getCookie} from "./api.js";
 import {ConsumerBasePage} from "./ConsumerPage";
+import {DescriptionWidget} from "./DescriptionWidget";
 import {DateTime} from 'luxon';
 
 
@@ -11,10 +12,27 @@ class ConsumerTagPage extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {'error': false, 'tag': '', 'editdesc': false};
+    this.state = {'error': false, 'tag': ''};
 
-    this.editbuttonClickHandler = this.editbuttonClickHandler.bind(this);
-    this.closebuttonHandler = this.closebuttonHandler.bind(this);
+    this.submitDone = this.submitDone.bind(this);
+    this.submitError = this.submitError.bind(this);
+  }
+
+  submitDone() {
+      getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
+        )
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(json => {
+            this.setState({tag: json})
+        },
+        (error) => {
+          this.setState({error});
+        });
+  }
+
+  submitError(error) {
+      this.setState({error});
   }
 
   getLatestCapture(captures_url) {
@@ -52,8 +70,6 @@ class ConsumerTagPage extends React.Component {
   }
 
   componentDidMount() {
-    const tagtoken = getCookie('tagtoken_' + this.props.serial);
-    this.setState({tagtoken: tagtoken});
     getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
         )
         .then(handleErrors)
@@ -66,23 +82,15 @@ class ConsumerTagPage extends React.Component {
         (error) => {
           this.setState({error});
         });
-
   }
 
-  closebuttonHandler(event) {
-      event.preventDefault();
-      this.setState({editdesc: false});
-  }
 
-  editbuttonClickHandler(event) {
-      event.preventDefault();
-      this.setState({editdesc: true});
-  }
 
   render() {
       const error = this.state.error;
       const latest_sample = this.state.latest_sample;
       const latest_capture = this.state.latest_capture || '';
+      const tag = this.state.tag;
       var latest_temp = "-- °C";
       var latest_rh = "-- %";
       var latest_batvoltagemv = "-- mV";
@@ -102,6 +110,7 @@ class ConsumerTagPage extends React.Component {
       return (
           <ConsumerBasePage bc={<ConsumerTagBC serial={this.props.serial} />}>
               <div className="container">
+                  <ErrorMessage error={this.state.error} />
                   <div className="columns">
                       <div className="column">
                           <NavPanel
@@ -137,57 +146,16 @@ class ConsumerTagPage extends React.Component {
                   </div>
 
               </div>
-              <Description clickHandler={this.editbuttonClickHandler} tagtoken={this.state.tagtoken} description={this.state.tag.description} />
+              <DescriptionWidget tag={tag} submitDone={this.submitDone} submitError={this.submitError} />
               <div className="container mt-5">
                   <LatestCaptureLink capture={latest_capture} tag={this.state.tag} />
               </div>
-              <DescriptionEditor closebtnHandler={this.closebuttonHandler} editdesc={this.state.editdesc} />
-
           </ConsumerBasePage>
       );
   }
 }
 
-function DescriptionEditor(props) {
-    return (
-        <div className={props.editdesc ? 'modal is-active': 'modal'}>
-          <div className="modal-background" onClick={props.closebtnHandler}></div>
-            <div className="modal-card">
-                <header className="modal-card-head">
-                    <p className="modal-card-title">Edit Description</p>
-                    <button className="delete" aria-label="close" onClick={props.closebtnHandler}></button>
-                </header>
-                <section className="modal-card-body">
 
-                </section>
-                <footer className="modal-card-foot">
-                    <button className="button is-success">Save changes</button>
-                    <button className="button" onClick={props.closebtnHandler}>Cancel</button>
-                </footer>
-            </div>
-       </div>
-    );
-}
-
-function Description(props) {
-    if (props.description) {
-        return(
-            <div className="container mt-5">
-                <p><DescriptionLabel clickHandler={props.clickHandler} tagtoken={props.tagtoken}/> {props.description} </p>
-            </div>
-        );
-    } else {
-        return('');
-    }
-}
-
-function DescriptionLabel(props) {
-    if (props.tagtoken) {
-        return(<a href='#' onClick={props.clickHandler}>Edit Description:</a>)
-    } else {
-        return("Description:");
-    }
-}
 
 function LatestCaptureLink(props) {
     if (typeof(props.capture) == "string") {
