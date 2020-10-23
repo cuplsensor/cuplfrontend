@@ -113,7 +113,7 @@ class AdminSimulatePage extends React.Component {
       const activetab = 'Simulate';
       const error = this.state.error;
       if (error) {
-          if (error.message === "UNAUTHORIZED") {
+          if (error.code ===401) {
               return <RedirectToLogin error={error} />
           }
       }

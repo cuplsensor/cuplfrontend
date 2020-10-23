@@ -18,14 +18,12 @@ import './App.css';
 import AdminSimulatePage from "./AdminSimulatePage";
 import HomePage from "./HomePage";
 import ConsumerTagPage from "./ConsumerTagPage";
+import ConsumerWebhookPage from "./ConsumerWebhookPage";
 import ConsumerCapturesPage from "./ConsumerCapturesPage";
-import {getData} from "./api";
 import ConsumerRandomTagPage from "./ConsumerRandomTagPage";
 import ConsumerCapturePage from "./ConsumerCapturePage";
 import ConsumerCalendarPage from "./ConsumerCalendarPage";
 import {DateTime} from "luxon";
-
-
 
 
 function App() {
@@ -43,6 +41,9 @@ function App() {
           </Route>
           <Route exact path="/tag/:serial/" render={props =>
             <ConsumerTagPage serial={props.match.params.serial}/>
+          } />
+          <Route exact path="/tag/:serial/webhook" render={props =>
+            <ConsumerWebhookPage serial={props.match.params.serial}/>
           } />
           <Route exact path="/tag/:serial/captures" render={props =>
             <ConsumerCapturesPage serial={props.match.params.serial}/>

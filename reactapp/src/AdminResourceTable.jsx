@@ -67,7 +67,7 @@ export class ResourceTable extends React.Component {
           resourceitems.push(<this.props.ListItem key={resource.id} resource={resource} />)
       }
       if (error) {
-          if (error.message === "UNAUTHORIZED") {
+          if (error.code ===401) {
               return <RedirectToLogin error={error} />
           }
       }

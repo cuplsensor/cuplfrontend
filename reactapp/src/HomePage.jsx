@@ -38,7 +38,7 @@ class HomePage extends React.Component {
                 this.setState({capture: json})
             },
             (error) => {
-              if (error.message === "CONFLICT") {
+              if (error.code ===409) {
                   error.message += " a new capture cannot be identical to a previous one."
               }
               this.setState({error: error});

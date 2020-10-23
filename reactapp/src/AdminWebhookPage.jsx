@@ -11,6 +11,7 @@ import {
 } from "./BasePage";
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
+import {WebhookForm} from "./WebhookForm"
 import {DateTime} from "luxon";
 
 
@@ -89,9 +90,11 @@ class AdminWebhookPage extends React.Component {
       if (this.state.tag.webhook.fields !== "") {
           data['fields'] = this.state.tag.webhook.fields;
       }
-      if (this.state.wh_secretkey !== "") {
+      if (this.state.tag.webhook.wh_secretkey !== "") {
           data['wh_secretkey'] = this.state.tag.webhook.wh_secretkey;
       }
+
+      console.log(this.state.tag);
 
       postData('https://b3.websensor.io/api/admin/webhooks',
                     data,
@@ -138,7 +141,7 @@ class AdminWebhookPage extends React.Component {
 
 
       if (error) {
-          if (error.message === "UNAUTHORIZED") {
+          if (error.code ===401) {
               return <RedirectToLogin error={error} />
           }
       }
@@ -146,62 +149,20 @@ class AdminWebhookPage extends React.Component {
       return (
           <AdminPage bc={<AdminTagWebhookBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
-              <form onSubmit={this.handleSubmit}>
-                      <BulmaField>
-                          <BulmaControl>
-                              <BulmaLabel>Address</BulmaLabel>
-                              <BulmaInput id="address" type="text" value={webhook_address} readOnly={webhook_set} changeHandler={this.handleChange}/>
-                          </BulmaControl>
-                      </BulmaField>
-                      <BulmaField>
-                          <BulmaControl>
-                              <BulmaLabel>Fields</BulmaLabel>
-                              <BulmaInput id="fields" type="text" value={webhook_fields} readOnly={webhook_set} changeHandler={this.handleChange } />
-                          </BulmaControl>
-                      </BulmaField>
-                      <BulmaField>
-                          <BulmaControl>
-                              <BulmaLabel>HMAC256 Secretkey</BulmaLabel>
-                              <BulmaInput id="wh_secretkey" type="text" value={webhook_secretkey} readOnly={webhook_set} changeHandler={this.handleChange} />
-                          </BulmaControl>
-                      </BulmaField>
-                      <CreatedOn created_on={webhook_created_on} />
-                      <FormButton webhook_set={webhook_set} />
-                      {/* https://jsfiddle.net/ndebellas/y4dLcqkx/ */}
-              </form>
+                <WebhookForm
+                    handleSubmit={this.handleSubmit}
+                    handleChange={this.handleChange}
+                    webhook_set={webhook_set}
+                    webhook_address={webhook_address}
+                    webhook_fields={webhook_fields}
+                    webhook_secretkey={webhook_secretkey}
+                    webhook_created_on={webhook_created_on}
+                />
               </Section>
           </AdminPage>);
   }
 }
 
-function CreatedOn(props) {
-    if (props.created_on) {
-        const timestamp = DateTime.fromISO(props.created_on).toLocaleString(DateTime.DATETIME_MED);
-        return (
-            <BulmaField>
-              <BulmaControl>
-                  <BulmaLabel>Created On (UTC)</BulmaLabel>
-                  <BulmaInput id="created_on" type="text" value={timestamp} readOnly={true} />
-              </BulmaControl>
-            </BulmaField>
-        );
-    } else {
-        return('');
-    }
-}
-
-function FormButton(props) {
-    if (props.webhook_set) {
-        return (
-            <input className="button is-danger" type="submit" value="Delete" />
-        );
-    } else {
-        return (
-            <input className="button is-success" type="submit" value="Create" />
-        );
-    }
-
-}
 
 function AdminTagWebhookBC(props) {
     return(

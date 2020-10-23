@@ -100,6 +100,7 @@ class ConsumerTagPage extends React.Component {
       var latest_rh = "-- %";
       var latest_batvoltagemv = "-- mV";
       var calendar_link = '#';
+      var webhook_link = '#';
 
       if (latest_sample) {
           latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
@@ -110,6 +111,7 @@ class ConsumerTagPage extends React.Component {
       if (typeof(latest_capture) != "string") {
           latest_batvoltagemv = latest_capture.batvoltagemv + " mV";
           calendar_link = "/tag/"+this.props.serial+"/calendar/day/"+latest_capture.timestamp;
+          webhook_link = "/tag/"+this.props.serial+"/webhook";
       }
 
       return (
@@ -130,11 +132,12 @@ class ConsumerTagPage extends React.Component {
                               iconpath={require("./tint-solid.svg")}
                               link={calendar_link}
                           />
-
                           <NavPanel
                               title="Webhook"
                               subtitle=""
-                              iconpath={require("./webhooks.svg")}/>
+                              iconpath={require("./webhooks.svg")}
+                              link={webhook_link}
+                          />
                       </div>
 
                       <div className="column">

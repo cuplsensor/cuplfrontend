@@ -48,7 +48,7 @@ export class DescriptionWidget extends React.Component {
                 this.props.submitDone();
             }
         }.bind(this)).catch(error => {
-            if (error.message === "UNAUTHORIZED") {
+            if (error.code ===401) {
                 error.message = error.message + " Invalid token. Scan tag again."
             }
           this.props.submitError(error);
@@ -93,7 +93,7 @@ function DescriptionEditor(props) {
 }
 
 function Description(props) {
-    if (props.description) {
+    if (props.description || props.tagtoken) {
         return(
             <div className="container mt-5">
                 <p><DescriptionLabel clickHandler={props.clickHandler} tagtoken={props.tagtoken}/> {props.description} </p>

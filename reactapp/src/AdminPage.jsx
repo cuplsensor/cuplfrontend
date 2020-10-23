@@ -61,7 +61,7 @@ export function RedirectToLogin(props) {
     const location = useLocation();
     const error = props.error;
     if (error) {
-          if (error.message === "UNAUTHORIZED") {
+          if (error.code ===401) {
               return (
                   <Redirect to={{
                     pathname: `/admin/login`,

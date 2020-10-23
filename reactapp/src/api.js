@@ -79,9 +79,19 @@ export async function getData(url = '', extraheaders = {}, params = {}) {
   return response; // parses JSON response into native JavaScript objects
 }
 
+class HTTPError extends Error {
+  constructor(message, code) {
+    super(message);
+    this.code = code;
+  }
+}
+
+
+
 export async function handleErrors(response) {
     if (!response.ok) {
-        throw Error(response.statusText);
+        console.log(response);
+        throw new HTTPError(response.statusText, response.status);
     }
     return response;
   }

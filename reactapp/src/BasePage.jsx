@@ -50,11 +50,15 @@ export function BulmaSubmit(props) {
 
 export function BulmaInput(props) {
   var readOnly = false;
+  var disabled = false;
   if (props.readOnly) {
       readOnly = true;
   }
+  if (props.disabled) {
+      disabled = true;
+  }
   return (
-    <input className="input" id={props.id} type={props.type} value={props.value} onChange={props.changeHandler} readOnly={readOnly} />
+    <input className="input" id={props.id} type={props.type} value={props.value} disabled={disabled} onChange={props.changeHandler} readOnly={readOnly} />
   );
 }
 

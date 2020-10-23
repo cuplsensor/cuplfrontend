@@ -75,7 +75,7 @@ class AdminTagsList extends React.Component {
   render() {
       const error = this.state.error;
       if (error) {
-          if (error.message === "UNAUTHORIZED") {
+          if (error.code ===401) {
               return <RedirectToLogin error={error} />
           }
       }
