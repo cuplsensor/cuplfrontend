@@ -1,7 +1,7 @@
 import React from "react";
 import {withRouter } from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
-import {ConsumerBasePage} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
 import 'chartjs-adapter-luxon';
 
@@ -69,13 +69,10 @@ class ConsumerCapturePage extends React.Component {
 
 function ConsumerCaptureBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
-        <ul>
-            <li><a href={`/tag/${props.serial}`}>{props.serial}</a></li>
+        <ConsumerBC serial={props.serial}>
             <li><a href={`/tag/${props.serial}/captures/`}>Captures</a></li>
             <li className="is-active"><a href="#" aria-current="page">{props.capture_id}</a></li>
-        </ul>
-      </nav>
+        </ConsumerBC>
     );
 }
 

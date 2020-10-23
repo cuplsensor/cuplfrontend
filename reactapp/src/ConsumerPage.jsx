@@ -14,6 +14,17 @@ export function ConsumerBasePage(props) {
   );
 }
 
+export function ConsumerBC(props) {
+    return (
+        <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
+            <ul>
+                <li><a href={`/tag/${props.serial}`}>{props.serial}</a></li>
+                {props.children}
+            </ul>
+        </nav>
+    );
+}
+
 function ConsumerHeader(props) {
     return (
         <Header bc={props.bc}>

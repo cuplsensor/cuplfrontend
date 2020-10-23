@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
 import {deleteData, getCookie, getData, handleErrors, postData} from "./api.js";
-import {ConsumerBasePage} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
 import 'chartjs-adapter-luxon';
 import {WebhookForm} from "./WebhookForm";
 import {ErrorMessage} from "./BasePage";
@@ -177,12 +177,9 @@ class ConsumerWebhookPage extends React.Component {
 
 function ConsumerWebhookBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
-        <ul>
-            <li><a href={`/tag/${props.serial}`}>{props.serial}</a></li>
-            <li className="is-active"><a href="#" aria-current="page">Webhook</a></li>
-        </ul>
-      </nav>
+      <ConsumerBC serial={props.serial}>
+          <li className="is-active"><a href="#" aria-current="page">Webhook</a></li>
+      </ConsumerBC>
     );
 }
 

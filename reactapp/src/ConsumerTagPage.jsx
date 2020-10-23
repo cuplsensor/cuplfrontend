@@ -2,7 +2,7 @@ import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
 import {ErrorMessage} from "./BasePage";
 import {getData, handleErrors, getCookie} from "./api.js";
-import {ConsumerBasePage} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
 import {DescriptionWidget} from "./DescriptionWidget";
 import {DateTime} from 'luxon';
 
@@ -115,7 +115,7 @@ class ConsumerTagPage extends React.Component {
       }
 
       return (
-          <ConsumerBasePage bc={<ConsumerTagBC serial={this.props.serial} />}>
+          <ConsumerBasePage bc={<ConsumerBC serial={this.props.serial} />}>
               <div className="container">
                   <ErrorMessage error={this.state.error} />
                   <div className="columns">
@@ -193,16 +193,6 @@ function NavPanel(props) {
                       </a>
                   </div>
         </div>
-    );
-}
-
-export function ConsumerTagBC(props) {
-    return (
-      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="#">{props.serial}</a></li>
-        </ul>
-      </nav>
     );
 }
 

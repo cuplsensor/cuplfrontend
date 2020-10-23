@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
-import {ConsumerBasePage} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
 
 import {DateTime} from "luxon";
@@ -261,12 +261,9 @@ function ArrowButton(props) {
 
 function ConsumerCalendarBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
-        <ul>
-            <li><a href={`/tag/${props.serial}`}>{props.serial}</a></li>
+      <ConsumerBC serial={props.serial}>
             <li className="is-active"><a href="#" aria-current="page">Calendar</a></li>
-        </ul>
-      </nav>
+      </ConsumerBC>
     );
 }
 
