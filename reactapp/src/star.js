@@ -39,6 +39,7 @@ export class HistorySubject extends StarBaseSubject {
 
   update_recent(ser) {
       // Append star serial to the recent array.
+      console.log("updating recents");
       if (!!ser) {
           this.push_recent(ser);
       }
