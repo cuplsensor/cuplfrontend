@@ -1,10 +1,10 @@
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
 import {deleteData, getCookie, getData, handleErrors, postData} from "./api.js";
-import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import 'chartjs-adapter-luxon';
 import {WebhookForm} from "./WebhookForm";
-import {ErrorMessage} from "./BasePage";
+import {ErrorMessage, handleDismiss, TagErrorMessage} from "./BasePage";
 
 
 class ConsumerWebhookPage extends React.Component {
@@ -13,6 +13,7 @@ class ConsumerWebhookPage extends React.Component {
 
     this.state = {'error': false, webhook: {address:'', fields:'', wh_secretkey:''}, disable_secretkey: false};
 
+    this.handleDismiss = handleDismiss.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -156,8 +157,8 @@ class ConsumerWebhookPage extends React.Component {
           return <Redirect to={{pathname: "/tag/"+this.props.serial, state: {error: this.state.error}}} />
       } else {
           return (
-              <ConsumerBasePage bc={<ConsumerWebhookBC serial={tagserial} />}>
-                <ErrorMessage error={error} />
+              <ConsumerBasePage bc={<ConsumerWebhookBC serial={tagserial} tagexists={this.state.webhook}/>}>
+                <TagErrorMessage error={error} serial={tagserial} handleDismiss={this.handleDismiss}/>
                 <WebhookForm
                         handleSubmit={this.handleSubmit}
                         handleChange={this.handleChange}
@@ -177,9 +178,9 @@ class ConsumerWebhookPage extends React.Component {
 
 function ConsumerWebhookBC(props) {
     return (
-      <ConsumerBC serial={props.serial}>
+      <ConsumerTagBC serial={props.serial} tagexists={props.tagexists}>
           <li className="is-active"><a href="#" aria-current="page">Webhook</a></li>
-      </ConsumerBC>
+      </ConsumerTagBC>
     );
 }
 

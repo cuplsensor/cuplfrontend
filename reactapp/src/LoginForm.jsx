@@ -1,12 +1,21 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
-import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
+import {
+    BasePage,
+    BulmaField,
+    BulmaControl,
+    BulmaLabel,
+    BulmaInput,
+    BulmaSubmit,
+    ErrorMessage,
+    handleDismiss
+} from "./BasePage.jsx";
 import {postData, handleErrors} from "./api.js";
 import Cookies from 'universal-cookie';
 
 
 
-class LoginForm extends BasePage {
+class LoginForm extends React.Component {
   constructor(props) {
     super(props);
     var error = false;
@@ -17,7 +26,23 @@ class LoginForm extends BasePage {
     }
     this.state = {client_id: '', client_secret: '', redirect: false, error: error};
 
+    this.handleDismiss = handleDismiss.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleRadioChange = this.handleRadioChange.bind(this);
+    this.handleCheckChange = this.handleCheckChange.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleRadioChange(event) {
+    this.setState({[event.target.name]: event.target.value});
+  }
+
+  handleCheckChange(event) {
+    this.setState({[event.target.id]: event.target.checked});
+  }
+
+  handleChange(event) {
+    this.setState({[event.target.id]: event.target.value});
   }
 
 
@@ -51,7 +76,7 @@ class LoginForm extends BasePage {
       }
       return (
           <div>
-            <ErrorMessage error={error} />
+            <ErrorMessage error={error} handleDismiss={this.handleDismiss} />
             <form onSubmit={this.handleSubmit}>
             <BulmaField>
               <BulmaLabel>client_id</BulmaLabel>

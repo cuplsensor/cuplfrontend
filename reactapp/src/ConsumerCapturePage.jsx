@@ -1,9 +1,10 @@
 import React from "react";
 import {withRouter } from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
-import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
 import 'chartjs-adapter-luxon';
+import {CaptureErrorMessage, handleDismiss} from "./BasePage";
 
 
 class ConsumerCapturePage extends React.Component {
@@ -16,6 +17,7 @@ class ConsumerCapturePage extends React.Component {
         capture = props.location.state.capture;
     }
 
+    this.handleDismiss = handleDismiss.bind(this);
     this.state = {'error': false, 'capture': capture, 'samples': []};
   }
 
@@ -44,18 +46,16 @@ class ConsumerCapturePage extends React.Component {
   }
 
   render() {
-      const error = this.state.error;
       var tagserial = "";
-
-      var capture_id = "";
+      var capture_id = this.props.id;
 
       if (this.state.capture) {
           tagserial = this.state.capture.tagserial;
-          capture_id = this.state.capture.id;
       }
 
       return (
-          <ConsumerBasePage bc={<ConsumerCaptureBC serial={tagserial} capture_id={capture_id} />}>
+          <ConsumerBasePage bc={<ConsumerCaptureBC serial={tagserial} tagexists={tagserial !== ""} capture_id={capture_id} />}>
+              <CaptureErrorMessage error={this.state.error} id={capture_id} handleDismiss={this.handleDismiss}/>
               <div id="chart-container">
                   <LineChart data={this.state.samples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
                   rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
@@ -69,10 +69,10 @@ class ConsumerCapturePage extends React.Component {
 
 function ConsumerCaptureBC(props) {
     return (
-        <ConsumerBC serial={props.serial}>
+        <ConsumerTagBC serial={props.serial} tagexists={props.tagexists}>
             <li><a href={`/tag/${props.serial}/captures/`}>Captures</a></li>
             <li className="is-active"><a href="#" aria-current="page">{props.capture_id}</a></li>
-        </ConsumerBC>
+        </ConsumerTagBC>
     );
 }
 

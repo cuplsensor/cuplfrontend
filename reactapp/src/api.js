@@ -80,9 +80,11 @@ export async function getData(url = '', extraheaders = {}, params = {}) {
 }
 
 class HTTPError extends Error {
-  constructor(message, code) {
+  constructor(message, code, url, text) {
     super(message);
     this.code = code;
+    this.url = url;
+    this.text = text;
   }
 }
 
@@ -90,8 +92,10 @@ class HTTPError extends Error {
 
 export async function handleErrors(response) {
     if (!response.ok) {
-        console.log(response);
-        throw new HTTPError(response.statusText, response.status);
+        const txt = await response.json();
+        console.log(txt);
+        throw new HTTPError(response.statusText, response.status, response.url, txt);
+
     }
     return response;
   }

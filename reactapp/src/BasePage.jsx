@@ -1,29 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
-
-export class BasePage extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleRadioChange = this.handleRadioChange.bind(this);
-    this.handleCheckChange = this.handleCheckChange.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleRadioChange(event) {
-    this.setState({[event.target.name]: event.target.value});
-  }
-
-  handleCheckChange(event) {
-    this.setState({[event.target.id]: event.target.checked});
-  }
-
-  handleChange(event) {
-    this.setState({[event.target.id]: event.target.value});
-  }
-
-
-}
+import {Link, Redirect} from "react-router-dom";
 
 
 export function BulmaField(props) {
@@ -92,14 +68,86 @@ export function Section(props) {
   );
 }
 
+export function CaptureErrorMessage(props) {
+    const error = props.error;
+    if (error == null) {
+        return (
+          <ErrorMessage error={error}/>
+        );
+    }
+    else if ((error.code === 404) && (error.url === 'https://b3.websensor.io/api/consumer/captures/' + props.id)) {
+        return (
+            <Redirect to={`/error/404/capture/${props.id}`} />
+        );
+    } else {
+        return (
+          <ErrorMessage error={error}/>
+        );
+    }
+}
+
+export function TagErrorMessage(props) {
+    const error = props.error;
+    if (error == null) {
+        return (
+          <ErrorMessage error={error} handleDismiss={props.handleDismiss} />
+        );
+    }
+    else if ((error.code === 404) && (error.url === 'https://b3.websensor.io/api/consumer/tag/' + props.serial)) {
+        return (
+            <Redirect to={`/error/404/tag/${props.serial}`} />
+        );
+    } else {
+        return (
+          <ErrorMessage error={error} handleDismiss={props.handleDismiss} />
+        );
+    }
+}
+
+export function handleDismiss() {
+    this.setState({error: null});
+}
+
+function toggleMessageBody(event) {
+    var mb = document.getElementsByClassName("message-body")[0];
+
+    if (mb.classList.contains("is-hidden")) {
+        mb.classList.remove("is-hidden");
+        event.target.text = "Show Less"
+    } else {
+        mb.classList.add("is-hidden");
+        event.target.text = "Show More"
+    }
+}
+
 export function ErrorMessage(props) {
   const error = props.error;
+
   if (error) {
-    return (
-        <div className="notification is-danger is-light">
-            {error.message}
-        </div>
-    );
+      if (error.text) {
+          return (
+          <article className="message is-danger is-light">
+              <div className="message-header">
+                  <p>{error.message} <a id="showmore" href='#' onClick={toggleMessageBody}>Show More</a></p>
+
+                  <button onClick={props.handleDismiss} className="delete" aria-label="delete" />
+              </div>
+              <div className="message-body is-hidden">
+                  <pre>
+                    <code>
+                        {JSON.stringify(error.text, null, 4) }
+                    </code>
+                </pre>
+              </div>
+          </article>);
+      } else {
+          return (
+            <div className="notification is-danger is-light">
+                {error.message}
+            </div>
+        );
+      }
+
   }
   else {
       return ("");

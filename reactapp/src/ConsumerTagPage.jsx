@@ -1,8 +1,8 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
-import {ErrorMessage} from "./BasePage";
+import {handleDismiss, TagErrorMessage} from "./BasePage";
 import {getData, handleErrors, getCookie} from "./api.js";
-import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {DescriptionWidget} from "./DescriptionWidget";
 import {DateTime} from 'luxon';
 
@@ -15,10 +15,11 @@ class ConsumerTagPage extends React.Component {
 
     if (this.props.location.state) {
         error = this.props.location.state.error;
+        window.history.replaceState(null, '')
     }
+    this.state = {'error': error, 'tag': null};
 
-    this.state = {'error': error, 'tag': ''};
-
+    this.handleDismiss = handleDismiss.bind(this);
     this.submitDone = this.submitDone.bind(this);
     this.submitError = this.submitError.bind(this);
   }
@@ -74,8 +75,8 @@ class ConsumerTagPage extends React.Component {
         });
   }
 
-  componentDidMount() {
-    getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
+  getTag(serial) {
+      getData('https://b3.websensor.io/api/consumer/tag/' + serial,
         )
         .then(handleErrors)
         .then(response => response.json())
@@ -89,7 +90,9 @@ class ConsumerTagPage extends React.Component {
         });
   }
 
-
+  componentDidMount() {
+    this.getTag(this.props.serial);
+  }
 
   render() {
       const error = this.state.error;
@@ -101,6 +104,12 @@ class ConsumerTagPage extends React.Component {
       var latest_batvoltagemv = "-- mV";
       var calendar_link = '#';
       var webhook_link = '#';
+
+      if (tag) {
+         if (tag.serial !== this.props.serial) {
+          this.getTag(this.props.serial);
+         }
+      }
 
       if (latest_sample) {
           latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
@@ -115,9 +124,9 @@ class ConsumerTagPage extends React.Component {
       }
 
       return (
-          <ConsumerBasePage bc={<ConsumerBC serial={this.props.serial} />}>
+          <ConsumerBasePage bc={<ConsumerTagBC serial={this.props.serial} tagexists={this.state.tag} />}>
               <div className="container">
-                  <ErrorMessage error={this.state.error} />
+                  <TagErrorMessage error={this.state.error} serial={this.props.serial} handleDismiss={this.handleDismiss} />
                   <div className="columns">
                       <div className="column">
                           <NavPanel

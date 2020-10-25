@@ -1,11 +1,12 @@
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
-import {ConsumerBasePage, ConsumerBC} from "./ConsumerPage";
+import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
 
 import {DateTime} from "luxon";
 import 'chartjs-adapter-luxon';
+import {handleDismiss, TagErrorMessage} from "./BasePage";
 
 
 
@@ -31,6 +32,8 @@ class ConsumerCalendarPage extends React.Component {
     const day = this.props.day || dateToday.day;
 
     const date = DateTime.fromObject({year:year, month:month, day:day, zone:zone});
+
+    this.handleDismiss = handleDismiss.bind(this);
 
     this.state = {'error': false, 'tag': tag, 'samples': [], 'range': range, 'date': date, 'sEDates': {}};
   }
@@ -114,7 +117,6 @@ class ConsumerCalendarPage extends React.Component {
   }
 
   render() {
-      const error = this.state.error;
       var tagserial = "";
 
       if (this.state.tag) {
@@ -122,7 +124,8 @@ class ConsumerCalendarPage extends React.Component {
       }
 
       return (
-          <ConsumerBasePage bc={<ConsumerCalendarBC serial={tagserial} />}>
+          <ConsumerBasePage bc={<ConsumerCalendarBC serial={this.props.serial} tagexists={this.state.tag}/>}>
+              <TagErrorMessage error={this.state.error} serial={this.props.serial} handleDismiss={this.handleDismiss}/>
               <nav id="daynav" className="level">
                   <DatePicker date={this.state.date} onDateChange={this.handleDateChange} />
                   <RangePicker range={this.state.range} onRangeChange={this.handleRangeChange} />
@@ -261,9 +264,9 @@ function ArrowButton(props) {
 
 function ConsumerCalendarBC(props) {
     return (
-      <ConsumerBC serial={props.serial}>
+      <ConsumerTagBC serial={props.serial} tagexists={props.tagexists}>
             <li className="is-active"><a href="#" aria-current="page">Calendar</a></li>
-      </ConsumerBC>
+      </ConsumerTagBC>
     );
 }
 

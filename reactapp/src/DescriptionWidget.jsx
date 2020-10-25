@@ -58,6 +58,9 @@ export class DescriptionWidget extends React.Component {
 
 
     render() {
+        if (!this.props.tag) {
+            return('');
+        }
         const tagtoken = getCookie('tagtoken_' + this.props.tag.serial);
         return (
             <div>

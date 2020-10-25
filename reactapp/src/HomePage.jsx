@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
-import {BasePage, BulmaField, BulmaControl, BulmaLabel, BulmaInput, BulmaSubmit, ErrorMessage} from "./BasePage.jsx";
 import {getData, postData, handleErrors, setCookie} from "./api.js";
+import {RecentStarred} from "./RecentStarred";
 import {ConsumerBasePage} from "./ConsumerPage";
 
 
@@ -20,8 +20,9 @@ class HomePage extends React.Component {
       const timeintb64 = urlparams.get('t');
       const circbufb64 = urlparams.get('q');
       const vfmtb64 = urlparams.get('v');
+      console.log(circbufb64);
 
-      if (serial && statusb64 && timeintb64 && circbufb64 && vfmtb64) {
+      if (serial && statusb64 && timeintb64 && vfmtb64) {
           this.setState({loading: true, serial: serial});
           postData('https://b3.websensor.io/api/consumer/captures',
             {'serial': serial,
@@ -71,7 +72,9 @@ class HomePage extends React.Component {
       }
 
       return (
-          <ConsumerBasePage>a</ConsumerBasePage>
+          <ConsumerBasePage>
+            <RecentStarred />
+          </ConsumerBasePage>
       );
   }
 }

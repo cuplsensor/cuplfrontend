@@ -94,6 +94,12 @@ function App() {
           <Route exact path="/admin/webhooks">
               <AdminWebhooksListPage />
           </Route>
+          <Route exact path="/error/404/tag/:serial" render={props =>
+            <NoTag serial={props.match.params.serial} /> }
+          />
+          <Route exact path="/error/404/capture/:id" render={props =>
+            <NoCapture id={props.match.params.id} /> }
+          />
           <Route path="*">
             <NoMatch />
           </Route>
@@ -113,6 +119,26 @@ function CalendarRedirect(props) {
   const day = dtlocal.day;
   return (
     <Redirect to={`/tag/${props.serial}/calendar/${props.range}/${year}/${month}/${day}`} />
+  );
+}
+
+export function NoCapture(props) {
+  return (
+    <ConsumerBasePage>
+        <h3>
+          Error 404: Capture <code>{props.id}</code> does not exist.
+        </h3>
+    </ConsumerBasePage>
+  );
+}
+
+export function NoTag(props) {
+  return (
+    <ConsumerBasePage>
+        <h3>
+          Error 404: Tag <code>{props.serial}</code> does not exist.
+        </h3>
+    </ConsumerBasePage>
   );
 }
 
