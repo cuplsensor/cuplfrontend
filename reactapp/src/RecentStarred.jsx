@@ -1,6 +1,7 @@
 import React from "react";
 import {Section} from "./BasePage";
 import {HistorySubject} from "./star";
+import {getTag} from "./api";
 
 
 export class RecentStarred extends React.Component {
@@ -37,18 +38,24 @@ export class RecentStarred extends React.Component {
         const starredarr = this.state.starred;
         const recentarr  = this.state.recents;
         return(
-                <Section>
-                    <table className="table">
-                        <thead>
-                            <h5 className="title is-5 mb-3">Starred Tags</h5>
-                        </thead>
-                        <TagTable taglist={starredarr} historysubject={this.historysubject} />
-                        <thead>
-                            <h5 className="title is-5 mt-4 mb-3">Recent Tags</h5>
-                        </thead>
-                        <TagTable taglist={recentarr} historysubject={this.historysubject} />
-                    </table>
-                </Section>
+            <table className="table">
+                <thead>
+                    <tr>
+                        <th colspan={5}>
+                            <h5 className="title is-5 mb-2">Starred Tags</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <TagTable taglist={starredarr} historysubject={this.historysubject} />
+                <thead>
+                    <tr>
+                        <th colspan={5}>
+                            <h5 className="title is-5 mb-2">Recent Tags</h5>
+                        </th>
+                    </tr>
+                </thead>
+                <TagTable taglist={recentarr} historysubject={this.historysubject} />
+            </table>
         );
     }
 }
@@ -73,13 +80,43 @@ class TagTable extends React.Component {
     }
 }
 
-function TagTableRow(props) {
-    return (
-        <tr>
-            <td><a href={`tag/${props.tagserial}`}>{props.tagserial}</a></td>
-            <td><Star historysubject={props.historysubject} serial={props.tagserial} tagexists={true} /></td>
-        </tr>
-    );
+class TagTableRow extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {error: false};
+    }
+
+    componentDidMount() {
+        getTag.call(this, this.props.tagserial, false, true);
+    }
+
+    render() {
+        const latest_sample = this.state.latest_sample;
+        var latest_temp = "-- °C";
+        var latest_rh = "-- %";
+        var description = ""
+        if (latest_sample) {
+            latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
+            if (latest_sample['rh'] !== null) {
+              latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
+            }
+        }
+
+        if (this.state.tag) {
+            description = this.state.tag.description;
+        }
+
+        return (
+            <tr>
+                <td><a href={`tag/${this.props.tagserial}`}>{this.props.tagserial}</a></td>
+                <td><Star historysubject={this.props.historysubject} serial={this.props.tagserial} tagexists={true} /></td>
+                <td>{latest_temp}</td>
+                <td>{latest_rh}</td>
+                <td>{description}</td>
+            </tr>
+        );
+    }
 }
 
 export class Star extends React.Component {
@@ -119,7 +156,7 @@ export class Star extends React.Component {
 
         console.log("component did update");
 
-        if (this.props.tagexists && this.state.tagisnew) {
+        if (this.props.tagexists && this.state.tagisnew && !this.viewonly) {
             this.historysubject.update_recent(this.props.serial);
             this.historysubject.subscribe(this);
             this.setState({tagisnew: false});

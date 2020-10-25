@@ -201,3 +201,56 @@ export function getCookie(name) {
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
+
+export function getLatestCapture(captures_url) {
+      getData(captures_url,
+          {},
+          {page: 1, per_page: 1}
+        )
+        .then(handleErrors)
+        .then(response => response.json())
+        .then(json => {
+            if (json[0] == null) {
+                this.setState({latest_capture: "No captures on this tag."});
+            } else {
+                this.setState({latest_capture: json[0]});
+            }
+        },
+        (error) => {
+          this.setState({error});
+        });
+  }
+
+export function getLatestSample(samples_url) {
+  getData(samples_url,
+      {},
+      {page: 1, per_page: 1}
+    )
+    .then(handleErrors)
+    .then(response => response.json())
+    .then(json => {
+        this.setState({latest_sample: json[0]});
+    },
+    (error) => {
+      this.setState({error});
+    });
+}
+
+export function getTag(serial, withLatestCapture, withLatestSample) {
+  getData('https://b3.websensor.io/api/consumer/tag/' + serial,
+    )
+    .then(handleErrors)
+    .then(response => response.json())
+    .then(json => {
+        this.setState({tag: json})
+        if (withLatestSample) {
+            getLatestSample.call(this, json['samples_url']);
+        }
+        if (withLatestCapture) {
+            getLatestCapture.call(this, json['captures_url']);
+        }
+    },
+    (error) => {
+      this.setState({error});
+    });
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
 import {handleDismiss, TagErrorMessage} from "./BasePage";
-import {getData, handleErrors, getCookie} from "./api.js";
+import {getData, handleErrors, getTag} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {DescriptionWidget} from "./DescriptionWidget";
 import {DateTime} from 'luxon';
@@ -41,57 +41,8 @@ class ConsumerTagPage extends React.Component {
       this.setState({error});
   }
 
-  getLatestCapture(captures_url) {
-      getData(captures_url,
-          {},
-          {page: 1, per_page: 1}
-        )
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            if (json[0] == null) {
-                this.setState({latest_capture: "No captures on this tag."});
-            } else {
-                this.setState({latest_capture: json[0]});
-            }
-        },
-        (error) => {
-          this.setState({error});
-        });
-  }
-
-  getLatestSample(samples_url) {
-      getData(samples_url,
-          {},
-          {page: 1, per_page: 1}
-        )
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            this.setState({latest_sample: json[0]});
-        },
-        (error) => {
-          this.setState({error});
-        });
-  }
-
-  getTag(serial) {
-      getData('https://b3.websensor.io/api/consumer/tag/' + serial,
-        )
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            this.setState({tag: json})
-            this.getLatestSample(json['samples_url']);
-            this.getLatestCapture(json['captures_url']);
-        },
-        (error) => {
-          this.setState({error});
-        });
-  }
-
   componentDidMount() {
-    this.getTag(this.props.serial);
+    getTag.call(this, this.props.serial, true, true);
   }
 
   render() {
@@ -107,7 +58,7 @@ class ConsumerTagPage extends React.Component {
 
       if (tag) {
          if (tag.serial !== this.props.serial) {
-          this.getTag(this.props.serial);
+          getTag.call(this, this.props.serial, true, true);
          }
       }
 
