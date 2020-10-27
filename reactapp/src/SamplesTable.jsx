@@ -35,7 +35,7 @@ export function SamplesTable(props) {
 
     for (const daysamples of samplesbyday) {
         daytables.push(
-            <DayTable heading={daysamples.datestr} samples={daysamples.samples} />
+            <DayTable key={daysamples.datestr} heading={daysamples.datestr} samples={daysamples.samples} />
         );
     }
 
@@ -50,13 +50,13 @@ function DayTable(props) {
     var tablerows = [];
 
     for (const sample of props.samples) {
-        tablerows.push(<TableRow time={sample.time.toLocaleString(DateTime.TIME_24_SIMPLE)} temp={sample['temp']} rh={sample['rh']} />);
+        tablerows.push(<TableRow key={sample.time.toLocaleString(DateTime.TIME_24_SIMPLE)} time={sample.time.toLocaleString(DateTime.TIME_24_SIMPLE)} temp={sample['temp']} rh={sample['rh']} />);
     }
     return (
       <table className="table is-striped">
         <thead>
             <tr>
-                <th class="stickyheading" colspan="3">{props.heading}</th>
+                <th className="stickyheading" colSpan="3">{props.heading}</th>
             </tr>
             <tr>
                 <th>Time</th>

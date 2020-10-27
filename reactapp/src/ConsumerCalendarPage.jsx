@@ -7,7 +7,7 @@ import {SamplesTable} from "./SamplesTable";
 
 import {DateTime} from "luxon";
 import 'chartjs-adapter-luxon';
-import {handleDismiss, TagErrorMessage} from "./BasePage";
+import {handleDismiss, TagErrorMessage, Section} from "./BasePage";
 
 
 
@@ -140,8 +140,12 @@ class ConsumerCalendarPage extends React.Component {
                              xmin={this.state.sEDates.startDate}
                              xmax={this.state.sEDates.endDate}
                   />
-                  <SamplesTable samples={this.state.samples} />
               </div>
+              <section className="section pl-0">
+                  <div className="container">
+                     <SamplesTable samples={this.state.samples} />
+                  </div>
+              </section>
           </ConsumerBasePage>
       );
   }

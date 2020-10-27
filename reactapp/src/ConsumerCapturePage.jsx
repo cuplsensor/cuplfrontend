@@ -4,7 +4,7 @@ import {getData, handleErrors, getSamples} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
 import 'chartjs-adapter-luxon';
-import {CaptureErrorMessage, handleDismiss} from "./BasePage";
+import {CaptureErrorMessage, handleDismiss, Section} from "./BasePage";
 import {SamplesTable} from "./SamplesTable";
 
 
@@ -61,7 +61,10 @@ class ConsumerCapturePage extends React.Component {
                   <LineChart data={this.state.samples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
                   rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
               </div>
-              <SamplesTable samples={this.state.samples} />
+              <div className="container">
+                 <SamplesTable samples={this.state.samples} />
+              </div>
+
 
           </ConsumerBasePage>
       );

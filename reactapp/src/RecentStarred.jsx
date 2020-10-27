@@ -41,7 +41,7 @@ export class RecentStarred extends React.Component {
             <table className="table">
                 <thead>
                     <tr>
-                        <th colspan={5}>
+                        <th colSpan={5}>
                             <h5 className="title is-5 mb-2">Starred Tags</h5>
                         </th>
                     </tr>
@@ -49,7 +49,7 @@ export class RecentStarred extends React.Component {
                 <TagTable taglist={starredarr} historysubject={this.historysubject} />
                 <thead>
                     <tr>
-                        <th colspan={5}>
+                        <th colSpan={5}>
                             <h5 className="title is-5 mb-2">Recent Tags</h5>
                         </th>
                     </tr>
