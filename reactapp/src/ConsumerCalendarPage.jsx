@@ -3,6 +3,7 @@ import {Redirect, withRouter} from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
+import {SamplesTable} from "./SamplesTable";
 
 import {DateTime} from "luxon";
 import 'chartjs-adapter-luxon';
@@ -139,6 +140,7 @@ class ConsumerCalendarPage extends React.Component {
                              xmin={this.state.sEDates.startDate}
                              xmax={this.state.sEDates.endDate}
                   />
+                  <SamplesTable samples={this.state.samples} />
               </div>
           </ConsumerBasePage>
       );
