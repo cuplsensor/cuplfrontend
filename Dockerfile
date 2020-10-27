@@ -5,9 +5,9 @@ WORKDIR /reactapp
 COPY /reactapp/package.json ./
 RUN echo y | npm install -g --silent
 # Download and run the build script
-RUN echo y | npm install react-scripts -g --silent
+RUN echo y | npm install react-scripts --silent
 COPY . ./
-RUN echo y |  npm run --silent build
+RUN npm run --silent build
 
 # production environment
 FROM nginx:stable-alpine
