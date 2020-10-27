@@ -2,8 +2,8 @@
 FROM node:15.0.1-alpine3.10 as build
 WORKDIR /reactapp
 ENV PATH /reactapp/node_modules/.bin:$PATH
-COPY package.json ./
-COPY package-lock.json ./
+COPY /reactapp/package.json ./
+COPY /reactapp/package-lock.json ./
 RUN npm ci --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 COPY . ./
