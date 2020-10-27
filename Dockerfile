@@ -4,10 +4,9 @@ WORKDIR /reactapp
 ENV PATH /reactapp/node_modules/.bin:$PATH
 COPY /reactapp/package.json ./
 COPY /reactapp/package-lock.json ./
-RUN npm ci --silent
-RUN npm install react-scripts@3.4.1 -g --silent
+RUN yarn --silent
 COPY . ./
-RUN npm run build
+RUN yarn build
 
 # production environment
 FROM nginx:stable-alpine
