@@ -4,7 +4,7 @@ WORKDIR /reactapp
 COPY /reactapp/package.json ./
 RUN echo y | npm install -g --silent
 COPY . ./
-RUN echo y |  npm build
+RUN echo y |  npm run --silent build 
 # production environment
 FROM nginx:stable-alpine
 COPY --from=build /reactapp/build /usr/share/nginx/html
