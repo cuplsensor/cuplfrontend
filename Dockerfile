@@ -3,7 +3,6 @@ FROM node:15.0.1-alpine3.10 as build
 WORKDIR /reactapp
 ENV PATH /reactapp/node_modules/.bin:$PATH
 COPY /reactapp/package.json ./
-COPY /reactapp/package-lock.json ./
 RUN yarn --silent
 COPY . ./
 RUN yarn build
