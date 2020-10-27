@@ -2,10 +2,9 @@
 FROM node:15.0.1-alpine3.10 as build
 WORKDIR /reactapp
 COPY /reactapp/package.json ./
-RUN npm install
+RUN echo y | npm install -g --silent
 COPY . ./
-RUN npm build
-
+RUN echo y |  npm build
 # production environment
 FROM nginx:stable-alpine
 COPY --from=build /reactapp/build /usr/share/nginx/html
