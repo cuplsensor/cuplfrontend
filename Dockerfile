@@ -1,11 +1,10 @@
 # build environment https://dev.to/mubbashir10/containerize-react-app-with-docker-for-production-572b
 FROM node:15.0.1-alpine3.10 as build
 WORKDIR /reactapp
-ENV PATH /reactapp/node_modules/.bin:$PATH
 COPY /reactapp/package.json ./
-RUN yarn --silent
+RUN npm install
 COPY . ./
-RUN yarn build
+RUN npm build
 
 # production environment
 FROM nginx:stable-alpine
