@@ -1,28 +1,18 @@
-# Based on
-# https://medium.com/@greut/minimal-python-deployment-on-docker-with-uwsgi-bc5aa89b3d35
-# but not using Alpine because this distribution is not compatible with Python manylinux binaries.
-FROM python:3.8.2-slim-buster as base
+# build environment
+FROM node:15.0.1-alpine3.10 as build
+WORKDIR /reactapp
+ENV PATH /reactapp/node_modules/.bin:$PATH
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm ci --silent
+RUN npm install react-scripts@3.4.1 -g --silent
+COPY . ./
+RUN npm run build
 
-RUN apt-get update &&  apt-get install -y build-essential \
-    && pip3 install uwsgi \
-    && apt-get remove -y --purge build-essential
-
-ENV WSF_PORT=5000
-
-COPY ./requirements.txt .
-# Install all requirements
-RUN pip3 install --extra-index-url https://testpypi.python.org/pypi -r requirements.txt
-
-FROM base
-# Create a working directory named app
-WORKDIR /app
-# Copy everything into the working directory
-COPY . .
-# Change ownership of the app folder to match the user running uwsgi
-RUN chown -R www-data:www-data /app
-
-# uWSGI will be available on this port
-EXPOSE $WSF_PORT
-
-CMD [ "uwsgi", "--uid", "uwsgi", \
-               "--ini",  "uwsgi.ini"]
+# production environment
+FROM nginx:stable-alpine
+COPY --from=build /reactapp/build /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+VOLUME /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
