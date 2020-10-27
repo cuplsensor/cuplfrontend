@@ -5,7 +5,6 @@ WORKDIR /reactapp
 COPY /reactapp/package.json ./
 RUN echo y | npm install -g --silent
 # Download and run the build script
-RUN npm install react-scripts -g --silent
 COPY . ./
 RUN npm run --silent build
 
