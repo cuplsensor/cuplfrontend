@@ -2,8 +2,10 @@
 FROM node:15.0.1-alpine3.10 as build
 WORKDIR /reactapp
 # Install dependencies from package.json
-RUN echo y | npm install -g --silent
+COPY reactapp/package.json ./
+RUN npm install --silent
 # Download and run the build script
+COPY ./reactapp ./
 RUN npm run --silent build
 
 # production environment
