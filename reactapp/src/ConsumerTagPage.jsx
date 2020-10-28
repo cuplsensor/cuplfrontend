@@ -93,7 +93,7 @@ class ConsumerTagPage extends React.Component {
                               link={calendar_link}
                           />
                           <NavPanel
-                              title="Relative Humidity"
+                              title="Humidity"
                               subtitle={latest_rh}
                               iconpath={tint}
                               link={calendar_link}
