@@ -8,6 +8,8 @@ import {SamplesTable} from "./SamplesTable";
 import {DateTime} from "luxon";
 import 'chartjs-adapter-luxon';
 import {handleDismiss, TagErrorMessage, Section} from "./BasePage";
+import angleLeft from "./angle-left-solid.svg";
+import angleRight from "./angle-right-solid.svg";
 
 
 
@@ -231,20 +233,18 @@ class DatePicker extends React.Component {
 
 
     render() {
-        const leftsvg = require("./angle-left-solid.svg");
-        const rightsvg = require("./angle-right-solid.svg");
         return  (
             <div className="level-left">
                 <div className="level-item is-pulled-left">
                     <div id="daybuttons" className="buttons has-addons is-pulled-left">
                         <a className="button" id="leftbutton" onClick={this.backOneDay}>
-                            <ArrowButton arrowpath={leftsvg}/>
+                            <ArrowButton arrowpath={angleLeft}/>
                         </a>
                         <a className="button" id="todaybutton" onClick={this.toToday}>
                             Today
                         </a>
                         <a className="button" id="rightbutton" onClick={this.forwardOneDay}>
-                            <ArrowButton arrowpath={rightsvg}/>
+                            <ArrowButton arrowpath={angleRight}/>
                         </a>
                     </div>
                 </div>

@@ -5,6 +5,12 @@ import {getData, handleErrors, getTag} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {DescriptionWidget} from "./DescriptionWidget";
 import {DateTime} from 'luxon';
+import thermometer from './thermometer-half-solid.svg';
+import tint from './tint-solid.svg';
+import battery from './battery-full-solid.svg';
+import webhooks from './webhooks.svg';
+import cogs from './cogs-solid.svg';
+
 
 
 
@@ -83,19 +89,19 @@ class ConsumerTagPage extends React.Component {
                           <NavPanel
                               title="Temperature"
                               subtitle={latest_temp}
-                              iconpath={require("./thermometer-half-solid.svg")}
+                              iconpath={thermometer}
                               link={calendar_link}
                           />
                           <NavPanel
                               title="Relative Humidity"
                               subtitle={latest_rh}
-                              iconpath={require("./tint-solid.svg")}
+                              iconpath={tint}
                               link={calendar_link}
                           />
                           <NavPanel
                               title="Webhook"
                               subtitle=""
-                              iconpath={require("./webhooks.svg")}
+                              iconpath={webhooks}
                               link={webhook_link}
                           />
                       </div>
@@ -104,11 +110,11 @@ class ConsumerTagPage extends React.Component {
                           <NavPanel
                               title="Battery"
                               subtitle={latest_batvoltagemv}
-                              iconpath={require("./battery-full-solid.svg")}/>
+                              iconpath={battery}/>
                           <NavPanel
                               title="Configure"
                               subtitle="WebNFC"
-                              iconpath={require("./cogs-solid.svg")}/>
+                              iconpath={cogs}/>
                       </div>
 
                   </div>

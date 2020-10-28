@@ -1,7 +1,6 @@
 import React from "react";
 import {Link, Redirect} from "react-router-dom";
 import logo from './logo.svg';
-import starfill from "./star-fill.svg";
 
 
 export function BulmaField(props) {
