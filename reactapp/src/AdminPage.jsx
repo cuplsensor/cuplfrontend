@@ -25,11 +25,24 @@ function AdminBasePage(props) {
   );
 }
 
-function AdminHeader(props) {
-    const isLoggedIn = props.isLoggedIn;
-    return (
-        <Header bc={props.bc}>
-            <div id="navbarBasicExample" className="navbar-menu">
+export class AdminHeader extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state = {burgerVisible: false};
+
+        this.handleBurgerClick = this.handleBurgerClick.bind(this);
+    }
+
+    handleBurgerClick(event) {
+        event.preventDefault();
+        this.setState({burgerVisible: !this.state.burgerVisible});
+    }
+
+    render() {
+        const isLoggedIn = this.props.isLoggedIn;
+        return (
+        <Header bc={this.props.bc} burgerVisible={this.state.burgerVisible} burgerClickHandler={this.handleBurgerClick}>
+            <div id="navbarBasicExample" className={this.state.burgerVisible ? "navbar-menu is-active" : "navbar-menu"}>
                 <div className="navbar-start ">
 
                 </div>
@@ -42,6 +55,8 @@ function AdminHeader(props) {
             </div>
         </Header>
     );
+    }
+
 }
 
 function AdminLogOutButton(props) {

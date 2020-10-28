@@ -53,7 +53,7 @@ export class RecentStarred extends React.Component {
                 <TagTable taglist={starredarr} historysubject={this.historysubject} />
                 <thead>
                     <tr>
-                        <th colSpan={5}>
+                        <th style={{paddingTop: '1.5em'}} colSpan={5}>
                             <h5 className="title is-5 mb-2">Recent Tags</h5>
                         </th>
                     </tr>

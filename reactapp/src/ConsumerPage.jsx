@@ -31,10 +31,23 @@ export function ConsumerTagBC(props) {
 
 
 
-function ConsumerHeader(props) {
-    return (
-        <Header bc={props.bc}>
-            <div id="navbarBasicExample" className="navbar-menu">
+export class ConsumerHeader extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {burgerVisible: false};
+
+        this.handleBurgerClick = this.handleBurgerClick.bind(this);
+    }
+
+    handleBurgerClick(event) {
+        event.preventDefault();
+        this.setState({burgerVisible: !this.state.burgerVisible});
+    }
+
+    render() {
+        return (
+        <Header bc={this.props.bc} burgerVisible={this.state.burgerVisible} burgerClickHandler={this.handleBurgerClick}>
+            <div id="navbarBasicExample" className={this.state.burgerVisible ? "navbar-menu is-active" : "navbar-menu"}>
                 <div className="navbar-end">
                   <div className="navbar-item">
                     <Link to="/random">Random</Link>
@@ -47,5 +60,7 @@ function ConsumerHeader(props) {
                 </div>
             </div>
         </Header>
-    );
+        );
+    }
+
 }

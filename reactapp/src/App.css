@@ -159,6 +159,10 @@ a {
   color:#1EAEDB;
 }
 
+.breadcrumb a {
+  color:#1EAEDB;
+}
+
 .flex {
   display: flex;
   align-items: baseline;

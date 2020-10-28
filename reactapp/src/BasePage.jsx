@@ -1,5 +1,7 @@
 import React from "react";
 import {Link, Redirect} from "react-router-dom";
+import logo from './logo.svg';
+import starfill from "./star-fill.svg";
 
 
 export function BulmaField(props) {
@@ -194,7 +196,17 @@ export function Header(props) {
                             <div className="item">
                                 <div className="inline-block">
                                   <Link to="/">
-                                    cupl
+
+                                      <a href="/" className="button is-white" style={{backgroundImage: `url(${logo})`,
+                                               backgroundRepeat: "no-repeat",
+                                               backgroundPosition: "center",
+                                               width: "45px",
+                                               backgroundSize: "100%",
+
+                                               marginTop: "0.35em"
+
+
+                                    }}></a>
                                   </Link>
 
                                 </div>
@@ -205,7 +217,7 @@ export function Header(props) {
                             </div>
                         </div>
                     </div>
-                <a role="button" className="navbar-burger" aria-label="menu" aria-expanded="false">
+                <a role="button" className={props.burgerVisible ? "navbar-burger is-active" : "navbar-burger"} onClick={props.burgerClickHandler} aria-label="menu" aria-expanded="false">
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
                     <span aria-hidden="true"></span>
