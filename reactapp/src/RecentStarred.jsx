@@ -2,6 +2,10 @@ import React from "react";
 import {Section} from "./BasePage";
 import {HistorySubject} from "./star";
 import {getTag} from "./api";
+import starfill from './star-fill.svg'; // Tell webpack this JS file uses this image
+import starempty from './star-empty.svg'; // Tell webpack this JS file uses this image
+
+
 
 
 export class RecentStarred extends React.Component {
@@ -176,9 +180,9 @@ export class Star extends React.Component {
     render() {
         var backgroundImage;
         if (this.state.starred) {
-            backgroundImage = `url(${require("./star-fill.svg")}`;
+            backgroundImage = `url(${starfill})`;
         } else {
-            backgroundImage = `url(${require("./star-empty.svg")}`;
+            backgroundImage = `url(${starempty})`;
         }
         return (
             <a onClick={this.handleStarClick} style={{backgroundImage: backgroundImage,
