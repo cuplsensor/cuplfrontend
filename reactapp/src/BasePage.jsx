@@ -194,7 +194,6 @@ export function Header(props) {
                         <div className="flex">
                             <div className="item">
                                 <div className="inline-block">
-                                  <Link to="/">
 
                                       <a href="/" className="button is-white" style={{backgroundImage: `url(${logo})`,
                                                backgroundRepeat: "no-repeat",
@@ -206,7 +205,6 @@ export function Header(props) {
 
 
                                     }}></a>
-                                  </Link>
 
                                 </div>
                             </div>
