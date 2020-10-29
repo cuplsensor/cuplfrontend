@@ -79,9 +79,9 @@ export async function getData(url = '', extraheaders = {}, params = {}) {
   return response; // parses JSON response into native JavaScript objects
 }
 
-class HTTPError extends Error {
+class HTTPError {
   constructor(message, code, url, text) {
-    super(message);
+    this.message = message;
     this.code = code;
     this.url = url;
     this.text = text;

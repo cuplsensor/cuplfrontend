@@ -67,7 +67,10 @@ class AdminTagsList extends React.Component {
             this.componentDidMount();
         },
         (error) => {
-          this.setState({error: error});
+            if (error) {
+                this.setState({error: error});
+            }
+
         });
     event.preventDefault();
   }
