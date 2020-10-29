@@ -11,9 +11,9 @@ RUN npm ci --silent
 #RUN npm install react-scripts@3.4.1 -g --silent
 # add app
 COPY reactapp/ ./
-RUN export PUBLIC_URL=https://f3.websensor.io/
+#RUN export PUBLIC_URL=https://f3.websensor.io/
 # start app
-RUN npm run build
+#RUN npm run build
 
 # production environment
 #FROM nginx:stable-alpine
