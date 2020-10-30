@@ -24,6 +24,7 @@ import ConsumerRandomTagPage from "./ConsumerRandomTagPage";
 import ConsumerCapturePage from "./ConsumerCapturePage";
 import ConsumerCalendarPage from "./ConsumerCalendarPage";
 import {DateTime} from "luxon";
+import AdminConfigSerialPage from "./AdminConfigSerialPage";
 
 
 function App() {
@@ -78,6 +79,9 @@ function App() {
           )} />
           <Route exact path="/admin/tag/:id/edit">
             <AdminEditPage />
+          </Route>
+          <Route exact path="/admin/tag/:id/configure/serial">
+            <AdminConfigSerialPage />
           </Route>
           <Route exact path="/admin/tag/:id/captures">
             <AdminTagCapturesPage />

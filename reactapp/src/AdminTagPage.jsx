@@ -22,7 +22,7 @@ export function AdminTagMenu(props) {
             <ul className="menu-list">
                 <MenuListElement name="Edit" url={'/admin/tag/' + props.tagid + '/edit'} active={props.activetab}/>
                 <MenuListElement name="Program" url={'/admin/tag/' + props.tagid + '/program'} active={props.activetab}/>
-                <MenuListElement name="Configure (serial)" url="/admin/tags" active={props.activetab}/>
+                <MenuListElement name="Configure (serial)" url={'/admin/tag/' + props.tagid + '/configure/serial'} active={props.activetab}/>
                 <MenuListElement name="Configure (NFC)" url="/admin/captures" active={props.activetab}/>
                 <MenuListElement name="Simulate" url={'/admin/tag/' + props.tagid + '/simulate'} active={props.activetab}/>
                 <MenuListElement name="Captures" url={'/admin/tag/' + props.tagid + '/captures'} active={props.activetab}/>

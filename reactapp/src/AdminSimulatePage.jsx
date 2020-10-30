@@ -141,6 +141,7 @@ class AdminSimulatePage extends React.Component {
                       </div>
                       <div className="field is-grouped">
                           <BulmaControl>
+                              <BulmaLabel>Tag Format</BulmaLabel>
                               <label className="radio">Temperature &amp; Relative Humidity
                                   <BulmaRadio name="tagformat" type="radio" value="1" checked={this.state.tagformat === "1"} changeHandler={this.handleRadioChange} />
                               </label>
