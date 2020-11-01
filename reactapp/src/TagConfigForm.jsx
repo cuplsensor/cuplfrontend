@@ -27,7 +27,6 @@ export class TagConfigForm extends React.Component {
                   error: false};
 
     this.handleDismiss = handleDismiss.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.handleCheckChange = this.handleCheckChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -37,38 +36,59 @@ export class TagConfigForm extends React.Component {
       let serial = "";
       let secretkey = "";
 
-      console.log(this.props.tag);
-
       if ((prevProps.tag == null) && (this.props.tag)) {
             serial = this.props.tag.serial;
             secretkey = this.props.tag.secretkey;
-            this.setState({serial: serial, secretkey: secretkey});
+            this.setState({serial: serial, secretkey: secretkey}, this.createConfigList);
       }
-
-
   }
 
-    handleRadioChange(event) {
-    this.setState({[event.target.name]: event.target.value});
+  handleRadioChange(event) {
+    this.setState({[event.target.name]: event.target.value}, this.createConfigList);
   }
 
   handleCheckChange(event) {
-    this.setState({[event.target.id]: event.target.checked});
+    this.setState({[event.target.id]: event.target.checked}, this.createConfigList);
   }
 
   handleChange(event) {
-    this.setState({[event.target.id]: event.target.value});
+    this.setState({[event.target.id]: event.target.value}, this.createConfigList);
   }
 
-  handleSubmit(event) {
+  createConfigList() {
+    var configlist = [];
 
-    event.preventDefault();
+    if (this.state.serial.length === 8) {
+      configlist.push(this.createConfigLine('w', this.state.serial));                     // Serial
+    }
+    configlist.push(this.createConfigLine('h', this.state.usehttps ? '1':'0'));           // HTTPS
+    configlist.push(this.createConfigLine('b', this.state.baseurl));                      // Append Base URL
+    configlist.push(this.createConfigLine('f', this.state.tagformat));          // Append version string
+    configlist.push(this.createConfigLine('t', this.state.smplintervalmins.toString()));  // Append the sample interval string
+    configlist.push(this.createConfigLine('u', this.state.minbatv.toString()))
+    configlist.push(this.createConfigLine('i', this.state.usehmac ? '1':'0'));            // Append use HMAC
+    if (this.state.usehmac && (this.state.secretkey.length === 16)) {
+      // Append secret key
+      configlist.push(this.createConfigLine('s', this.state.secretkey));                  // Append secret key
+    }
+
+    this.setState({configlist: configlist});
+  }
+
+  createConfigLine(key, value) {
+    var cline = '<' + key + ':' + value + '>';
+    return cline;
   }
 
   render() {
       const error = this.state.error;
+      var configlistcr = "";
+      if (this.state.configlist) {
+          configlistcr = this.state.configlist.map((item, index) => <p key={index}>{item}</p>);
+      }
       return (
           <div>
+          <div className="block">
             <ErrorMessage error={error} handleDismiss={this.handleDismiss} />
             <form onSubmit={this.handleSubmit}>
             <BulmaField>
@@ -120,13 +140,16 @@ export class TagConfigForm extends React.Component {
                         <BulmaInput id="minbatv" type="text" value={this.state.minbatv || ""} changeHandler={this.handleChange} />
                     </BulmaControl>
                 </BulmaField>
-            <BulmaField>
-              <BulmaControl>
-                <BulmaSubmit value="Log in" />
-              </BulmaControl>
-            </BulmaField>
           </form>
           </div>
+          <div className="block">
+              <pre>
+                  <code>
+                      {configlistcr}
+                  </code>
+              </pre>
+          </div>
+      </div>
       );
   }
 }
