@@ -9,7 +9,7 @@ COPY reactapp/package.json ./
 COPY reactapp/package-lock.json ./
 RUN npm ci --silent
 #RUN npm install react-scripts@3.4.1 -g --silent
- reactapp/ ./
+COPY reactapp/ ./
 #RUN export PUBLIC_URL=https://f3.websensor.io/
 # start app
 #RUN npm run build

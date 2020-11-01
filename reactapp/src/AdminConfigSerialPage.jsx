@@ -4,6 +4,7 @@ import React from "react";
 import {GetAdminToken, getData, handleErrors, putData} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {TagConfigForm} from "./TagConfigForm";
+import {ConnectAndWrite} from "./webserial";
 import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, Section} from "./BasePage";
 
 class AdminConfigSerialPage extends React.Component {
@@ -13,6 +14,9 @@ class AdminConfigSerialPage extends React.Component {
     GetAdminToken.call(this);
 
     this.state = {error: false};
+
+    this.handleConfigChange = this.handleConfigChange.bind(this);
+    this.handleWriteClick = this.handleWriteClick.bind(this);
   }
 
   componentDidMount() {
@@ -34,21 +38,42 @@ class AdminConfigSerialPage extends React.Component {
         });
   }
 
+  handleConfigChange(configlist) {
+      this.setState({configlist: configlist});
+  }
+
+  handleWriteClick() {
+      ConnectAndWrite(this.state.configlist);
+  }
 
   render() {
       const tagid = this.props.match.params.id;
       const activetab = 'Configure (serial)';
       const error = this.state.error;
       const tag = this.state.tag;
+      var configlistcr = "";
       if (error) {
           if (error.code === 401) {
               return <RedirectToLogin error={error} />
           }
       }
+      if (this.state.configlist) {
+          configlistcr = this.state.configlist.map((item, index) => <p key={index}>{item}</p>);
+      }
       return (
           <AdminPage bc={<AdminConfigSerialBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
-                  <TagConfigForm tag={tag} />
+                  <TagConfigForm tag={tag} onConfigChange={this.handleConfigChange} />
+                  <div className="block">
+                      <pre>
+                          <code>
+                              {configlistcr}
+                          </code>
+                      </pre>
+                  </div>
+                  <div className="block">
+                      <button onClick={this.handleWriteClick} className="button">Write to Serial</button>
+                  </div>
               </Section>
           </AdminPage>);
 

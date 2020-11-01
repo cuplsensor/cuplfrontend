@@ -72,7 +72,7 @@ export class TagConfigForm extends React.Component {
       configlist.push(this.createConfigLine('s', this.state.secretkey));                  // Append secret key
     }
 
-    this.setState({configlist: configlist});
+    this.props.onConfigChange(configlist);
   }
 
   createConfigLine(key, value) {
@@ -82,12 +82,8 @@ export class TagConfigForm extends React.Component {
 
   render() {
       const error = this.state.error;
-      var configlistcr = "";
-      if (this.state.configlist) {
-          configlistcr = this.state.configlist.map((item, index) => <p key={index}>{item}</p>);
-      }
+
       return (
-          <div>
           <div className="block">
             <ErrorMessage error={error} handleDismiss={this.handleDismiss} />
             <form onSubmit={this.handleSubmit}>
@@ -142,14 +138,6 @@ export class TagConfigForm extends React.Component {
                 </BulmaField>
           </form>
           </div>
-          <div className="block">
-              <pre>
-                  <code>
-                      {configlistcr}
-                  </code>
-              </pre>
-          </div>
-      </div>
       );
   }
 }
