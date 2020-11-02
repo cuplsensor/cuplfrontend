@@ -38,7 +38,7 @@ export class DescriptionWidget extends React.Component {
           event.preventDefault();
       }
 
-      putData('https://b3.websensor.io/api/consumer/tag/' + this.props.tag.serial,
+      putData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + this.props.tag.serial,
         {'description': this.state.newdesc},
           {'Authorization': bearertoken}
         )

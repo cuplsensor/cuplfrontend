@@ -23,7 +23,7 @@ class AdminConfigSerialPage extends React.Component {
       const admintoken = this.admintoken;
       const tagid = this.props.match.params.id;
       const bearertoken = `Bearer ${admintoken}`;
-      getData('https://b3.websensor.io/api/admin/tag/' + tagid,
+      getData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tag/' + tagid,
         {'Authorization': bearertoken }
         )
         .then(handleErrors)
@@ -48,7 +48,7 @@ class AdminConfigSerialPage extends React.Component {
 
   render() {
       const tagid = this.props.match.params.id;
-      const activetab = 'Configure (serial)';
+      const activetab = 'Serial';
       const error = this.state.error;
       const tag = this.state.tag;
       var configlistcr = "";
@@ -84,7 +84,8 @@ class AdminConfigSerialPage extends React.Component {
 function AdminConfigSerialBC(props) {
     return(
         <AdminTagBC tagid={props.tagid}>
-            <li className="is-active"><a href="#" aria-current="page">Configure (serial)</a></li>
+            <li className="is-active"><a href="#" aria-current="page">Configure</a></li>
+            <li className="is-active"><a href="#" aria-current="page">Serial</a></li>
         </AdminTagBC>
     );
 }

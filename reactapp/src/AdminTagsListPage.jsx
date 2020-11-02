@@ -16,13 +16,16 @@ function TagHeaderItem() {
             <th>Firmware Version</th>
             <th>Hardware Version</th>
             <th>Description</th>
-            <th>Created On (UTC)</th>
+            <th>Date Created</th>
+            <th>Time Created</th>
         </tr>
     );
 }
 
 function TagListItem(props) {
-      const timestamp = DateTime.fromISO(props.resource['timeregistered']).toLocaleString(DateTime.DATETIME_MED);
+      const dtUTC = DateTime.fromISO(props.resource['timeregistered']).setZone('utc');
+      const datestamp = dtUTC.toLocaleString(DateTime.DATE_SHORT);
+      const timestamp = dtUTC.toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET);
       return (
         <tr>
             <td><Link to={"/admin/tag/" + props.resource['id']}>{props.resource['id']}</Link></td>
@@ -31,6 +34,7 @@ function TagListItem(props) {
             <td>{props.resource['fwversion']}</td>
             <td>{props.resource['hwversion']}</td>
             <td>{props.resource['description']}</td>
+            <td>{datestamp}</td>
             <td>{timestamp}</td>
         </tr>
       );
@@ -58,7 +62,7 @@ class AdminTagsList extends React.Component {
 
   handleSubmit(event) {
       const bearertoken = `Bearer ${this.admintoken}`;
-      postData('https://b3.websensor.io/api/admin/tags',
+      postData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tags',
         {},
         {'Authorization': bearertoken })
         .then(handleErrors)
@@ -89,7 +93,7 @@ class AdminTagsList extends React.Component {
                 {...this.props}
                 ListItem={TagListItem}
                 HeaderItem={TagHeaderItem}
-                url='https://b3.websensor.io/api/admin/tags'
+                url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tags'}
             />
             <br/>
             <form onSubmit={this.handleSubmit}>

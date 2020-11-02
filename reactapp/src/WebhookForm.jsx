@@ -35,7 +35,7 @@ export function WebhookForm(props) {
 
 function CreatedOn(props) {
     if (props.created_on) {
-        const timestamp = DateTime.fromISO(props.created_on).toLocaleString(DateTime.DATETIME_MED);
+        const timestamp = DateTime.fromISO(props.created_on).toLocaleString(DateTime.DATETIME_FULL);
         return (
             <BulmaField>
               <BulmaControl>

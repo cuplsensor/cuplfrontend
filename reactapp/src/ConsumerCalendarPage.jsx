@@ -104,7 +104,7 @@ class ConsumerCalendarPage extends React.Component {
 
   componentDidMount() {
       if (this.state.tag == null) {
-        getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
+        getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + this.props.serial,
         )
         .then(handleErrors)
         .then(response => response.json())

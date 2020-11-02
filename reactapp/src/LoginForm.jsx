@@ -52,7 +52,7 @@ class LoginForm extends React.Component {
   }
 
   handleSubmit(event) {
-    postData('https://b3.websensor.io/api/admin/token',
+    postData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/token',
         {'client_id': this.state.client_id, 'client_secret': this.state.client_secret})
         .then(handleErrors)
         .then(response => response.json())

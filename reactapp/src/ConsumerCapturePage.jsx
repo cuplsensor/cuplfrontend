@@ -24,7 +24,7 @@ class ConsumerCapturePage extends React.Component {
 
   componentDidMount() {
       if (this.state.capture == null) {
-        getData('https://b3.websensor.io/api/consumer/captures/' + this.props.id,
+        getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/captures/' + this.props.id,
         )
         .then(handleErrors)
         .then(response => response.json())

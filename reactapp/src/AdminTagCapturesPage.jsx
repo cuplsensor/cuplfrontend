@@ -22,7 +22,7 @@ export function AdminTagCapturesPage(props) {
                 {...props}
                 ListItem={TagCapturesListItem}
                 HeaderItem={TagCapturesHeaderItem}
-                url='https://b3.websensor.io/api/admin/captures'
+                url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/captures'}
             />
           </AdminPage>
       );
@@ -32,16 +32,20 @@ function TagCapturesHeaderItem() {
     return(
         <tr>
             <th>ID</th>
-            <th>Timestamp (UTC)</th>
+            <th>Date Created</th>
+            <th>Time Created</th>
         </tr>
         );
 }
 
 function TagCapturesListItem(props) {
-      const timestamp = DateTime.fromISO(props.resource['timestamp']).toLocaleString(DateTime.DATETIME_MED);
+    const dtUTC = DateTime.fromISO(props.resource['timestamp']).setZone('utc');
+    const datestamp = dtUTC.toLocaleString(DateTime.DATE_SHORT);
+    const timestamp = dtUTC.toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET);
       return (
         <tr>
             <td>{props.resource['id']}</td>
+            <td>{datestamp}</td>
             <td>{timestamp}</td>
         </tr>
       );

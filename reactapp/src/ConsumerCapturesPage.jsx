@@ -35,7 +35,7 @@ class ConsumerCapturesPage extends React.Component {
 
   componentDidMount() {
       if (this.state.tag == null) {
-          getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial,
+          getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + this.props.serial,
           )
               .then(handleErrors)
               .then(response => response.json())
@@ -85,13 +85,13 @@ function CapturesHeaderItem() {
     return(
         <tr>
             <th>ID</th>
-            <th>Timestamp (UTC)</th>
+            <th>Timestamp</th>
         </tr>
         );
 }
 
 function CapturesListItem(props) {
-      const timestamp = DateTime.fromISO(props.resource['timestamp']).toLocaleString(DateTime.DATETIME_MED);
+    const timestamp = DateTime.fromISO(props.resource['timestamp']).toLocaleString(DateTime.DATETIME_FULL);
       return (
         <tr>
             <td><Link to={{pathname: `/tag/${props.resource.tagserial}/captures/${props.resource.id}`, state:{capture:props.resource}}}>{props.resource['id']}</Link></td>

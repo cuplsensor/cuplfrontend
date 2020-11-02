@@ -35,7 +35,7 @@ class AdminEditPage extends React.Component {
       const admintoken = this.admintoken;
       const tagid = this.props.match.params.id;
       const bearertoken = `Bearer ${admintoken}`;
-      getData('https://b3.websensor.io/api/admin/tag/' + tagid,
+      getData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tag/' + tagid,
         {'Authorization': bearertoken }
         )
         .then(handleErrors)
@@ -57,7 +57,7 @@ class AdminEditPage extends React.Component {
       if (event) {
           event.preventDefault();
       }
-      putData('https://b3.websensor.io/api/admin/tag/' + tagid,
+      putData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tag/' + tagid,
         {'fwversion': this.state.tag.fwversion,
               'hwversion': this.state.tag.hwversion,
               'description': this.state.tag.description},

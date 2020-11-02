@@ -141,12 +141,14 @@ export function MenuListElement(props) {
         return (
           <li>
               <a className="is-active" href={props.url}>{props.name}</a>
+              {props.children}
           </li>
         );
     } else {
         return (
             <li>
                 <a href={props.url}>{props.name}</a>
+                {props.children}
             </li>
         );
     }

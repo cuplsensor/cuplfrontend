@@ -237,7 +237,7 @@ export function getLatestSample(samples_url) {
 }
 
 export function getTag(serial, withLatestCapture, withLatestSample) {
-  getData('https://b3.websensor.io/api/consumer/tag/' + serial,
+  getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + serial,
     )
     .then(handleErrors)
     .then(response => response.json())

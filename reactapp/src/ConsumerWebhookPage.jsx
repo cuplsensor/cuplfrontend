@@ -21,7 +21,7 @@ class ConsumerWebhookPage extends React.Component {
   componentDidMount() {
       const tagtoken = getCookie('tagtoken_' + this.props.serial);
       const bearertoken = `Bearer ${tagtoken}`;
-      getData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial + '/webhook',
+      getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + this.props.serial + '/webhook',
           {'Authorization': bearertoken}
         )
         .then(handleErrors)
@@ -77,7 +77,7 @@ class ConsumerWebhookPage extends React.Component {
           data['wh_secretkey'] = this.state.webhook.wh_secretkey;
       }
 
-      postData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial + '/webhook',
+      postData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + this.props.serial + '/webhook',
                     data,
           {'Authorization': bearertoken}
         )
@@ -111,7 +111,7 @@ class ConsumerWebhookPage extends React.Component {
         const tagtoken = getCookie('tagtoken_' + this.props.serial);
         const bearertoken = `Bearer ${tagtoken}`;
 
-        deleteData('https://b3.websensor.io/api/consumer/tag/' + this.props.serial + '/webhook',
+        deleteData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + this.props.serial + '/webhook',
               {'Authorization': bearertoken}
             )
             .then(handleErrors)

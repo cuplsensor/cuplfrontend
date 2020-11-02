@@ -12,7 +12,7 @@ class ConsumerRandomTagPage extends React.Component {
   }
 
   componentDidMount() {
-    getData('https://b3.websensor.io/api/consumer/random/tag',
+    getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/random/tag',
         )
         .then(handleErrors)
         .then(response => response.json())

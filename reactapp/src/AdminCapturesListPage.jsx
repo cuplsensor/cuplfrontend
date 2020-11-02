@@ -20,7 +20,7 @@ export function AdminCapturesListPage(props) {
                 {...props}
                 ListItem={CapturesListItem}
                 HeaderItem={CapturesHeaderItem}
-                url='https://b3.websensor.io/api/admin/captures'
+                url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/captures'}
             />
           </AdminPage>
       );
@@ -31,17 +31,21 @@ function CapturesHeaderItem() {
         <tr>
             <th>ID</th>
             <th>Parent Tag</th>
-            <th>Timestamp (UTC)</th>
+            <th>Date Created</th>
+            <th>Time Created</th>
         </tr>
         );
 }
 
 function CapturesListItem(props) {
-      const timestamp = DateTime.fromISO(props.resource['timestamp']).toLocaleString(DateTime.DATETIME_MED);
+      const dtUTC = DateTime.fromISO(props.resource['timestamp']).setZone('utc');
+      const datestamp = dtUTC.toLocaleString(DateTime.DATE_SHORT);
+      const timestamp = dtUTC.toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET);
       return (
         <tr>
             <td>{props.resource['id']}</td>
             <td><Link to={"/admin/tag/" + props.resource['parent_tag']}>{props.resource['parent_tag']}</Link></td>
+            <td>{datestamp}</td>
             <td>{timestamp}</td>
         </tr>
       );

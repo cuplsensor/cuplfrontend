@@ -76,7 +76,7 @@ export function CaptureErrorMessage(props) {
           <ErrorMessage error={error}/>
         );
     }
-    else if ((error.code === 404) && (error.url === 'https://b3.websensor.io/api/consumer/captures/' + props.id)) {
+    else if ((error.code === 404) && (error.url === process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/captures/' + props.id)) {
         return (
             <Redirect to={`/error/404/capture/${props.id}`} />
         );
@@ -94,7 +94,7 @@ export function TagErrorMessage(props) {
           <ErrorMessage error={error} handleDismiss={props.handleDismiss} />
         );
     }
-    else if ((error.code === 404) && (error.url === 'https://b3.websensor.io/api/consumer/tag/' + props.serial)) {
+    else if ((error.code === 404) && (error.url === process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/tag/' + props.serial)) {
         return (
             <Redirect to={`/error/404/tag/${props.serial}`} />
         );

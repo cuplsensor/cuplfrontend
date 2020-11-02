@@ -19,7 +19,7 @@ export function AdminWebhooksListPage(props) {
                 {...props}
                 ListItem={WebhooksListItem}
                 HeaderItem={WebhooksHeaderItem}
-                url='https://b3.websensor.io/api/admin/webhooks'
+                url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/webhooks'}
             />
           </AdminPage>
       );
@@ -39,7 +39,7 @@ function WebhooksHeaderItem() {
 }
 
 function WebhooksListItem(props) {
-      const timestamp = DateTime.fromISO(props.resource['created_on']).toLocaleString(DateTime.DATETIME_MED);
+    const timestamp = DateTime.fromISO(props.resource['created_on']).setZone('utc').toLocaleString(DateTime.DATETIME_FULL);
       return (
         <tr>
             <td><Link to={"/admin/tag/" + props.resource['tag_id'] + "/webhook"}>{props.resource['id']}</Link></td>

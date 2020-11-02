@@ -34,7 +34,7 @@ class AdminWebhookPage extends React.Component {
       const admintoken = this.admintoken;
       const tagid = this.props.match.params.id;
       const bearertoken = `Bearer ${admintoken}`;
-      getData('https://b3.websensor.io/api/admin/tag/' + tagid,
+      getData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tag/' + tagid,
         {'Authorization': bearertoken }
         )
         .then(handleErrors)
@@ -68,7 +68,7 @@ class AdminWebhookPage extends React.Component {
         const admintoken = this.admintoken;
         const bearertoken = `Bearer ${admintoken}`;
         const webhook_id = this.state.tag.webhook.id;
-        deleteData('https://b3.websensor.io/api/admin/webhook/' + webhook_id,
+        deleteData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/webhook/' + webhook_id,
               {'Authorization': bearertoken}
             )
             .then(handleErrors)
@@ -96,7 +96,7 @@ class AdminWebhookPage extends React.Component {
 
       console.log(this.state.tag);
 
-      postData('https://b3.websensor.io/api/admin/webhooks',
+      postData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/webhooks',
                     data,
           {'Authorization': bearertoken}
         )

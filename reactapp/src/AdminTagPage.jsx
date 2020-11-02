@@ -22,14 +22,25 @@ export function AdminTagMenu(props) {
             <ul className="menu-list">
                 <MenuListElement name="Edit" url={'/admin/tag/' + props.tagid + '/edit'} active={props.activetab}/>
                 <MenuListElement name="Program" url={'/admin/tag/' + props.tagid + '/program'} active={props.activetab}/>
-                <MenuListElement name="Configure (serial)" url={'/admin/tag/' + props.tagid + '/configure/serial'} active={props.activetab}/>
-                <MenuListElement name="Configure (NFC)" url="/admin/captures" active={props.activetab}/>
+                <MenuListElement name="Configure" url={'/admin/tag/' + props.tagid + '/configure'} active={''} children={<AdminConfigSubMenu name="Configure" tagid={props.tagid} activetab={props.activetab}/>} />
                 <MenuListElement name="Simulate" url={'/admin/tag/' + props.tagid + '/simulate'} active={props.activetab}/>
                 <MenuListElement name="Captures" url={'/admin/tag/' + props.tagid + '/captures'} active={props.activetab}/>
                 <MenuListElement name="Webhook" url={'/admin/tag/' + props.tagid + '/webhook'} active={props.activetab}/>
             </ul>
         </div>
     );
+}
+
+function AdminConfigSubMenu(props) {
+    const isHidden = !((props.activetab.toLowerCase() === "serial") || (props.activetab.toLowerCase() === "nfc"));
+    return (
+        <div className={isHidden ? "is-hidden" : "is-block"}>
+            <ul>
+                <MenuListElement name="Serial" url={'/admin/tag/' + props.tagid + '/configure/serial'} active={props.activetab}/>
+                <MenuListElement name="NFC" url={'/admin/tag/' + props.tagid + '/configure/nfc'} active={props.activetab}/>
+            </ul>
+        </div>
+    )
 }
 
 

@@ -24,7 +24,7 @@ class HomePage extends React.Component {
 
       if (serial && statusb64 && timeintb64 && vfmtb64) {
           this.setState({loading: true, serial: serial});
-          postData('https://b3.websensor.io/api/consumer/captures',
+          postData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/captures',
             {'serial': serial,
                   'statusb64': statusb64,
                   'timeintb64': timeintb64,

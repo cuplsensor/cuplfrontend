@@ -80,6 +80,9 @@ function App() {
           <Route exact path="/admin/tag/:id/edit">
             <AdminEditPage />
           </Route>
+          <Route exact path="/admin/tag/:id/configure" render={props => (
+              <Redirect to={`/admin/tag/${props.match.params.id}/configure/serial`} />
+          )} />
           <Route exact path="/admin/tag/:id/configure/serial">
             <AdminConfigSerialPage />
           </Route>
