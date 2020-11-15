@@ -61,6 +61,7 @@ class ConsumerTagPage extends React.Component {
       var latest_batvoltagemv = "-- mV";
       var calendar_link = '#';
       var webhook_link = '#';
+      var battery_link = '#';
 
       if (tag) {
          if (tag.serial !== this.props.serial) {
@@ -78,6 +79,7 @@ class ConsumerTagPage extends React.Component {
           latest_batvoltagemv = latest_capture.batvoltagemv + " mV";
           calendar_link = "/tag/"+this.props.serial+"/calendar/day/"+latest_capture.timestamp;
           webhook_link = "/tag/"+this.props.serial+"/webhook";
+          battery_link = "/tag/"+this.props.serial+"/battery";
       }
 
       return (
@@ -110,7 +112,9 @@ class ConsumerTagPage extends React.Component {
                           <NavPanel
                               title="Battery"
                               subtitle={latest_batvoltagemv}
-                              iconpath={battery}/>
+                              iconpath={battery}
+                              link={battery_link}
+                          />
                           <NavPanel
                               title="Configure"
                               subtitle="WebNFC"

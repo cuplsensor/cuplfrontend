@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^7.2.1",
     "chart.js": "^2.9.3",
     "chartjs-adapter-luxon": "^0.2.2",
+    "chartjs-plugin-annotation": "^0.5.7",
     "luxon": "^1.25.0",
     "parse-link-header": "^1.0.1",
     "qrcode.react": "^1.0.0",

@@ -19,6 +19,7 @@ import AdminSimulatePage from "./AdminSimulatePage";
 import HomePage from "./HomePage";
 import ConsumerTagPage from "./ConsumerTagPage";
 import ConsumerWebhookPage from "./ConsumerWebhookPage";
+import ConsumerBatteryPage from "./ConsumerBatteryPage";
 import ConsumerCapturesPage from "./ConsumerCapturesPage";
 import ConsumerRandomTagPage from "./ConsumerRandomTagPage";
 import ConsumerCapturePage from "./ConsumerCapturePage";
@@ -48,6 +49,9 @@ function App() {
           } />
           <Route exact path="/tag/:serial/captures" render={props =>
             <ConsumerCapturesPage serial={props.match.params.serial}/>
+          } />
+          <Route exact path="/tag/:serial/battery" render={props =>
+            <ConsumerBatteryPage serial={props.match.params.serial}/>
           } />
           <Route exact path="/tag/:serial/captures/:id" render={props =>
             <ConsumerCapturePage serial={props.match.params.serial} id={props.match.params.id}/>

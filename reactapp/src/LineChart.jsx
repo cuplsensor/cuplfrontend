@@ -2,6 +2,10 @@ import React from "react";
 import {DateTime} from "luxon";
 import {Chart} from "chart.js";
 import 'chartjs-adapter-luxon';
+// https://stackoverflow.com/questions/42691873/draw-horizontal-line-on-chart-in-chart-js-on-v2
+import * as ChartAnnotation from 'chartjs-plugin-annotation';
+
+Chart.plugins.register([ChartAnnotation]); // Global
 
 export class LineChart extends React.Component {
     constructor(props) {
@@ -72,7 +76,7 @@ export class LineChart extends React.Component {
                                     position: 'right',
                                     display: true
                                 }],
-                            }
+                            },
                           },
                         data: {
                               labels: this.props.data.map(d => d.time),
@@ -105,5 +109,89 @@ export class LineChart extends React.Component {
 
     render() {
         return <canvas ref={this.chartRef} />;
+    }
+}
+
+export class BatteryLineChart extends LineChart {
+    constructor(props) {
+        super(props);
+    }
+
+    componentDidUpdate() {
+        const xmin = this.props.xmin || null;
+        const xmax = this.props.xmax || null;
+
+        if (xmin !== null) {
+            this.myChart.options.scales.xAxes[0].ticks.min = xmin;
+        }
+
+        if (xmax !== null) {
+            this.myChart.options.scales.xAxes[0].ticks.max = xmax;
+        }
+
+        this.myChart.data.labels = this.props.data.map(d => d.time);
+        this.myChart.data.datasets[0].data = this.props.data.map(d => d.batvoltagemv);
+        this.myChart.update();
+    }
+
+    componentDidMount() {
+        this.myChart = new Chart(this.chartRef.current, {
+                          type: 'line',
+                          options: {
+                             tooltips : {
+                                mode : 'index', intersect: false,
+                            },
+                            scales: {
+                              xAxes: [
+                                {
+                                  type: 'time',
+                                  time: {
+                                    unit: 'day',
+                                    parser: function (dateTimeIn) {
+                                        return this.parserCallback(dateTimeIn);
+                                    }.bind(this)
+                                  }
+                                }
+                              ],
+                                yAxes: [{
+                                    id: 'batAxis',
+                                    type: 'linear',
+                                    position: 'left',
+                                    ticks: {
+                                        min: 1800
+                                    }
+                                }],
+                            },
+                            annotation: {
+                              annotations: [{
+                                type: 'line',
+                                mode: 'horizontal',
+                                scaleID: 'batAxis',
+                                value: 2200,
+                                borderColor: 'red',
+                                borderWidth: 1,
+                                label: {
+                                  enabled: false,
+                                  content: 'Test label'
+                                }
+                              }]
+                            }
+                          },
+                        data: {
+                              labels: this.props.data.map(d => d.time),
+                                datasets: [{
+                                  label: 'Battery Voltage (mV)',
+                                  data: this.props.data.map(d => d.batvoltagemv),
+                                  fill: 'rgba(208, 170, 255, 0.75)',
+                                  backgroundColor: "rgba(208, 170, 255, 0.75)",
+                                  borderColor: "rgba(208, 170, 255, 1)",
+                                  pointBackgroundColor: "rgba(208, 170, 255, 1)",
+                                  pointRadius: 3,
+                                  borderWidth: 1,
+                                  lineTension: 0,
+                                  yAxisID: 'batAxis',
+                                }]
+                        }
+                    });
     }
 }

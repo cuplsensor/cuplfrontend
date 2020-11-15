@@ -30,6 +30,8 @@ export class ResourceTable extends React.Component {
 
     this.state = {
             redirect: false,
+            resources: [],
+            error: false
     };
 
     GetAdminToken.call(this);
@@ -41,13 +43,16 @@ export class ResourceTable extends React.Component {
 
       getData(this.props.url,
         this.props.extraheaders,
-          {'per_page': 10, 'page': page}
+          {'per_page': (this.props.per_page || 10), 'page': page}
         )
         .then(handleErrors)
         .then(this.parsePages)
         .then(response => response.json())
         .then(json => {
             this.setState({resources: json});
+            if (this.props.resourceChangeCallback) {
+                this.props.resourceChangeCallback(json);
+            }
         },
         (error) => {
           this.setState({error: error});
@@ -61,11 +66,16 @@ export class ResourceTable extends React.Component {
       const prevExists = this.state.prevExists;
       const nextExists = this.state.nextExists;
       const listitem = this.props.listitem;
+      var showTable = true;
       const pages = this.state.pages;
       let resourceitems = [];
       for (const resource of resources) {
           resourceitems.push(<this.props.ListItem key={resource.id} resource={resource} />)
       }
+      if (this.props.showTable !== null) {
+          showTable = this.props.showTable;
+      }
+      const tableDisplay = showTable ? "block" : "none";
       if (error) {
           if (error.code ===401) {
               return <RedirectToLogin error={error} />
@@ -75,7 +85,7 @@ export class ResourceTable extends React.Component {
       return(
           <div>
               <ErrorMessage error={error} />
-            <table className="table">
+            <table className="table" style={{display:tableDisplay}}>
                 <thead>
                     <this.props.HeaderItem />
                 </thead>
