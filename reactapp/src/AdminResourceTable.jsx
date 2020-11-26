@@ -66,16 +66,16 @@ export class ResourceTable extends React.Component {
       const prevExists = this.state.prevExists;
       const nextExists = this.state.nextExists;
       const listitem = this.props.listitem;
-      var showTable = true;
+      var hideTable = false;
       const pages = this.state.pages;
       let resourceitems = [];
       for (const resource of resources) {
           resourceitems.push(<this.props.ListItem key={resource.id} resource={resource} />)
       }
-      if (this.props.showTable !== null) {
-          showTable = this.props.showTable;
+      if (this.props.hideTable) {
+          hideTable = this.props.hideTable;
       }
-      const tableDisplay = showTable ? "block" : "none";
+      const tableDisplay = hideTable ? "none" : "block";
       if (error) {
           if (error.code ===401) {
               return <RedirectToLogin error={error} />

@@ -26,6 +26,8 @@ import ConsumerCapturePage from "./ConsumerCapturePage";
 import ConsumerCalendarPage from "./ConsumerCalendarPage";
 import {DateTime} from "luxon";
 import AdminConfigSerialPage from "./AdminConfigSerialPage";
+import AdminConfigNFCPage from "./AdminConfigNFCPage";
+import ConsumerConfigNFCPage from "./ConsumerConfigNFCPage";
 
 
 function App() {
@@ -52,6 +54,9 @@ function App() {
           } />
           <Route exact path="/tag/:serial/battery" render={props =>
             <ConsumerBatteryPage serial={props.match.params.serial}/>
+          } />
+          <Route exact path="/tag/:serial/configure" render={props =>
+            <ConsumerConfigNFCPage serial={props.match.params.serial}/>
           } />
           <Route exact path="/tag/:serial/captures/:id" render={props =>
             <ConsumerCapturePage serial={props.match.params.serial} id={props.match.params.id}/>
@@ -89,6 +94,9 @@ function App() {
           )} />
           <Route exact path="/admin/tag/:id/configure/serial">
             <AdminConfigSerialPage />
+          </Route>
+          <Route exact path="/admin/tag/:id/configure/nfc">
+            <AdminConfigNFCPage />
           </Route>
           <Route exact path="/admin/tag/:id/captures">
             <AdminTagCapturesPage />

@@ -62,6 +62,7 @@ class ConsumerTagPage extends React.Component {
       var calendar_link = '#';
       var webhook_link = '#';
       var battery_link = '#';
+      var configure_link = '#';
 
       if (tag) {
          if (tag.serial !== this.props.serial) {
@@ -80,6 +81,7 @@ class ConsumerTagPage extends React.Component {
           calendar_link = "/tag/"+this.props.serial+"/calendar/day/"+latest_capture.timestamp;
           webhook_link = "/tag/"+this.props.serial+"/webhook";
           battery_link = "/tag/"+this.props.serial+"/battery";
+          configure_link = "/tag/"+this.props.serial+"/configure";
       }
 
       return (
@@ -117,8 +119,10 @@ class ConsumerTagPage extends React.Component {
                           />
                           <NavPanel
                               title="Configure"
-                              subtitle="WebNFC"
-                              iconpath={cogs}/>
+                              subtitle="NFC"
+                              iconpath={cogs}
+                              link={configure_link}
+                          />
                       </div>
 
                   </div>

@@ -30,7 +30,7 @@ class ConsumerBatteryPage extends React.Component {
     }
 
     this.handleDismiss = handleDismiss.bind(this);
-    this.state = {'error': false, 'tag': tag, 'captures':[], 'showTable': false};
+    this.state = {'error': false, 'tag': tag, 'captures':[], 'hideTable': true};
     this.onCapturesChange = this.onCapturesChange.bind(this);
     this.toggleTable = this.toggleTable.bind(this);
   }
@@ -78,7 +78,7 @@ class ConsumerBatteryPage extends React.Component {
                                 HeaderItem={BatteryHeaderItem}
                                 url={this.state.tag.captures_url}
                                 per_page={25}
-                                showTable={this.state.showTable}
+                                hideTable={this.state.hideTable}
                                 resourceChangeCallback={this.onCapturesChange}
                           />
                       </div>
@@ -91,17 +91,17 @@ class ConsumerBatteryPage extends React.Component {
   }
 
   toggleTable() {
-      this.setState({showTable: !this.state.showTable});
+      this.setState({hideTable: !this.state.hideTable});
   }
 
   tableSwitch() {
-      if (this.state.showTable) {
+      if (this.state.hideTable) {
           return(
-            <a href='#' onClick={this.toggleTable}>Hide table</a>
+            <a href='#' onClick={this.toggleTable}>Show table</a>
           );
       } else {
           return(
-            <a href='#' onClick={this.toggleTable}>Show table</a>
+            <a href='#' onClick={this.toggleTable}>Hide table</a>
           );
       }
   }

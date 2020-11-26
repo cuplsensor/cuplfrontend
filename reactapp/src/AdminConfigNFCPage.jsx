@@ -1,22 +1,20 @@
 import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
-import {withRouter} from "react-router-dom";
+import {useLocation, withRouter} from "react-router-dom";
 import React from "react";
 import {GetAdminToken, getData, handleErrors, putData} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {TagConfigForm} from "./TagConfigForm";
-import {ConnectAndWrite} from "./webserial";
 import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, Section} from "./BasePage";
+import {ConsumerBasePage} from "./ConsumerPage";
+import {ConfigNFC} from "./ConfigNFC";
 
-class AdminConfigSerialPage extends React.Component {
+class AdminConfigNFCPage extends React.Component {
   constructor(props) {
     super(props);
 
     GetAdminToken.call(this);
 
     this.state = {error: false};
-
-    this.handleConfigChange = this.handleConfigChange.bind(this);
-    this.handleWriteClick = this.handleWriteClick.bind(this);
   }
 
   componentDidMount() {
@@ -38,42 +36,22 @@ class AdminConfigSerialPage extends React.Component {
         });
   }
 
-  handleConfigChange(configlist) {
-      this.setState({configlist: configlist});
-  }
-
-  handleWriteClick() {
-      ConnectAndWrite(this.state.configlist);
-  }
-
   render() {
       const tagid = this.props.match.params.id;
-      const activetab = 'Serial';
+      const activetab = 'NFC';
       const error = this.state.error;
       const tag = this.state.tag;
-      var configlistcr = "";
+
       if (error) {
           if (error.code === 401) {
               return <RedirectToLogin error={error} />
           }
       }
-      if (this.state.configlist) {
-          configlistcr = this.state.configlist.map((item, index) => <p key={index}>{item}</p>);
-      }
+
       return (
-          <AdminPage bc={<AdminConfigSerialBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
+          <AdminPage bc={<AdminConfigNFC_BC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
-                  <TagConfigForm tag={tag} onConfigChange={this.handleConfigChange} admin={true}/>
-                  <div className="block">
-                      <pre>
-                          <code>
-                              {configlistcr}
-                          </code>
-                      </pre>
-                  </div>
-                  <div className="block">
-                      <button onClick={this.handleWriteClick} className="button">Write to Serial</button>
-                  </div>
+                    <ConfigNFC tag={this.state.tag} admin={true} />
               </Section>
           </AdminPage>);
 
@@ -81,14 +59,14 @@ class AdminConfigSerialPage extends React.Component {
 }
 
 
-function AdminConfigSerialBC(props) {
+function AdminConfigNFC_BC(props) {
     return(
         <AdminTagBC tagid={props.tagid}>
             <li className="is-active"><a href="#" aria-current="page">Configure</a></li>
-            <li className="is-active"><a href="#" aria-current="page">Serial</a></li>
+            <li className="is-active"><a href="#" aria-current="page">NFC</a></li>
         </AdminTagBC>
     );
 }
 
 
-export default withRouter(AdminConfigSerialPage);
+export default withRouter(AdminConfigNFCPage);
