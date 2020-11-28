@@ -163,6 +163,12 @@ a {
   color:#1EAEDB;
 }
 
+
+
+.select.bluearrow:after {
+  border-color: #1EAEDB !important;
+}
+
 .flex {
   display: flex;
   align-items: baseline;

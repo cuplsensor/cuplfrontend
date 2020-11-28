@@ -3,12 +3,16 @@ import {Section} from "./BasePage";
 import {HistorySubject} from "./star";
 import {getTag} from "./api";
 import starfill from './star-fill.svg'; // Tell webpack this JS file uses this image
-import starempty from './star-empty.svg'; // Tell webpack this JS file uses this image
-
-
+import starempty from './star-empty.svg';
+import TempUnitContext from "./TempUnitContext"; // Tell webpack this JS file uses this image
 
 
 export class RecentStarred extends React.Component {
+    // Assign a contextType to read the current theme context.
+    // React will find the closest theme Provider above and use its value.
+    // In this example, the current theme is "dark".
+    static contextType = TempUnitContext;
+
     constructor(props) {
         super(props);
 
@@ -41,6 +45,7 @@ export class RecentStarred extends React.Component {
     render() {
         const starredarr = this.state.starred;
         const recentarr  = this.state.recents;
+        console.log(this.context);
         return(
             <table className="table">
                 <thead>

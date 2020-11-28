@@ -1,9 +1,8 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
-import {getData, postData, handleErrors, setCookie} from "./api.js";
+import {postData, handleErrors, setCookie} from "./api.js";
 import {RecentStarred} from "./RecentStarred";
 import {ConsumerBasePage} from "./ConsumerPage";
-
 
 
 class HomePage extends React.Component {
@@ -47,12 +46,12 @@ class HomePage extends React.Component {
       }
   }
 
-
-
   render() {
       const error = this.state.error;
       const capture = this.state.capture;
       const loading = this.state.loading;
+
+
       if (capture) {
           const tagserial = capture['tagserial'];
           if (tagserial !== undefined) {
