@@ -1,5 +1,7 @@
 import React from "react";
 import {DateTime} from "luxon";
+import TempUnitContext from "./TempUnitContext";
+import {tempWithUnitStr} from "./BasePage";
 
 function groupSamplesByDay(samples) {
     // Assumes that all samples are already in chronological order.
@@ -60,7 +62,7 @@ function DayTable(props) {
             </tr>
             <tr>
                 <th>Time</th>
-                <th>Temp °C</th>
+                <th><TemperatureHeading /></th>
                 <th>RH %</th>
             </tr>
         </thead>
@@ -72,11 +74,50 @@ function DayTable(props) {
 }
 
 function TableRow(props) {
+    var rh_str = "--";
+
+    if (props.rh) {
+        rh_str = parseFloat(props.rh).toFixed(2);
+    }
+
     return (
       <tr>
           <td>{props.time}</td>
-          <td>{parseFloat(props.temp).toFixed(2)}</td>
-          <td>{parseFloat(props.rh).toFixed(2)}</td>
+          <td><TemperatureText tempdegc_str={props.temp}/></td>
+          <td>{rh_str}</td>
       </tr>
     );
+}
+
+class TemperatureHeading extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    static contextType = TempUnitContext;
+
+    render() {
+        const temp_unit = this.context.unit;
+
+        return "Temp °" + temp_unit;
+    }
+}
+
+class TemperatureText extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    static contextType = TempUnitContext;
+
+    render() {
+        const temp_unit = this.context.unit;
+        var tempdegc_str = null;
+
+        if (this.props.tempdegc_str) {
+            tempdegc_str = this.props.tempdegc_str;
+        }
+
+        return tempWithUnitStr({tempdegc_str:tempdegc_str, unit:temp_unit, hideunit: true});
+    }
 }

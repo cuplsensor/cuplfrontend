@@ -2,6 +2,41 @@ import React from "react";
 import {Link, Redirect} from "react-router-dom";
 import logo from './logo.svg';
 
+export function tempConverted(tempdegc, unit) {
+    var tempdegc_flt;
+
+    if (typeof(tempdegc) == "string") {
+        tempdegc_flt = parseFloat(tempdegc);
+    } else {
+        tempdegc_flt = tempdegc;
+    }
+
+    var temp_flt;
+
+    if (unit === "F") {
+        temp_flt = (tempdegc_flt * 9/5) + 32;
+    } else {
+        temp_flt = tempdegc_flt;
+    }
+
+    return temp_flt;
+}
+
+
+export function tempWithUnitStr(props) {
+    const tempdegc_str = props.tempdegc_str;
+    const unit = props.unit;
+    const hideunit = props.hideunit || false;
+    var temp_str = "--";
+    const unitstr = hideunit ? "" : " °" + unit;
+
+    if (tempdegc_str) {
+        const temp_flt = tempConverted(tempdegc_str, unit);
+        temp_str = temp_flt.toFixed(2);
+    }
+
+    return temp_str + unitstr;
+}
 
 export function BulmaField(props) {
   return (

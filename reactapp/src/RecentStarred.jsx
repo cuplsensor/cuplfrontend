@@ -4,14 +4,15 @@ import {HistorySubject} from "./star";
 import {getTag} from "./api";
 import starfill from './star-fill.svg'; // Tell webpack this JS file uses this image
 import starempty from './star-empty.svg';
-import TempUnitContext from "./TempUnitContext"; // Tell webpack this JS file uses this image
+import {tempWithUnitStr} from "./BasePage";
+import TempUnitContext from "./TempUnitContext";
 
 
 export class RecentStarred extends React.Component {
     // Assign a contextType to read the current theme context.
     // React will find the closest theme Provider above and use its value.
     // In this example, the current theme is "dark".
-    static contextType = TempUnitContext;
+
 
     constructor(props) {
         super(props);
@@ -45,7 +46,6 @@ export class RecentStarred extends React.Component {
     render() {
         const starredarr = this.state.starred;
         const recentarr  = this.state.recents;
-        console.log(this.context);
         return(
             <table className="table">
                 <thead>
@@ -100,13 +100,16 @@ class TagTableRow extends React.Component {
         getTag.call(this, this.props.tagserial, false, true);
     }
 
+    static contextType = TempUnitContext;
+
     render() {
         const latest_sample = this.state.latest_sample;
-        var latest_temp = "-- °C";
+        const temp_unit = this.context.unit;
+        var latest_temp = tempWithUnitStr({tempdegc_str:null, unit:temp_unit});
         var latest_rh = "-- %";
         var description = ""
         if (latest_sample) {
-            latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
+            latest_temp = tempWithUnitStr({tempdegc_str:latest_sample['temp'], unit:temp_unit});
             if (latest_sample['rh'] !== null) {
               latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
             }

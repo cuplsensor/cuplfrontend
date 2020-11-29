@@ -138,7 +138,6 @@ class ConsumerCalendarPage extends React.Component {
                              tempcolor="rgba(220,100,94,1)"
                              temptitle="temperature"
                              rhcolor="rgba(153,226,255,1)"
-                             rhtitle="RH"
                              xmin={this.state.sEDates.startDate}
                              xmax={this.state.sEDates.endDate}
                   />

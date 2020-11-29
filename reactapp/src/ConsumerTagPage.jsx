@@ -1,6 +1,6 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
-import {handleDismiss, TagErrorMessage} from "./BasePage";
+import {tempWithUnitStr, handleDismiss, TagErrorMessage} from "./BasePage";
 import {getData, handleErrors, getTag} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {DescriptionWidget} from "./DescriptionWidget";
@@ -10,9 +10,7 @@ import tint from './tint-solid.svg';
 import battery from './battery-full-solid.svg';
 import webhooks from './webhooks.svg';
 import cogs from './cogs-solid.svg';
-
-
-
+import TempUnitContext from "./TempUnitContext";
 
 class ConsumerTagPage extends React.Component {
   constructor(props) {
@@ -56,7 +54,7 @@ class ConsumerTagPage extends React.Component {
       const latest_sample = this.state.latest_sample;
       const latest_capture = this.state.latest_capture || '';
       const tag = this.state.tag;
-      var latest_temp = "-- °C";
+      var latest_temp = null;
       var latest_rh = "-- %";
       var latest_batvoltagemv = "-- mV";
       var calendar_link = '#';
@@ -71,7 +69,7 @@ class ConsumerTagPage extends React.Component {
       }
 
       if (latest_sample) {
-          latest_temp = parseFloat(latest_sample['temp']).toFixed(2) + " °C";
+          latest_temp = latest_sample['temp'];
           if (latest_sample['rh'] !== null) {
               latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
           }
@@ -90,10 +88,8 @@ class ConsumerTagPage extends React.Component {
                   <TagErrorMessage error={this.state.error} serial={this.props.serial} handleDismiss={this.handleDismiss} />
                   <div className="columns">
                       <div className="column">
-                          <NavPanel
-                              title="Temperature"
-                              subtitle={latest_temp}
-                              iconpath={thermometer}
+                          <TemperatureNavPanel
+                              tempdegc_str={latest_temp}
                               link={calendar_link}
                           />
                           <NavPanel
@@ -135,6 +131,33 @@ class ConsumerTagPage extends React.Component {
           </ConsumerBasePage>
       );
   }
+}
+
+class TemperatureNavPanel extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    static contextType = TempUnitContext;
+
+    render() {
+        const temp_unit = this.context.unit;
+        const tempdegc_str = this.props.tempdegc_str;
+        var latest_temp = tempWithUnitStr({tempdegc_str:null, unit:temp_unit});
+
+        if (tempdegc_str) {
+            latest_temp = tempWithUnitStr({tempdegc_str:tempdegc_str, unit:temp_unit});
+        }
+
+        return (
+          <NavPanel
+          title="Temperature"
+          subtitle={latest_temp}
+          iconpath={thermometer}
+          link={this.props.link}
+          />
+        );
+    }
 }
 
 

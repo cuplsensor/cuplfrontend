@@ -20,8 +20,9 @@ export class ConsumerBasePage extends React.Component {
 
         // State also contains the updater function so it will
         // be passed down into the context provider
+        const defaultUnit = (navigator.language === "en-US") ? "F" : "C";
         this.state = {
-            unit: window.localStorage.getItem('TempUnit') || "C",
+            unit: window.localStorage.getItem('TempUnit') || defaultUnit,
             changeUnit: this.changeUnit,
         };
     }

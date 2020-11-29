@@ -4,6 +4,8 @@ import {Chart} from "chart.js";
 import 'chartjs-adapter-luxon';
 // https://stackoverflow.com/questions/42691873/draw-horizontal-line-on-chart-in-chart-js-on-v2
 import * as ChartAnnotation from 'chartjs-plugin-annotation';
+import TempUnitContext from "./TempUnitContext";
+import {tempConverted} from "./BasePage";
 
 Chart.plugins.register([ChartAnnotation]); // Global
 
@@ -14,9 +16,32 @@ export class LineChart extends React.Component {
         this.DateTime = DateTime;
     }
 
+    static contextType = TempUnitContext;
+
+    decimateData() {
+        var sampledata = this.props.data;
+        var datalength = sampledata.length;
+        const maxlength = 700;
+        const dlfactor = Math.round(datalength / maxlength);
+        console.log(dlfactor);
+
+
+
+        if (dlfactor > 1) {
+            var decimated = Array();
+            for (var i = 0; i < datalength; i=i+dlfactor) {
+              decimated.push(sampledata[i]);
+            }
+            sampledata = decimated;
+        }
+
+        return sampledata;
+    }
+
     componentDidUpdate() {
         const xmin = this.props.xmin || null;
         const xmax = this.props.xmax || null;
+        const unit = this.context.unit;
 
         if (xmin !== null) {
             this.myChart.options.scales.xAxes[0].ticks.min = xmin;
@@ -26,9 +51,29 @@ export class LineChart extends React.Component {
             this.myChart.options.scales.xAxes[0].ticks.max = xmax;
         }
 
-        this.myChart.data.labels = this.props.data.map(d => d.time);
-        this.myChart.data.datasets[0].data = this.props.data.map(d => d.temp);
-        this.myChart.data.datasets[1].data = this.props.data.map(d => d.rh);
+        const timerangems = this.myChart.options.scales.xAxes[0].ticks.max - this.myChart.options.scales.xAxes[0].ticks.min;
+        const timerange2days = 86400000 * 2;
+        var timeunit = "hour";
+        var pointradius = 3;
+
+        if (timerangems > timerange2days) {
+            timeunit = 'day';
+            pointradius = 3;
+        }
+
+        this.myChart.options.scales.xAxes[0].time.unit = timeunit;
+        this.myChart.data.datasets[0].pointRadius = pointradius;
+        this.myChart.data.datasets[1].pointRadius = pointradius;
+
+
+        const sampledata = this.decimateData();
+        this.myChart.data.labels = sampledata.map(d => d.time);
+        this.myChart.data.datasets[0].label = "Temp °"+unit;
+        this.myChart.options.scales.yAxes[0].scaleLabel.labelString = "Temp °"+unit;
+        this.myChart.data.datasets[0].data = sampledata.map(d => tempConverted(d.temp, unit));
+        this.myChart.data.datasets[1].data = sampledata.map(d => d.rh);
+
+        console.log();
         this.myChart.update();
     }
 
@@ -48,32 +93,66 @@ export class LineChart extends React.Component {
     }
 
     componentDidMount() {
+        const unit = this.context.unit;
+        const sampledata = this.decimateData();
+
         this.myChart = new Chart(this.chartRef.current, {
                           type: 'line',
                           options: {
+                              animation: false,
+                              hover: {
+                                  animationDuration: 0 // duration of animations when hovering an item
+                                },
+                              elements: {
+                              line: {
+                                tension: 0 // disables bezier curves
+                              }
+                            },
                              tooltips : {
                                 mode : 'index', intersect: false,
-                            },
+                                 callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        var label = data.datasets[tooltipItem.datasetIndex].label || '';
+
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += tooltipItem.yLabel.toFixed(2);
+                                        return label;
+                                    }
+                                 }
+                             },
                             scales: {
                               xAxes: [
                                 {
                                   type: 'time',
                                   time: {
-                                    unit: 'day',
                                     parser: function (dateTimeIn) {
                                         return this.parserCallback(dateTimeIn);
                                     }.bind(this)
-                                  }
+                                  },
+                                    ticks: {
+                                      maxTicksLimit: 8,
+                                    }
                                 }
                               ],
                                 yAxes: [{
                                     id: 'tempAxis',
                                     type: 'linear',
                                     position: 'left',
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "Temp °"+unit
+                                      },
                                 }, {
+
                                     id: 'rhAxis',
                                     type: 'linear',
                                     position: 'right',
+                                    scaleLabel: {
+                                        display: true,
+                                        labelString: "RH %"
+                                      },
                                     display: true
                                 }],
                             },
@@ -81,8 +160,8 @@ export class LineChart extends React.Component {
                         data: {
                               labels: this.props.data.map(d => d.time),
                                 datasets: [{
-                                  label: this.props.temptitle,
-                                  data: this.props.data.map(d => d.temp),
+                                  label: "Temp °"+unit,
+                                  data: sampledata.map(d => tempConverted(d.temp, unit)),
                                   fill: 'none',
                                   backgroundColor: this.props.tempcolor,
                                   pointRadius: 3,
@@ -92,8 +171,8 @@ export class LineChart extends React.Component {
                                   yAxisID: 'tempAxis',
                                 },
                                 {
-                                  label: this.props.rhtitle,
-                                  data: this.props.data.map(d => d.rh),
+                                  label: "RH %",
+                                  data: sampledata.map(d => d.rh),
                                   fill: 'none',
                                   backgroundColor: this.props.rhcolor,
                                   pointRadius: 3,
@@ -138,6 +217,7 @@ export class BatteryLineChart extends LineChart {
         this.myChart = new Chart(this.chartRef.current, {
                           type: 'line',
                           options: {
+                              animation: false,
                              tooltips : {
                                 mode : 'index', intersect: false,
                             },
