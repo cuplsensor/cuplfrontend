@@ -17,7 +17,7 @@ function groupSamplesByDay(samples) {
         const sampledt = sample.time;
         if (sampledt.day !== currentdt.day)
         {
-            samplesbyday.push({datestr: currentdt.toLocaleString(DateTime.DATE_FULL), samples: samplesforcurrentday});
+            samplesbyday.push({datestr: currentdt.toLocaleString(DateTime.DATE_HUGE), samples: samplesforcurrentday});
             samplesforcurrentday = [];
             currentdt = sampledt;
         }
@@ -26,7 +26,7 @@ function groupSamplesByDay(samples) {
     }
 
     if (samples[0]) {
-        samplesbyday.push({datestr: currentdt.toLocaleString(DateTime.DATE_FULL), samples: samplesforcurrentday});
+        samplesbyday.push({datestr: currentdt.toLocaleString(DateTime.DATE_HUGE), samples: samplesforcurrentday});
     }
     return samplesbyday;
 }

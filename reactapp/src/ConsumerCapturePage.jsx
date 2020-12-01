@@ -6,6 +6,8 @@ import {LineChart} from "./LineChart";
 import 'chartjs-adapter-luxon';
 import {CaptureErrorMessage, handleDismiss, Section} from "./BasePage";
 import {SamplesTable} from "./SamplesTable";
+import {DownloadCSVButton} from "./DownloadCSV";
+import {ShareLinkButton} from "./ShareLink";
 
 
 class ConsumerCapturePage extends React.Component {
@@ -49,6 +51,13 @@ class ConsumerCapturePage extends React.Component {
   render() {
       var tagserial = "";
       var capture_id = this.props.id;
+      const csvfilename = this.state.capture.tagserial
+          + "_"
+          + "capture"
+          + "_"
+          + capture_id
+          + ".csv";
+      const sharename = 'cuplTag ' + this.state.capture.tagserial;
 
       if (this.state.capture) {
           tagserial = this.state.capture.tagserial;
@@ -62,10 +71,12 @@ class ConsumerCapturePage extends React.Component {
                   rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
               </div>
               <div className="container">
+                  <div className="is-pulled-right">
+                      <DownloadCSVButton samples={this.state.samples} filename={csvfilename} />
+                      <ShareLinkButton name={sharename} />
+                  </div>
                  <SamplesTable samples={this.state.samples} />
               </div>
-
-
           </ConsumerBasePage>
       );
   }

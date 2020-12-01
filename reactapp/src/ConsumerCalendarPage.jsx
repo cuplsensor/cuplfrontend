@@ -10,6 +10,8 @@ import 'chartjs-adapter-luxon';
 import {handleDismiss, TagErrorMessage, Section} from "./BasePage";
 import angleLeft from "./angle-left-solid.svg";
 import angleRight from "./angle-right-solid.svg";
+import {DownloadCSVButton} from "./DownloadCSV";
+import {ShareLinkButton} from "./ShareLink";
 
 
 
@@ -121,6 +123,17 @@ class ConsumerCalendarPage extends React.Component {
 
   render() {
       var tagserial = "";
+      const csvfilename = this.props.serial
+          + "_"
+          + this.state.range
+          + "_"
+          + this.state.date.year.toString()
+          + "-"
+          + this.state.date.month.toString()
+          + "-"
+          + this.state.date.day.toString()
+          + ".csv";
+      const sharename = 'cuplTag ' + this.props.serial;
 
       if (this.state.tag) {
           tagserial = this.state.tag.serial;
@@ -144,6 +157,10 @@ class ConsumerCalendarPage extends React.Component {
               </div>
               <section className="section pl-0">
                   <div className="container">
+                      <div className="is-pulled-right">
+                          <DownloadCSVButton samples={this.state.samples} filename={csvfilename} />
+                          <ShareLinkButton name={sharename} />
+                      </div>
                      <SamplesTable samples={this.state.samples} />
                   </div>
               </section>
