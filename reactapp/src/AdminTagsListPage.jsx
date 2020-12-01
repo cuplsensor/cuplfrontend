@@ -5,7 +5,7 @@ import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, ErrorMess
 import {Pagination, parsePages} from "./Pagination";
 import {postData, getData, handleErrors, GetAdminToken} from "./api";
 import {DateTime} from "luxon";
-import {AdminResourceTable} from "./AdminResourceTable";
+import {AdminResourceTable, ResourceTable} from "./AdminResourceTable";
 
 function TagHeaderItem() {
     return(
@@ -18,6 +18,7 @@ function TagHeaderItem() {
             <th>Description</th>
             <th>Date Created</th>
             <th>Time Created</th>
+            <th></th>
         </tr>
     );
 }
@@ -36,6 +37,7 @@ function TagListItem(props) {
             <td>{props.resource['description']}</td>
             <td>{datestamp}</td>
             <td>{timestamp}</td>
+            <td><a href="#" onClick={() => props.deleteFcn(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tag/' + props.resource['id'])}>Delete</a></td>
         </tr>
       );
   }
@@ -57,52 +59,21 @@ class AdminTagsList extends React.Component {
     };
 
     GetAdminToken.call(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
 
-  handleSubmit(event) {
-      const bearertoken = `Bearer ${this.admintoken}`;
-      postData(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tags',
-        {},
-        {'Authorization': bearertoken })
-        .then(handleErrors)
-        .then(response => response.json())
-        .then(json => {
-            this.componentDidMount();
-        },
-        (error) => {
-            if (error) {
-                this.setState({error: error});
-            }
 
-        });
-    event.preventDefault();
   }
 
   render() {
-      const error = this.state.error;
-      if (error) {
-          if (error.code ===401) {
-              return <RedirectToLogin error={error} />
-          }
-      }
-
       return(
           <AdminPage bc={<AdminTagsBC />} menu={<AdminMenu activetab='tags' />}>
             <AdminResourceTable
                 {...this.props}
                 ListItem={TagListItem}
                 HeaderItem={TagHeaderItem}
+                showAdd={true}
                 url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/tags'}
             />
-            <br/>
-            <form onSubmit={this.handleSubmit}>
-                <BulmaField>
-                  <BulmaControl>
-                    <BulmaSubmit value="Quick Add" />
-                  </BulmaControl>
-                </BulmaField>
-            </form>
+
           </AdminPage>
       );
   }

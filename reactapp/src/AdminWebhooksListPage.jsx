@@ -34,6 +34,7 @@ function WebhooksHeaderItem() {
             <th>Fields</th>
             <th>WH_Secretkey</th>
             <th>Created On (UTC)</th>
+            <th></th>
         </tr>
         );
 }
@@ -48,6 +49,7 @@ function WebhooksListItem(props) {
             <td>{props.resource['fields']}</td>
             <td>{props.resource['wh_secretkey']}</td>
             <td>{timestamp}</td>
+            <td><a href="#" onClick={() => props.deleteFcn(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/webhook/' + props.resource['id'])}>Delete</a></td>
         </tr>
       );
   }

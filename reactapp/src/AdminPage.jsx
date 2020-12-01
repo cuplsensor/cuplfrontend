@@ -2,6 +2,7 @@ import LoginForm from "./LoginForm";
 import {Footer, Header, Section} from "./BasePage";
 import React from "react";
 import {Link, Redirect, useLocation} from "react-router-dom";
+import {RemoveAdminToken} from "./api";
 
 export function AdminLogin() {
     return (
@@ -16,7 +17,7 @@ function AdminBasePage(props) {
     const bc = props.bc;
   return (
     <div>
-      <AdminHeader bc={bc} isLoggedIn={isLoggedIn} />
+      <AdminHeader bc={bc} isLoggedIn={isLoggedIn} logout={props.logout}/>
           <Section>
               {props.children}
           </Section>
@@ -28,7 +29,9 @@ function AdminBasePage(props) {
 export class AdminHeader extends React.Component{
     constructor(props) {
         super(props);
-        this.state = {burgerVisible: false};
+        this.state = {
+            burgerVisible: false,
+        };
 
         this.handleBurgerClick = this.handleBurgerClick.bind(this);
     }
@@ -40,6 +43,7 @@ export class AdminHeader extends React.Component{
 
     render() {
         const isLoggedIn = this.props.isLoggedIn;
+
         return (
         <Header bc={this.props.bc} burgerVisible={this.state.burgerVisible} burgerClickHandler={this.handleBurgerClick}>
             <div id="navbarBasicExample" className={this.state.burgerVisible ? "navbar-menu is-active" : "navbar-menu"}>
@@ -47,10 +51,7 @@ export class AdminHeader extends React.Component{
 
                 </div>
                 <div className="navbar-end">
-                  <div className="navbar-item">
-                      <Link className="button" to="/">Consumer</Link>
-                  </div>
-                    <AdminLogOutButton isLoggedIn={isLoggedIn} />
+                    <AdminLogOutButton isLoggedIn={isLoggedIn} logout={this.props.logout} />
                 </div>
             </div>
         </Header>
@@ -59,16 +60,22 @@ export class AdminHeader extends React.Component{
 
 }
 
-function AdminLogOutButton(props) {
-    const isLoggedIn = props.isLoggedIn;
-    if (isLoggedIn) {
-        return(
-            <div className="navbar-item">
-                <Link className="button" to="/admin/login">Log Out</Link>
-            </div>
-            );
-    } else {
-        return('');
+class AdminLogOutButton extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        const isLoggedIn = this.props.isLoggedIn;
+        if (isLoggedIn) {
+            return(
+                <div className="navbar-item">
+                    <a href="#" className="button" onClick={this.props.logout}>Log Out</a>
+                </div>
+                );
+        } else {
+            return('');
+        }
     }
 }
 
@@ -87,19 +94,38 @@ export function RedirectToLogin(props) {
     return ('');
 }
 
-export function AdminPage(props) {
+export class AdminPage extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {isLoggedIn: true};
+
+        this.logout = this.logout.bind(this);
+    }
+
+    logout() {
+        RemoveAdminToken();
+        this.setState({isLoggedIn: false});
+    }
+
+    render() {
+        if (this.state.isLoggedIn === false) {
+            return <Redirect to="/" />
+        }
         return(
-            <AdminBasePage bc={props.bc} isLoggedIn={true}>
+            <AdminBasePage bc={this.props.bc} isLoggedIn={this.state.isLoggedIn} logout={this.logout}>
                 <div className="columns">
                     <aside className="menu column is-2 is-fullheight">
-                        {props.menu}
+                        {this.props.menu}
                     </aside>
                     <div className="column is-10">
-                        {props.children}
+                        {this.props.children}
                     </div>
                 </div>
             </AdminBasePage>
         );
+    }
+
 }
 
 function AdminLoginBC(props) {

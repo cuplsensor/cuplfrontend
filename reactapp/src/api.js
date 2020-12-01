@@ -186,6 +186,11 @@ export async function getSamples(samples_url, extraparams, zone) {
     }
 }
 
+  export function RemoveAdminToken() {
+    const cookies = new Cookies();
+    cookies.remove('admintoken');
+}
+
 export function setCookie(name, value, minutes) {
   var expires = "";
   if (minutes) {

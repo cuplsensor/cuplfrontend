@@ -33,6 +33,7 @@ function CapturesHeaderItem() {
             <th>Parent Tag</th>
             <th>Date Created</th>
             <th>Time Created</th>
+            <th></th>
         </tr>
         );
 }
@@ -47,6 +48,7 @@ function CapturesListItem(props) {
             <td><Link to={"/admin/tag/" + props.resource['parent_tag']}>{props.resource['parent_tag']}</Link></td>
             <td>{datestamp}</td>
             <td>{timestamp}</td>
+            <td><a href="#" onClick={() => props.deleteFcn(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/capture/' + props.resource['id'])}>Delete</a></td>
         </tr>
       );
   }
