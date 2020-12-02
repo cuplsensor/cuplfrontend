@@ -1,7 +1,7 @@
 import React from "react";
 import {Redirect, Link, withRouter } from "react-router-dom";
 import {tempWithUnitStr, handleDismiss, TagErrorMessage} from "./BasePage";
-import {getData, handleErrors, getTag} from "./api.js";
+import {getData, handleErrors, getTag, getCookie} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {DescriptionWidget} from "./DescriptionWidget";
 import {DateTime} from 'luxon';
@@ -11,6 +11,7 @@ import battery from './battery-full-solid.svg';
 import webhooks from './webhooks.svg';
 import cogs from './cogs-solid.svg';
 import TempUnitContext from "./TempUnitContext";
+
 
 class ConsumerTagPage extends React.Component {
   constructor(props) {
@@ -54,6 +55,8 @@ class ConsumerTagPage extends React.Component {
       const latest_sample = this.state.latest_sample;
       const latest_capture = this.state.latest_capture || '';
       const tag = this.state.tag;
+      // Display extra elements if tagtoken is present
+      const tagtoken_exists = !!getCookie('tagtoken_' + this.props.serial);
       var latest_temp = null;
       var latest_rh = "-- %";
       var latest_batvoltagemv = "-- mV";
@@ -61,6 +64,7 @@ class ConsumerTagPage extends React.Component {
       var webhook_link = '#';
       var battery_link = '#';
       var configure_link = '#';
+      var empty_set = true;
 
       if (tag) {
          if (tag.serial !== this.props.serial) {
@@ -69,6 +73,7 @@ class ConsumerTagPage extends React.Component {
       }
 
       if (latest_sample) {
+          empty_set = false;
           latest_temp = latest_sample['temp'];
           if (latest_sample['rh'] !== null) {
               latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
@@ -91,18 +96,21 @@ class ConsumerTagPage extends React.Component {
                           <TemperatureNavPanel
                               tempdegc_str={latest_temp}
                               link={calendar_link}
+                              hide={empty_set}
                           />
                           <NavPanel
                               title="Humidity"
                               subtitle={latest_rh}
                               iconpath={tint}
                               link={calendar_link}
+                              hide={empty_set}
                           />
                           <NavPanel
                               title="Webhook"
                               subtitle=""
                               iconpath={webhooks}
                               link={webhook_link}
+                              hide={!tagtoken_exists}
                           />
                       </div>
 
@@ -112,12 +120,14 @@ class ConsumerTagPage extends React.Component {
                               subtitle={latest_batvoltagemv}
                               iconpath={battery}
                               link={battery_link}
+                              hide={empty_set}
                           />
                           <NavPanel
                               title="Configure"
                               subtitle="NFC"
                               iconpath={cogs}
                               link={configure_link}
+                              hide={!tagtoken_exists}
                           />
                       </div>
 
@@ -155,6 +165,7 @@ class TemperatureNavPanel extends React.Component {
           subtitle={latest_temp}
           iconpath={thermometer}
           link={this.props.link}
+          hide={this.props.hide}
           />
         );
     }
@@ -178,7 +189,8 @@ function LatestCaptureLink(props) {
 }
 
 function NavPanel(props) {
-    return (
+    if (!props.hide) {
+       return (
         <div className="tile box" >
                   <div className="tile is-child"
                        style={{backgroundImage: `url(${props.iconpath}`,
@@ -190,7 +202,11 @@ function NavPanel(props) {
                       </a>
                   </div>
         </div>
-    );
+        );
+    } else {
+        return "";
+    }
+
 }
 
 

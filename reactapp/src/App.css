@@ -147,6 +147,16 @@ a {
 	-moz-border-radius: 24px;
 }
 
+.serialColumn {
+  font-family: "Lucida Console";
+}
+
+.secretkeyColumn {
+  border-width:0px;
+  border:none;
+  font-family: "Lucida Console";
+}
+
 #searchplace {
   max-width:500px;
 }

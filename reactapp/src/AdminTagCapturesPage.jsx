@@ -22,6 +22,7 @@ export function AdminTagCapturesPage(props) {
                 {...props}
                 ListItem={TagCapturesListItem}
                 HeaderItem={TagCapturesHeaderItem}
+                extraparams={{'parent_tag': tagid}}
                 url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/captures'}
             />
           </AdminPage>
@@ -34,6 +35,7 @@ function TagCapturesHeaderItem() {
             <th>ID</th>
             <th>Date Created</th>
             <th>Time Created</th>
+            <th></th>
         </tr>
         );
 }
@@ -47,6 +49,7 @@ function TagCapturesListItem(props) {
             <td>{props.resource['id']}</td>
             <td>{datestamp}</td>
             <td>{timestamp}</td>
+            <td><a href="#" onClick={() => props.deleteFcn(process.env.REACT_APP_WSB_ORIGIN + '/api/admin/capture/' + props.resource['id'])}>Delete</a></td>
         </tr>
       );
   }

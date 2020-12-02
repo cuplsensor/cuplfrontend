@@ -25,10 +25,9 @@ export class ResourceTable extends React.Component {
 
   componentDidMount() {
       const page = new URLSearchParams(this.props.location.search).get("page") || 1;
-      getData(this.props.url,
-        this.state.extraheaders,
-          {'per_page': (this.props.per_page || 10), 'page': page}
-        )
+      const pageparams = {'per_page': (this.props.per_page || 10), 'page': page};
+      const params = Object.assign({}, pageparams, this.props.extraparams)
+      getData(this.props.url, this.state.extraheaders, params)
         .then(handleErrors)
         .then(this.parsePages)
         .then(response => response.json())
@@ -41,6 +40,10 @@ export class ResourceTable extends React.Component {
         (error) => {
           this.setState({error: error});
         });
+  }
+
+  headerItem() {
+      return <this.props.HeaderItem />;
   }
 
   resourceItems() {
@@ -64,6 +67,7 @@ export class ResourceTable extends React.Component {
       const listitem = this.props.listitem;
       var hideTable = false;
       const pages = this.state.pages;
+      const headerItem = this.headerItem();
       const resourceitems = this.resourceItems();
       const addbutton = this.addButton();
 
@@ -83,7 +87,7 @@ export class ResourceTable extends React.Component {
               <ErrorMessage error={error} />
             <table className="table" style={{display:tableDisplay}}>
                 <thead>
-                    <this.props.HeaderItem />
+                    {headerItem}
                 </thead>
                 <tbody>
                     {resourceitems}
@@ -110,11 +114,17 @@ export class AdminResourceTable extends ResourceTable {
             redirect: false,
             resources: [],
             extraheaders: extraheaders,
+            hideSecret: true,
             error: false
         };
 
         this.addResource = this.addResource.bind(this);
         this.deleteResource = this.deleteResource.bind(this);
+        this.toggleHideSecret = this.toggleHideSecret.bind(this);
+    }
+
+    toggleHideSecret() {
+        this.setState({hideSecret: !this.state.hideSecret});
     }
 
     addResource(event) {
@@ -146,11 +156,15 @@ export class AdminResourceTable extends ResourceTable {
       });
     }
 
+    headerItem() {
+      return <this.props.HeaderItem hideSecret={this.state.hideSecret} eyeClicked={this.toggleHideSecret} />;
+    }
+
     resourceItems() {
       const resources = this.state.resources || [];
       let resourceitems = [];
       for (const resource of resources) {
-          resourceitems.push(<this.props.ListItem key={resource.id} resource={resource} deleteFcn={this.deleteResource} />)
+          resourceitems.push(<this.props.ListItem key={resource.id} resource={resource} hideSecret={this.state.hideSecret} deleteFcn={this.deleteResource} />)
       }
       return resourceitems;
   }

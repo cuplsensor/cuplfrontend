@@ -143,7 +143,7 @@ export function AdminBC(props) {
     return (
       <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
         <ul>
-            <li><a href="#">Admin</a></li>
+            <li><a href="/admin/tags">Admin</a></li>
             {props.children}
         </ul>
       </nav>
