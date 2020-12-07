@@ -8,6 +8,7 @@ import {CaptureErrorMessage, handleDismiss, Section} from "./BasePage";
 import {SamplesTable} from "./SamplesTable";
 import {DownloadCSVButton} from "./DownloadCSV";
 import {ShareLinkButton} from "./ShareLink";
+import {ConsumerCaptureTable} from "./AdminCapturesListPage";
 
 
 class ConsumerCapturePage extends React.Component {
@@ -51,16 +52,18 @@ class ConsumerCapturePage extends React.Component {
   render() {
       var tagserial = "";
       var capture_id = this.props.id;
-      const csvfilename = this.state.capture.tagserial
+      var csvfilename = "";
+      var sharename = "";
+
+      if (this.state.capture) {
+          tagserial = this.state.capture.tagserial;
+          csvfilename = this.state.capture.tagserial
           + "_"
           + "capture"
           + "_"
           + capture_id
           + ".csv";
-      const sharename = 'cuplTag ' + this.state.capture.tagserial;
-
-      if (this.state.capture) {
-          tagserial = this.state.capture.tagserial;
+          sharename = 'cuplTag ' + this.state.capture.tagserial;
       }
 
       return (
@@ -70,12 +73,28 @@ class ConsumerCapturePage extends React.Component {
                   <LineChart data={this.state.samples} tempcolor="rgba(220,100,94,1)" temptitle="temperature"
                   rhcolor="rgba(153,226,255,1)" rhtitle="RH"/>
               </div>
-              <div className="container">
-                  <div className="is-pulled-right">
-                      <DownloadCSVButton samples={this.state.samples} filename={csvfilename} />
-                      <ShareLinkButton name={sharename} />
+              <div className="columns">
+                  <div className="column">
+                      <section className="section">
+                          <div className="container">
+                            <SamplesTable samples={this.state.samples} />
+                          </div>
+                      </section>
                   </div>
-                 <SamplesTable samples={this.state.samples} />
+                  <div className="column is-narrow">
+                      <section className="section">
+                          <div className="container">
+                              <DownloadCSVButton samples={this.state.samples} filename={csvfilename} />
+                              <ShareLinkButton name={sharename} />
+                          </div>
+                      </section>
+                      <section className="section">
+                          <div className="container">
+                            <ConsumerCaptureTable capture={this.state.capture} />
+                          </div>
+                      </section>
+                  </div>
+
               </div>
           </ConsumerBasePage>
       );
