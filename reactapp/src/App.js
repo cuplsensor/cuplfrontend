@@ -28,6 +28,7 @@ import {DateTime} from "luxon";
 import AdminConfigSerialPage from "./AdminConfigSerialPage";
 import AdminConfigNFCPage from "./AdminConfigNFCPage";
 import ConsumerConfigNFCPage from "./ConsumerConfigNFCPage";
+import ConsumerVersionPage from "./ConsumerVersionPage";
 
 
 function App() {
@@ -39,6 +40,9 @@ function App() {
         <Switch>
           <Route exact path="/">
             <HomePage />
+          </Route>
+          <Route exact path="/version">
+            <ConsumerVersionPage />
           </Route>
           <Route exact path="/random">
             <ConsumerRandomTagPage />

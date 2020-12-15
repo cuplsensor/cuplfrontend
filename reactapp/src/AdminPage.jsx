@@ -130,11 +130,9 @@ export class AdminPage extends React.Component {
 
 function AdminLoginBC(props) {
     return (
-      <nav className="breadcrumb is-left is-size-6" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="#">Log In</a></li>
-        </ul>
-      </nav>
+      <AdminBC>
+            <li className="is-active"><a href="#" aria-current="page">Log In</a></li>
+      </AdminBC>
     );
 }
 

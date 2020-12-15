@@ -21,7 +21,6 @@ export function AdminTagMenu(props) {
         <div>
             <ul className="menu-list">
                 <MenuListElement name="Edit" url={'/admin/tag/' + props.tagid + '/edit'} active={props.activetab}/>
-                <MenuListElement name="Program" url={'/admin/tag/' + props.tagid + '/program'} active={props.activetab}/>
                 <MenuListElement name="Configure" url={'/admin/tag/' + props.tagid + '/configure'} active={''} children={<AdminConfigSubMenu name="Configure" tagid={props.tagid} activetab={props.activetab}/>} />
                 <MenuListElement name="Simulate" url={'/admin/tag/' + props.tagid + '/simulate'} active={props.activetab}/>
                 <MenuListElement name="Captures" url={'/admin/tag/' + props.tagid + '/captures'} active={props.activetab}/>

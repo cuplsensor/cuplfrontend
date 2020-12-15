@@ -1,5 +1,5 @@
 import React from "react";
-import {Redirect, withRouter } from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import {postData, handleErrors, setCookie} from "./api.js";
 import {RecentStarred} from "./RecentStarred";
 import {ConsumerBasePage} from "./ConsumerPage";
@@ -73,6 +73,11 @@ class HomePage extends React.Component {
       return (
           <ConsumerBasePage>
             <RecentStarred />
+            <section className="section pl-3">
+                <div className="container">
+                    <p>cu<sub>pl</sub> the NFC environmental sensor: <a href="https://cupl.co.uk" style={{color: "red"}}>learn more and buy cuplTags &#xbb;</a></p>
+                </div>
+            </section>
           </ConsumerBasePage>
       );
   }
