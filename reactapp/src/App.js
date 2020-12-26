@@ -29,6 +29,7 @@ import AdminConfigSerialPage from "./AdminConfigSerialPage";
 import AdminConfigNFCPage from "./AdminConfigNFCPage";
 import ConsumerConfigNFCPage from "./ConsumerConfigNFCPage";
 import ConsumerVersionPage from "./ConsumerVersionPage";
+import AdminTagsAddPage from "./AdminTagsAddPage";
 
 
 function App() {
@@ -86,6 +87,9 @@ function App() {
           </Route>
           <Route exact path="/admin/tags">
             <AdminTagsList />
+          </Route>
+          <Route exact path="/admin/tags/add">
+            <AdminTagsAddPage />
           </Route>
           <Route exact path="/admin/tag/:id" render={props => (
               <Redirect to={`/admin/tag/${props.match.params.id}/simulate`} />

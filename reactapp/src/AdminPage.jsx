@@ -3,6 +3,7 @@ import {Footer, Header, Section} from "./BasePage";
 import React from "react";
 import {Link, Redirect, useLocation} from "react-router-dom";
 import {RemoveAdminToken} from "./api";
+import {AdminConfigSubMenu} from "./AdminTagPage";
 
 export function AdminLogin() {
     return (
@@ -148,11 +149,22 @@ export function AdminBC(props) {
     );
 }
 
+function TagSubMenu(props) {
+    const isHidden = !((props.activetab.toLowerCase() === "tags") || (props.activetab.toLowerCase() === "add"));
+    return (
+        <div className={isHidden ? "is-hidden" : "is-block"}>
+            <ul>
+                <MenuListElement name="Add" url={'/admin/tags/add'} active={props.activetab}/>
+            </ul>
+        </div>
+    )
+}
+
 export function AdminMenu(props) {
     return (
         <div>
             <ul className="menu-list">
-                <MenuListElement name="Tags" url="/admin/tags" active={props.activetab} />
+                <MenuListElement name="Tags" url="/admin/tags" active={props.activetab} children={<TagSubMenu name="Tags" url="/admin/tags/add" activetab={props.activetab} />} />
                 <MenuListElement name="Captures" url="/admin/captures" active={props.activetab} />
                 <MenuListElement name="Webhooks" url="/admin/webhooks" active={props.activetab} />
             </ul>
