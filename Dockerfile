@@ -10,14 +10,10 @@ COPY reactapp/package-lock.json ./
 RUN npm ci --silent
 #RUN npm install react-scripts@3.4.1 -g --silent
 COPY reactapp/ ./
-#RUN export PUBLIC_URL=https://f3.websensor.io/
-# start app
-#RUN npm run build
-
-# production environment
-#FROM nginx:stable-alpine
-#COPY --from=build /app/build /usr/share/nginx/html
-#COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
-#VOLUME /usr/share/nginx/html
-#EXPOSE 80
-#CMD ["nginx", "-g", "daemon off;"]
+ARG WSF_ORIGIN
+ARG WSB_ORIGIN
+RUN echo "WSB_ORIGIN: $WSB_ORIGIN"
+ENV PUBLIC_URL=$WSF_ORIGIN
+ENV REACT_APP_WSB_ORIGIN=$WSB_ORIGIN
+RUN echo "REACT_APP_WSB_ORIGIN: $REACT_APP_WSB_ORIGIN"
+RUN npm run build
