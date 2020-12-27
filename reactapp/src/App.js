@@ -34,7 +34,7 @@ import AdminTagsAddPage from "./AdminTagsAddPage";
 
 function App() {
   return (
-   <Router basename={process.env.PUBLIC_URL}>
+   <Router basename="/f">
       <div>
         {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
