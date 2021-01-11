@@ -22,7 +22,7 @@ export function AdminTagCapturesPage(props) {
                 {...props}
                 ListItem={TagCapturesListItem}
                 HeaderItem={TagCapturesHeaderItem}
-                extraparams={{'parent_tag': tagid}}
+                extraparams={{'tag_id': tagid}}
                 url={process.env.REACT_APP_WSB_ORIGIN + '/api/admin/captures'}
             />
           </AdminPage>
