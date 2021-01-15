@@ -46,7 +46,7 @@
       </scripts>
       <node-interpreter value="project" />
       <envs>
-        <env name="REACT_APP_WSB_ORIGIN" value="https://b3.cupl.uk/" />
+        <env name="REACT_APP_WSB_ORIGIN" value="https://b3.cupl.uk" />
         <env name="REACT_APP_CUPLDEPLOY_HASH" value="1d3606f" />
         <env name="REACT_APP_CUPLFRONTEND_HASH" value="a3f5639" />
         <env name="REACT_APP_CUPLBACKEND_HASH" value="36f73be" />
@@ -71,7 +71,7 @@
       <option name="presentableId" value="Default" />
       <updated>1609116312376</updated>
       <workItem from="1609116313824" duration="1330000" />
-      <workItem from="1610352554096" duration="9917000" />
+      <workItem from="1610352554096" duration="13443000" />
     </task>
     <servers />
   </component>
@@ -79,10 +79,10 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2334" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610647768608">
+    <state x="2334" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1610701060301">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="2334" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1610647768608" />
+    <state x="2334" y="174" key="#com.intellij.execution.impl.EditConfigurationsDialog/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1610701060301" />
     <state x="2660" y="224" key="#com.intellij.ide.macro.MacrosDialog" timestamp="1609116450673">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
@@ -91,10 +91,10 @@
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="2649" y="349" key="#com.intellij.tools.ToolEditorDialog/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1610638534768" />
-    <state x="2747" y="269" width="1003" height="490" key="EnvironmentVariablesDialog" timestamp="1610647767017">
+    <state x="2747" y="269" width="1003" height="490" key="EnvironmentVariablesDialog" timestamp="1610701058548">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>
-    <state x="2747" y="269" width="1003" height="490" key="EnvironmentVariablesDialog/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1610647767017" />
+    <state x="2747" y="269" width="1003" height="490" key="EnvironmentVariablesDialog/1920.0.1920.1040/0.0.1920.1040@1920.0.1920.1040" timestamp="1610701058548" />
     <state width="1860" height="284" key="GridCell.Tab.0.bottom" timestamp="1610647798862">
       <screen x="1920" y="0" width="1920" height="1040" />
     </state>

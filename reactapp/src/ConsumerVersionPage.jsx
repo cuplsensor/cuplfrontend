@@ -12,7 +12,7 @@ class ConsumerVersionPage extends React.Component {
   }
 
   componentDidMount() {
-      getData(process.env.REACT_APP_WSB_ORIGIN + 'api/consumer/version',)
+      getData(process.env.REACT_APP_WSB_ORIGIN + '/api/consumer/version',)
       .then(handleErrors)
       .then(response => response.json())
       .then(json => {
