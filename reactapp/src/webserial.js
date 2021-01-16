@@ -67,12 +67,12 @@ function toggleUIConnected(connected) {
   btnConnect.textContent = lbl;
 }
 
-
 async function disconnect() {
   // CODELAB: Close the input stream (reader).
   if (reader) {
     await reader.cancel();
     await inputDone.catch(() => {});
+    reader.releaseLock();
     reader = null;
     inputDone = null;
   }
@@ -102,6 +102,45 @@ async function readResponse() {
   }
 
   return value;
+}
+
+function extractPayload(cmd, readstr) {
+  let startmarker = `<${cmd}:`; // Marks the start of a command e.g. <x:
+  let endmarker = '>'; // Marks the end of a command.
+  let smIndex = readstr.lastIndexOf(startmarker);
+  let payloadIndex = smIndex + startmarker.length;
+  let payloadstr = "";
+
+  if (smIndex > -1) {
+    let aftersm = readstr.substring(payloadIndex);
+    let emIndex = aftersm.indexOf(endmarker);
+    if (emIndex > -1) {
+      payloadstr = aftersm.substring(0, emIndex);
+    }
+  }
+
+  return payloadstr
+}
+
+export async function ConnectAndGetVersion() {
+  const versioncmd = 'x';
+  await connect();
+  await writeToStream(`<${versioncmd}>`);
+
+  let readWithTimeout = promiseTimeout(2000, reader.read());
+  return readWithTimeout.then(function processText({done, value}) {
+      const versionstr = extractPayload(versioncmd, value);
+      if (versionstr === "") {
+        value = value.replace(/[\n\r]/g, '');
+        return Promise.reject(`Bad response to the version command: ${value}`);
+      } else {
+        return Promise.resolve(versionstr);
+      }
+    }).catch(error => {
+      return Promise.reject(error);
+    }).finally(() => {
+      disconnect();
+    });
 }
 
 export async function ConnectAndWrite(configlist) {

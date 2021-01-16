@@ -5,15 +5,12 @@ import {
     Section,
     BulmaLabel,
     BulmaInput,
-    BulmaCheckbox,
-    BulmaRadio,
     BulmaField,
     BulmaSubmit, ErrorMessage
 } from "./BasePage";
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
-import {AdminTagsBC} from "./AdminTagsListPage";
-
+import {ConnectAndGetVersion} from "./webserial";
 
 class AdminTagsAddPage extends React.Component {
   constructor(props) {
@@ -21,10 +18,11 @@ class AdminTagsAddPage extends React.Component {
 
     GetAdminToken.call(this);
 
-    this.state = {serial: null, secretkey: null, description: null, fwversion: null, hwversion: null};
+    this.state = {serial: null, secretkey: null, description: null, fwversion: null, hwversion: null, newtag: null, readstatus: ""};
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.handleReadClick = this.handleReadClick.bind(this);
   }
 
   handleSubmit(event) {
@@ -63,6 +61,7 @@ class AdminTagsAddPage extends React.Component {
         .then(handleErrors)
         .then(response => response.json())
         .then(json => {
+            this.setState({newtag: json});
         },
         (error) => {
             if (error) {
@@ -75,13 +74,29 @@ class AdminTagsAddPage extends React.Component {
     this.setState({[event.target.id]: event.target.value});
   }
 
-  readFromSerial(event) {
-      alert("reading from serial");
+  handleReadClick(event) {
+      event.preventDefault();
+      this.setState({readstatus: "Reading version..."});
+      ConnectAndGetVersion()
+          .then(function processVersion(fwversion) {
+                console.log(fwversion);
+                this.setState({readstatus: "Read OK", fwversion: fwversion});
+              }.bind(this))
+          .catch(error => {
+                console.log(error);
+                this.setState({readstatus: error});
+              });
   }
 
   render() {
       const activetab = 'Add';
       const error = this.state.error;
+      if (this.state.newtag) {
+          return <Redirect to={{
+              pathname: `/admin/tag/${this.state.newtag['id']}/configure`,
+              state: {error: error}}}
+          />
+      }
       if (error) {
           if (error.code ===401) {
               return <RedirectToLogin error={error} />
@@ -111,8 +126,11 @@ class AdminTagsAddPage extends React.Component {
                           </div>
                           <BulmaControl>
                               <BulmaLabel>&#8205;</BulmaLabel>
-                              <button className="button is-primary is-link is-light" onClick={this.readFromSerial}>Read from Serial</button>
+                              <button className="button is-primary is-link is-light" onClick={this.handleReadClick}>Read from Serial</button>
                           </BulmaControl>
+                      </div>
+                      <div className="notification" id="serialstatus" style={{display: this.state.readstatus === "" ? 'None' : 'block'}}>
+                          {this.state.readstatus}
                       </div>
                       <BulmaField>
                           <BulmaControl>
