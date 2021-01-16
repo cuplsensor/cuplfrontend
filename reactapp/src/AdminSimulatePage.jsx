@@ -3,7 +3,7 @@ import {GetAdminToken, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio} from "./BasePage";
 import React from "react";
-import {Redirect, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 var QRCode = require('qrcode.react');
 
 

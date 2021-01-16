@@ -1,11 +1,9 @@
 import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
-import {useLocation, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import React from "react";
 import {GetAdminToken, getData, handleErrors, putData} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
-import {TagConfigForm} from "./TagConfigForm";
-import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, Section} from "./BasePage";
-import {ConsumerBasePage} from "./ConsumerPage";
+import {Section} from "./BasePage";
 import {ConfigNFC} from "./ConfigNFC";
 
 class AdminConfigNFCPage extends React.Component {

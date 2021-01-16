@@ -1,7 +1,7 @@
 import LoginForm from "./LoginForm";
 import {Footer, Header, Section} from "./BasePage";
 import React from "react";
-import {Link, Redirect, useLocation} from "react-router-dom";
+import {Redirect, useLocation} from "react-router-dom";
 import {RemoveAdminToken} from "./api";
 import {AdminConfigSubMenu} from "./AdminTagPage";
 

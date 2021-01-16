@@ -1,11 +1,9 @@
 import React from "react";
-import {AdminPage, AdminMenu, AdminBC, RedirectToLogin} from "./AdminPage"
-import {Link, Redirect, withRouter} from "react-router-dom";
-import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, ErrorMessage} from "./BasePage";
-import {Pagination, parsePages} from "./Pagination";
-import {postData, getData, handleErrors, GetAdminToken} from "./api";
+import {AdminPage, AdminMenu, AdminBC} from "./AdminPage"
+import {Link, withRouter} from "react-router-dom";
+import {GetAdminToken} from "./api";
 import {DateTime} from "luxon";
-import {AdminResourceTable, ResourceTable} from "./AdminResourceTable";
+import {AdminResourceTable} from "./AdminResourceTable";
 import eyeSolid from "./eye-solid.svg";
 import eyeSlashSolid from "./eye-slash-solid.svg"
 

@@ -1,5 +1,5 @@
 import React from "react";
-import {Redirect, Link, withRouter } from "react-router-dom";
+import {Link, withRouter } from "react-router-dom";
 import {tempWithUnitStr, handleDismiss, TagErrorMessage} from "./BasePage";
 import {getData, handleErrors, getTag, getCookie} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";

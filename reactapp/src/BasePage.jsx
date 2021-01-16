@@ -199,7 +199,7 @@ export function Footer() {
       <nav className="level">
         <div className="level-left">
           <div className="level-item mr-1">
-            <a href="https://github.com/cuplsensor/wsfrontend">cuplfrontend</a>
+            <a href={process.env.REACT_APP_CUPLFRONTEND_REPO}>cuplfrontend</a>
           </div>
           <div className="level-item">
             by Plotsensor Ltd.
@@ -207,7 +207,7 @@ export function Footer() {
         </div>
         <div className="level-right">
           <div className="level-item">
-            <a href="https://github.com/cuplsensor/wsfrontend/blob/master/LICENSE">Licence</a>
+            <a href={`${process.env.REACT_APP_CUPLFRONTEND_REPO}/blob/master/LICENSE`}>Licence</a>
           </div>
           <div className="level-item">
             <a href="/version">Version</a>

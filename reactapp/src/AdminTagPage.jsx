@@ -1,9 +1,6 @@
-import {AdminPage, ListElement, MenuListElement, RedirectToLogin} from "./AdminPage";
-import {getData, postData} from "./api";
+import {MenuListElement} from "./AdminPage";
 import React from "react";
 import {AdminBC} from "./AdminPage"
-import {Redirect, withRouter} from "react-router-dom";
-
 
 export function AdminTagBC(props) {
     return (

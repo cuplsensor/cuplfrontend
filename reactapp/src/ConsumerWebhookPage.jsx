@@ -4,7 +4,7 @@ import {deleteData, getCookie, getData, handleErrors, postData} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import 'chartjs-adapter-luxon';
 import {WebhookForm} from "./WebhookForm";
-import {ErrorMessage, handleDismiss, TagErrorMessage} from "./BasePage";
+import {handleDismiss, TagErrorMessage} from "./BasePage";
 
 
 class ConsumerWebhookPage extends React.Component {

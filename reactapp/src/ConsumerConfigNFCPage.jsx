@@ -1,10 +1,9 @@
 import React from "react";
 import {handleDismiss} from "./BasePage"
-import {Redirect, Link, withRouter } from "react-router-dom";
+import {withRouter } from "react-router-dom";
 import {getData, handleErrors} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {ConfigNFC} from "./ConfigNFC";
-
 
 
 class ConsumerConfigNFCPage extends React.Component {

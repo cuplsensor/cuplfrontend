@@ -1,4 +1,4 @@
-import AdminTagPage, {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
+import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
 import {GetAdminToken, putData, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {

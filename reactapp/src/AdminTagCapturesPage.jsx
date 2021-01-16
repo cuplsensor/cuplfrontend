@@ -1,7 +1,7 @@
 import React from "react";
-import {AdminPage, RedirectToLogin} from "./AdminPage"
+import {AdminPage} from "./AdminPage"
 import {AdminTagBC, AdminTagMenu} from "./AdminTagPage"
-import {Link, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {AdminResourceTable} from "./AdminResourceTable";
 import {DateTime} from "luxon";
 

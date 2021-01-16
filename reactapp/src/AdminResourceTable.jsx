@@ -1,7 +1,5 @@
 import React from "react";
-import {AdminPage, AdminMenu, AdminBC, RedirectToLogin} from "./AdminPage"
-import {Link} from "react-router-dom";
-import {withRouter, BrowserRouter} from "react-router-dom"
+import {RedirectToLogin} from "./AdminPage"
 import {BulmaControl, BulmaField, BulmaSubmit, ErrorMessage} from "./BasePage";
 import {Pagination, parsePages} from "./Pagination";
 import {getData, deleteData, handleErrors, GetAdminToken, postData} from "./api";

@@ -1,11 +1,11 @@
 import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
 import {withRouter} from "react-router-dom";
 import React from "react";
-import {GetAdminToken, getData, handleErrors, putData} from "./api";
+import {GetAdminToken, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {TagConfigForm} from "./TagConfigForm";
 import {ConnectAndWrite} from "./webserial";
-import {BulmaControl, BulmaField, BulmaInput, BulmaLabel, BulmaSubmit, Section} from "./BasePage";
+import {Section} from "./BasePage";
 
 class AdminConfigSerialPage extends React.Component {
   constructor(props) {

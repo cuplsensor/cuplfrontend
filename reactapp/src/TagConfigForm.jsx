@@ -1,12 +1,9 @@
 import React from "react";
-import {Redirect, withRouter } from "react-router-dom";
 import {
-    BasePage,
     BulmaField,
     BulmaControl,
     BulmaLabel,
     BulmaInput,
-    BulmaSubmit,
     ErrorMessage,
     handleDismiss, BulmaCheckbox, BulmaRadio
 } from "./BasePage.jsx";

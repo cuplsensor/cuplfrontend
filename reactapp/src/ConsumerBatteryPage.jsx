@@ -1,16 +1,7 @@
 import React from "react";
 import {handleDismiss} from "./BasePage"
-import {Redirect, Link, withRouter } from "react-router-dom";
-import {
-    BasePage,
-    BulmaField,
-    BulmaControl,
-    BulmaLabel,
-    BulmaInput,
-    BulmaSubmit,
-    ErrorMessage,
-    TagErrorMessage
-} from "./BasePage.jsx";
+import {Link, withRouter} from "react-router-dom";
+import {TagErrorMessage} from "./BasePage.jsx";
 import {getData, handleErrors} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {BatteryLineChart} from "./LineChart";

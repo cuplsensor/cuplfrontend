@@ -1,5 +1,4 @@
 import React from "react";
-import {Section} from "./BasePage";
 import {HistorySubject} from "./star";
 import {getTag} from "./api";
 import starfill from './star-fill.svg'; // Tell webpack this JS file uses this image

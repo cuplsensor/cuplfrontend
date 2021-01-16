@@ -1,5 +1,4 @@
-import AdminTagPage, {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
-import {GetAdminToken, getData, handleErrors, postData} from "./api";
+import {GetAdminToken, handleErrors, postData} from "./api";
 import {AdminBC, AdminMenu, AdminPage, RedirectToLogin} from "./AdminPage";
 import {
     BulmaControl,
@@ -76,6 +75,10 @@ class AdminTagsAddPage extends React.Component {
     this.setState({[event.target.id]: event.target.value});
   }
 
+  readFromSerial(event) {
+      alert("reading from serial");
+  }
+
   render() {
       const activetab = 'Add';
       const error = this.state.error;
@@ -101,12 +104,16 @@ class AdminTagsAddPage extends React.Component {
                               <BulmaInput id="secretkey" type="text"  value={this.state.secretkey || ""} changeHandler={this.handleChange} maxLength={16}/>
                           </BulmaControl>
                       </BulmaField>
-                      <BulmaField>
-                          <BulmaControl>
+                      <div className="field is-grouped">
+                          <div className="control is-expanded">
                               <BulmaLabel>Firmware Version</BulmaLabel>
                               <BulmaInput id="fwversion" type="text" value={this.state.fwversion || ""} changeHandler={this.handleChange}/>
+                          </div>
+                          <BulmaControl>
+                              <BulmaLabel>&#8205;</BulmaLabel>
+                              <button className="button is-primary is-link is-light" onClick={this.readFromSerial}>Read from Serial</button>
                           </BulmaControl>
-                      </BulmaField>
+                      </div>
                       <BulmaField>
                           <BulmaControl>
                               <BulmaLabel>Hardware Version</BulmaLabel>

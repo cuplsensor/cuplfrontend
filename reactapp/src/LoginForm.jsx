@@ -1,7 +1,6 @@
 import React from "react";
 import {Redirect, withRouter } from "react-router-dom";
 import {
-    BasePage,
     BulmaField,
     BulmaControl,
     BulmaLabel,

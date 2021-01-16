@@ -1,5 +1,5 @@
 import React from "react";
-import {Redirect, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {getData, handleErrors, getSamples} from "./api.js";
 import {ConsumerBasePage, ConsumerTagBC} from "./ConsumerPage";
 import {LineChart} from "./LineChart";
@@ -7,7 +7,7 @@ import {SamplesTable} from "./SamplesTable";
 
 import {DateTime} from "luxon";
 import 'chartjs-adapter-luxon';
-import {handleDismiss, TagErrorMessage, Section} from "./BasePage";
+import {handleDismiss, TagErrorMessage} from "./BasePage";
 import angleLeft from "./angle-left-solid.svg";
 import angleRight from "./angle-right-solid.svg";
 import {DownloadCSVButton} from "./DownloadCSV";

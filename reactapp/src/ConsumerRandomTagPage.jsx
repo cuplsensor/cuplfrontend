@@ -1,7 +1,6 @@
 import React from "react";
-import {Redirect, withRouter } from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import {getData, handleErrors} from "./api.js";
-
 
 
 class ConsumerRandomTagPage extends React.Component {

@@ -1,24 +1,15 @@
-import AdminTagPage, {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
+import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
 import {GetAdminToken, postData, deleteData, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
-import {
-    BulmaControl,
-    Section,
-    BulmaLabel,
-    BulmaInput,
-    BulmaField,
-    BulmaSubmit
-} from "./BasePage";
+import {Section} from "./BasePage";
 import React from "react";
-import {Redirect, withRouter} from "react-router-dom";
+import {withRouter} from "react-router-dom";
 import {WebhookForm} from "./WebhookForm"
-import {DateTime} from "luxon";
 
 
 class AdminWebhookPage extends React.Component {
   constructor(props) {
     super(props);
-    const frontendurl = window.location.origin;
 
     GetAdminToken.call(this);
 
@@ -46,7 +37,6 @@ class AdminWebhookPage extends React.Component {
               json['webhook']['address'] = json['webhook']['address'] || "";
               json['webhook']['fields'] = json['webhook']['fields'] || "";
               json['webhook']['wh_secretkey'] = json['webhook']['wh_secretkey'] || "";
-              json['webhook']['created_on'] = json['webhook']['created_on'];
             } else {
                 webhook_set = false;
                 json['webhook'] = {};

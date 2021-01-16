@@ -3,7 +3,6 @@ import {AdminPage, AdminMenu, AdminBC} from "./AdminPage"
 import {Link, withRouter} from "react-router-dom";
 import {AdminResourceTable} from "./AdminResourceTable";
 import {DateTime} from "luxon";
-import {AdminTagBC} from "./AdminTagPage";
 
 function AdminCapturesBC(props) {
     return(
