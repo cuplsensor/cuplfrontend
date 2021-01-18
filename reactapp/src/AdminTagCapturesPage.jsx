@@ -18,6 +18,7 @@ export function AdminTagCapturesPage(props) {
     const activetab = 'captures';
     return(
           <AdminPage bc={<AdminTagCapturesBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
+
             <AdminResourceTable
                 {...props}
                 ListItem={TagCapturesListItem}

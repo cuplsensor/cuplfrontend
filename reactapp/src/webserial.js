@@ -47,6 +47,7 @@ async function connect() {
   inputStream = decoder.readable;
 
   reader = inputStream.getReader();
+
 }
 
 function writeToStream(...lines) {
@@ -119,20 +120,22 @@ function extractPayload(cmd, readstr) {
     }
   }
 
-  return payloadstr
+  return payloadstr;
 }
 
 export async function ConnectAndGetVersion() {
   const versioncmd = 'x';
-  await connect();
+  await connect().catch((error) => {return Promise.reject(`Unable to connect. ${error}`)});
+
   await writeToStream(`<${versioncmd}>`);
 
-  let readWithTimeout = promiseTimeout(2000, reader.read());
+  let readWithTimeout = promiseTimeout(5000, reader.read());
   return readWithTimeout.then(function processText({done, value}) {
-      const versionstr = extractPayload(versioncmd, value);
+      let tagresponse = value;
+      const versionstr = extractPayload(versioncmd, tagresponse);
       if (versionstr === "") {
-        value = value.replace(/[\n\r]/g, '');
-        return Promise.reject(`Bad response to the version command: ${value}`);
+        tagresponse = tagresponse.replace(/[\n\r]/g, '');
+        return Promise.reject(`Bad response to the version command: ${tagresponse}`);
       } else {
         return Promise.resolve(versionstr);
       }
@@ -143,20 +146,40 @@ export async function ConnectAndGetVersion() {
     });
 }
 
-export async function ConnectAndWrite(configlist) {
-  await connect();
-
-  for (const configstr of configlist) {
-    await writeToStream(configstr);
-    reader.read().then(function processText({done, value}) {
-      if (done) {
-        console.log("Stream complete");
-        return;
+async function validateResponse(configlist) {
+  let readWithTimeout = promiseTimeout(5000, reader.read());
+  return readWithTimeout.then(function processText({done, value}) {
+      const tagresponse = value;
+      console.log(tagresponse);
+      for (const configstr of configlist) {
+        if (typeof tagresponse == 'undefined')
+        {
+          return Promise.reject(`Response is undefined`);
+        }
+        if (!tagresponse.includes(configstr)) {
+          return Promise.reject(`No response to:${configstr}`);
+        }
       }
-      console.log(value);
+      return Promise.resolve("Write OK");
     }).catch(error => {
-      console.log(error);
-    });
+      return Promise.reject(error);
+    })
+}
+
+async function writeAttempt(configlist) {
+  for (const configstr of configlist) {
+    writeToStream(configstr)
+    await validateResponse(configstr).catch(() => {validateResponse(configstr).catch(() => {validateResponse(configstr)})});
+    await new Promise(r => setTimeout(r, 500));
   }
+  return Promise.resolve("Write OK");
+}
+
+export async function ConnectAndWrite(configlist) {
+  await connect().catch((error) => {return Promise.reject(`Unable to connect. ${error}`)});
+
+  return writeAttempt(configlist).finally(() => {
+    disconnect();
+  });
 }
 

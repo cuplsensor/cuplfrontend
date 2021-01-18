@@ -96,6 +96,20 @@ export function BulmaLabel(props) {
   );
 }
 
+export function DisplayStatus(props) {
+    if (props.status) {
+        if (props.err) {
+            return <div className="is-inline has-text-danger">&#10060; {props.status}</div>
+        } else if (props.success) {
+            return <div className="is-inline has-text-success">&#10004; {props.status}</div>
+        }
+        else {
+            return <div className="is-inline">&#x21B9; {props.status}</div>
+        }
+    } {return ""}
+}
+
+
 export function Section(props) {
   return (
     <section className="section">

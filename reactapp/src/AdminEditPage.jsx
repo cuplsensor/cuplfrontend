@@ -7,7 +7,7 @@ import {
     BulmaLabel,
     BulmaInput,
     BulmaField,
-    BulmaSubmit
+    BulmaSubmit, ErrorMessage
 } from "./BasePage";
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
@@ -93,6 +93,7 @@ class AdminEditPage extends React.Component {
       return (
           <AdminPage bc={<AdminTagEditBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
+                  <ErrorMessage error={error} />
               <form onSubmit={this.handleSubmit}>
                       <BulmaField>
                           <BulmaControl>

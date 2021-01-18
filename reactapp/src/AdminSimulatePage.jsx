@@ -1,9 +1,9 @@
 import AdminTagPage, {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
 import {GetAdminToken, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
-import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio} from "./BasePage";
+import {BulmaControl, Section, BulmaLabel, BulmaInput, BulmaCheckbox, BulmaRadio, ErrorMessage} from "./BasePage";
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 var QRCode = require('qrcode.react');
 
 
@@ -113,13 +113,19 @@ class AdminSimulatePage extends React.Component {
       const activetab = 'Simulate';
       const error = this.state.error;
       if (error) {
-          if (error.code ===401) {
+          if (error.code === 401) {
               return <RedirectToLogin error={error} />
+          }
+          if (error.code === 404) {
+              return <Redirect to={{
+                        pathname: `/admin/tags`,
+                        state: {error: error}}} />
           }
       }
       return (
           <AdminPage bc={<AdminTagSimulateBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
+                  <ErrorMessage error={error} />
               <form onSubmit={this.handleSubmit}>
                       <div className="field is-grouped is-grouped-multiline">
                           <BulmaControl>

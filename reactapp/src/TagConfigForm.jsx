@@ -18,7 +18,7 @@ export class TagConfigForm extends React.Component {
                   secretkey: '',
                   usehmac: true,
                   minbatv: 2200,
-                  usehttps: (window.location.protocol === 'https:'),
+                  disablehttps: (window.location.protocol !== 'https:'),
                   tagformat: "1",
                   redirect: false,
                   error: false};
@@ -61,7 +61,7 @@ export class TagConfigForm extends React.Component {
         if (this.state.serial.length === 8) {
             configlist.push(this.createConfigLine('w', this.state.serial));                     // Serial
         }
-        configlist.push(this.createConfigLine('h', this.state.usehttps ? '1':'0'));           // HTTPS
+        configlist.push(this.createConfigLine('h', this.state.disablehttps ? '1':'0'));        // HTTPS
         configlist.push(this.createConfigLine('b', this.state.baseurl));                      // Append Base URL
         configlist.push(this.createConfigLine('u', this.state.minbatv.toString()))
         configlist.push(this.createConfigLine('i', this.state.usehmac ? '1':'0'));            // Append use HMAC
@@ -99,8 +99,8 @@ export class TagConfigForm extends React.Component {
                     <BulmaInput id="baseurl" type="text" value={this.state.baseurl} changeHandler={this.handleChange} />
               </BulmaControl>
                 <BulmaControl>
-                    <BulmaLabel><a href="https://cupltag.readthedocs.io/en/latest/docs/firmware/configuration.html#use-https">Use HTTPS</a></BulmaLabel>
-                    <BulmaCheckbox id="usehttps" name="usehttps" type="checkbox" value={this.state.usehttps || false} changeHandler={this.handleCheckChange} />
+                    <BulmaLabel><a href="https://cupltag.readthedocs.io/en/latest/docs/firmware/configuration.html#use-https">Disable HTTPS</a></BulmaLabel>
+                    <BulmaCheckbox id="disablehttps" name="disablehttps" type="checkbox" value={this.state.disablehttps || false} changeHandler={this.handleCheckChange} />
                 </BulmaControl>
             </div>
             <div className="field is-grouped">

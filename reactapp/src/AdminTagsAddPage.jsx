@@ -6,7 +6,7 @@ import {
     BulmaLabel,
     BulmaInput,
     BulmaField,
-    BulmaSubmit, ErrorMessage
+    BulmaSubmit, ErrorMessage, DisplayStatus
 } from "./BasePage";
 import React from "react";
 import {Redirect, withRouter} from "react-router-dom";
@@ -18,7 +18,7 @@ class AdminTagsAddPage extends React.Component {
 
     GetAdminToken.call(this);
 
-    this.state = {serial: null, secretkey: null, description: null, fwversion: null, hwversion: null, newtag: null, readstatus: ""};
+    this.state = {serial: null, secretkey: null, description: null, fwversion: null, hwversion: null, newtag: null, readstatus: "", read_error: false, read_success: false};
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -76,15 +76,15 @@ class AdminTagsAddPage extends React.Component {
 
   handleReadClick(event) {
       event.preventDefault();
-      this.setState({readstatus: "Reading version..."});
+      this.setState({readstatus: "Reading version...", read_error: false, read_success: false});
       ConnectAndGetVersion()
           .then(function processVersion(fwversion) {
                 console.log(fwversion);
-                this.setState({readstatus: "Read OK", fwversion: fwversion});
+                this.setState({readstatus: "Read OK", read_error: false, read_success: true, fwversion: fwversion});
               }.bind(this))
           .catch(error => {
                 console.log(error);
-                this.setState({readstatus: error});
+                this.setState({readstatus: error, read_error: true, read_success: false});
               });
   }
 
@@ -126,11 +126,11 @@ class AdminTagsAddPage extends React.Component {
                           </div>
                           <BulmaControl>
                               <BulmaLabel>&#8205;</BulmaLabel>
-                              <button className="button is-primary is-link is-light" onClick={this.handleReadClick}>Read from Serial</button>
+                              <button className="button is-primary is-link is-light" onClick={this.handleReadClick}>Read from Tag</button>
                           </BulmaControl>
                       </div>
-                      <div className="notification" id="serialstatus" style={{display: this.state.readstatus === "" ? 'None' : 'block'}}>
-                          {this.state.readstatus}
+                      <div className="field">
+                        <DisplayStatus err={this.state.read_error} success={this.state.read_success} status={this.state.readstatus} />
                       </div>
                       <BulmaField>
                           <BulmaControl>

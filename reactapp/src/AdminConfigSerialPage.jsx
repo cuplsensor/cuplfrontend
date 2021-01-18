@@ -1,11 +1,11 @@
 import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
-import {withRouter} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import React from "react";
 import {GetAdminToken, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
 import {TagConfigForm} from "./TagConfigForm";
 import {ConnectAndWrite} from "./webserial";
-import {Section} from "./BasePage";
+import {Section, DisplayStatus, ErrorMessage} from "./BasePage";
 
 class AdminConfigSerialPage extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class AdminConfigSerialPage extends React.Component {
 
     GetAdminToken.call(this);
 
-    this.state = {error: false};
+    this.state = {error: false, writestatus: null, write_error: false, write_success: false};
 
     this.handleConfigChange = this.handleConfigChange.bind(this);
     this.handleWriteClick = this.handleWriteClick.bind(this);
@@ -42,8 +42,17 @@ class AdminConfigSerialPage extends React.Component {
       this.setState({configlist: configlist});
   }
 
-  handleWriteClick() {
-      ConnectAndWrite(this.state.configlist);
+  handleWriteClick(event) {
+      event.preventDefault();
+      this.setState({writestatus: "Writing configuration strings...", write_error: false, write_success: false});
+      ConnectAndWrite(this.state.configlist)
+        .then(function displayStatus(status) {
+                this.setState({writestatus: status, write_error: false, write_success: true});
+              }.bind(this))
+          .catch(error => {
+                console.log(error);
+                this.setState({writestatus: error, write_error: true, write_success: false});
+              });
   }
 
   render() {
@@ -56,6 +65,11 @@ class AdminConfigSerialPage extends React.Component {
           if (error.code === 401) {
               return <RedirectToLogin error={error} />
           }
+          if (error.code === 404) {
+                return <Redirect to={{
+            pathname: `/admin/tags`,
+            state: {error: error}}} />
+          }
       }
       if (this.state.configlist) {
           configlistcr = this.state.configlist.map((item, index) => <p key={index}>{item}</p>);
@@ -63,6 +77,7 @@ class AdminConfigSerialPage extends React.Component {
       return (
           <AdminPage bc={<AdminConfigSerialBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
+                  <ErrorMessage error={error} />
                   <TagConfigForm tag={tag} onConfigChange={this.handleConfigChange} admin={true}/>
                   <div className="block">
                       <pre>
@@ -71,15 +86,19 @@ class AdminConfigSerialPage extends React.Component {
                           </code>
                       </pre>
                   </div>
-                  <div className="block">
-                      <button onClick={this.handleWriteClick} className="button">Write to Serial</button>
+                  <div className="columns is-vcentered">
+                      <div className="column is-narrow">
+                        <button onClick={this.handleWriteClick} className="button is-info is-light">Write to Tag</button>
+                      </div>
+                      <div className="column">
+                          <DisplayStatus err={this.state.write_error} success={this.state.write_success} status={this.state.writestatus} />
+                      </div>
                   </div>
               </Section>
           </AdminPage>);
 
     }
 }
-
 
 function AdminConfigSerialBC(props) {
     return(

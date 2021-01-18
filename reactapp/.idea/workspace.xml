@@ -3,7 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="afd08f7a-0b3d-43c5-9455-689d4acddcac" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminConfigSerialPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminConfigSerialPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminEditPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminEditPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminSimulatePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminSimulatePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminTagCapturesPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminTagCapturesPage.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/AdminTagsAddPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminTagsAddPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AdminWebhookPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/AdminWebhookPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/BasePage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/BasePage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/TagConfigForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/TagConfigForm.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/webserial.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/webserial.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,7 +80,7 @@
       <updated>1609116312376</updated>
       <workItem from="1609116313824" duration="1330000" />
       <workItem from="1610352554096" duration="14686000" />
-      <workItem from="1610791965974" duration="13221000" />
+      <workItem from="1610791965974" duration="36309000" />
     </task>
     <servers />
   </component>

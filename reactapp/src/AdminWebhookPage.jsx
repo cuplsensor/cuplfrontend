@@ -1,9 +1,9 @@
 import {AdminTagBC, AdminTagMenu} from "./AdminTagPage";
 import {GetAdminToken, postData, deleteData, getData, handleErrors} from "./api";
 import {AdminPage, RedirectToLogin} from "./AdminPage";
-import {Section} from "./BasePage";
+import {ErrorMessage, Section} from "./BasePage";
 import React from "react";
-import {withRouter} from "react-router-dom";
+import {Redirect, withRouter} from "react-router-dom";
 import {WebhookForm} from "./WebhookForm"
 
 
@@ -134,11 +134,17 @@ class AdminWebhookPage extends React.Component {
           if (error.code ===401) {
               return <RedirectToLogin error={error} />
           }
+          if (error.code === 404) {
+                return <Redirect to={{
+            pathname: `/admin/tags`,
+            state: {error: error}}} />
+          }
       }
 
       return (
           <AdminPage bc={<AdminTagWebhookBC tagid={tagid} />} menu={<AdminTagMenu tagid={tagid} activetab={activetab} />}>
               <Section>
+                  <ErrorMessage error={error} />
                 <WebhookForm
                     handleSubmit={this.handleSubmit}
                     handleChange={this.handleChange}
