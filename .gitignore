@@ -125,3 +125,7 @@ dmypy.json
 .pyre/
 /.idea/
 reactapp/src/.logo.svg.swp
+reactapp/.idea/deployment.xml
+reactapp/.idea/workspace.xml
+reactapp/.idea/workspace.xml
+reactapp/.idea/workspace.xml

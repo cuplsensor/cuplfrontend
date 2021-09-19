@@ -23,9 +23,9 @@ export class ConfigNFC extends React.Component {
 
     this.state = {configliststr: ''};
 
+    this.handleWriteClick = this.handleWriteClick.bind(this);
     this.handleConfigChange = this.handleConfigChange.bind(this);
     this.handleCopyClick = this.handleCopyClick.bind(this);
-
   }
 
   handleConfigChange(configlist) {
@@ -49,6 +49,28 @@ export class ConfigNFC extends React.Component {
       document.body.removeChild(dummy);
   }
 
+  handleWriteClick() {
+      if ('NDEFReader' in window) {
+          /* Scan and write NFC tags */
+          const configliststr = this.state.configliststr;
+          alert('Tap cuplTag to update configuration.');
+          /* The line below prevents build error in ReactJS because NDEFReader cannot be found. */
+          /*global NDEFReader*/
+          const ndef = new NDEFReader();
+          ndef.write(configliststr).then(() => {
+              const msgwriteokstr = "Configuration updated. Wait 1 minute or RESET.";
+              alert(msgwriteokstr);
+              console.log(msgwriteokstr);
+            }).catch(error => {
+              const msgwritefailstr = `Write failed :-( try again: ${error}.`;
+              alert(msgwritefailstr);
+              console.log(msgwritefailstr);
+            });
+      } else {
+          alert('Chrome 89+ on Android required.');
+      }
+  }
+
   render() {
       return (
           <>
@@ -61,7 +83,14 @@ export class ConfigNFC extends React.Component {
                       </pre>
                   </div>
                   <div className="block">
-                      <button onClick={this.handleCopyClick} className="button">Copy to Clipboard</button>
+                      <div className="field is-grouped">
+                          <p className="control">
+                              <button onClick={this.handleCopyClick} className="button">Copy to Clipboard</button>
+                          </p>
+                          <p className="control">
+                              <button onClick={this.handleWriteClick} className="button">Write with WebNFC</button>
+                          </p>
+                      </div>
                   </div>
           </>
   );
