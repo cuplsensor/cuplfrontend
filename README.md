@@ -1,7 +1,7 @@
 # cuplfrontend
 This is the graphical user interface part of the cupl system. It is static web application written in [ReactJS](https://reactjs.org/). It displays samples collected from   [cuplTags](https://github.com/cuplsensor/cupltag) on a graph and in a table. There is a feature that allows tags to be *starred* and displayed on the home page. It wraps around all of the functionality in [cuplbackend](https://github.com/cuplsensor/cuplbackend).
 
-![cuplfrontend homepage screenshot](cuplfrontend_homepage.png)
+![cuplfrontend homepage screenshot](cuplfrontend_homepage.PNG)
 
 ## Installation
 
