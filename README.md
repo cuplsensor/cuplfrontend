@@ -19,7 +19,7 @@ npm start
 
 ## Documentation
 
-* [Configuration with UART (2 of 2)](https://github.com/cuplsensor/cuplfrontend/blob/master/docs/guides/configUARTpt2/index.md).
+* cuplTag [Configuration with UART (2 of 2)](https://github.com/cuplsensor/cuplfrontend/blob/master/docs/guides/configUARTpt2/index.md).
 
 ## Licence
 
