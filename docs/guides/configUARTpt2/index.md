@@ -8,7 +8,7 @@ You will need:
 
 * A cuplTag PCBA connected to a PC as shown in [Part 1](https://github.com/cuplsensor/cupltag/blob/master/docs/guides/configUARTpt1/index.md).
 * A cupl frontend + backend web application served with HTTPS ([instructions](https://github.com/cuplsensor/cupldeploy#installation)).
-* The Chrome browser 89+ to use WebSerial.
+* Google Chrome 89+ to use WebSerial.
 
 ## Provision a cuplTag
 
