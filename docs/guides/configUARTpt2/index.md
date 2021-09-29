@@ -48,6 +48,7 @@ When login is successful, you will be redirected to the tags page.
 4. Change the tag format and sample interval to what you would like *optional*.
 5. Select **Write to Tag** to write configuration strings over the serial port.
 6. On success, you will see *Writing configuration strings* followed by *Write OK*.
+
    ![image-20210929111528064](writeok.png)
 
 ## Test the Provisioned cuplTag
