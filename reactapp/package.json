@@ -11,7 +11,7 @@
     "chartjs-adapter-luxon": "^0.2.2",
     "chartjs-plugin-annotation": "^0.5.7",
     "luxon": "^1.25.0",
-    "parse-link-header": "^1.0.1",
+    "parse-link-header": "^2.0.0",
     "qrcode.react": "^1.0.0",
     "react": "^16.13.1",
     "react-cookie": "^4.0.3",
