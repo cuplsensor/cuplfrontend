@@ -93,7 +93,7 @@ function TableRow(props) {
     var rh_str = "--";
 
     if (props.rh) {
-        rh_str = parseFloat(props.rh).toFixed(2);
+        rh_str = parseFloat(props.rh).toFixed(0);
     }
 
     return (

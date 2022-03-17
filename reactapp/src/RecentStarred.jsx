@@ -126,7 +126,7 @@ class TagTableRow extends React.Component {
         if (latest_sample) {
             latest_temp = tempWithUnitStr({tempdegc_str:latest_sample['temp'], unit:temp_unit});
             if (latest_sample['rh'] !== null) {
-              latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
+              latest_rh = parseFloat(latest_sample['rh']).toFixed(0) + " %";
             }
         }
 

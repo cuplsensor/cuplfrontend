@@ -133,7 +133,7 @@ export class LineChart extends React.Component {
                                         if (label) {
                                             label += ': ';
                                         }
-                                        label += tooltipItem.yLabel.toFixed(2);
+                                        label += tooltipItem.yLabel.toFixed(1);
                                         return label;
                                     }
                                  }

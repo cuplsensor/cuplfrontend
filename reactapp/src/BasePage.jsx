@@ -48,7 +48,7 @@ export function tempWithUnitStr(props) {
 
     if (tempdegc_str) {
         const temp_flt = tempConverted(tempdegc_str, unit);
-        temp_str = temp_flt.toFixed(2);
+        temp_str = temp_flt.toFixed(1);
     }
 
     return temp_str + unitstr;

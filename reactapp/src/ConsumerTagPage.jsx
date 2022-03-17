@@ -92,7 +92,7 @@ class ConsumerTagPage extends React.Component {
           empty_set = false;
           latest_temp = latest_sample['temp'];
           if (latest_sample['rh'] !== null) {
-              latest_rh = parseFloat(latest_sample['rh']).toFixed(2) + " %";
+              latest_rh = parseFloat(latest_sample['rh']).toFixed(0) + " %";
           }
       }
       if (typeof(latest_capture) != "string") {

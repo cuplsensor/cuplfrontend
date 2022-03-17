@@ -52,11 +52,11 @@ export class DownloadCSVButton extends React.Component {
                 if (val !== null) {
                     if (key === 'temp') {
                         val = tempConverted(val, args.tempunit);
-                        val = val.toFixed(2);
+                        val = val.toFixed(1);
                         result += val;
                     }
                     else if (key == 'rh') {
-                        val = val.toFixed(2);
+                        val = val.toFixed(0);
                         result += val;
                     } else if (key === 'time') {
                         const valISO = val.toISO();
